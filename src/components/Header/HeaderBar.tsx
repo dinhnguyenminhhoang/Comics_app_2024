@@ -1,8 +1,9 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TextStyle, View} from 'react-native';
 import React from 'react';
 import {COLORS, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
-import GrandientIcon from './GrandientIcon';
+import GrandientIcon from '../Resuable/GrandientIcon';
 import ProfilePic from './ProfilePic';
+import resuable from 'components/Resuable/Resuable.style';
 
 interface HeaderNarProps {
   title?: string;
@@ -10,10 +11,10 @@ interface HeaderNarProps {
 
 const HeaderBar: React.FC<HeaderNarProps> = ({title}) => {
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer, resuable.rowWithSpace]}>
       <GrandientIcon
         name="menu-fold"
-        color={COLORS.primaryGreyHex}
+        color={COLORS.primaryWhiteHex}
         size={FONTSIZE.size_16}
       />
       <Text style={styles.HeaderText}>{title}</Text>
@@ -24,10 +25,7 @@ const HeaderBar: React.FC<HeaderNarProps> = ({title}) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    padding: SPACING.space_30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    paddingBottom: SPACING.space_10,
   },
   HeaderText: {
     fontFamily: FONTFAMILY.poppins_semibold,
