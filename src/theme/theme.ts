@@ -46,10 +46,12 @@ interface Color {
   primaryBlackRGBA: string;
   secondaryBlackRGBA: string;
   primaryBacgroundContent: string;
+  darkShadow: string;
 }
 
 export const COLORS: Color = {
   primaryBacgroundContent: '#614385',
+  darkShadow: '#B4B5E5',
   primaryRedHex: '#DC3535',
   primaryOrangeHex: '#D17842',
   primaryBlackHex: '#0C0F14',

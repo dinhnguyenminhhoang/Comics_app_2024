@@ -7,7 +7,7 @@ import CartScreen from 'screens/CartScreen';
 import FacoriesScreen from 'screens/FacoriesScreen';
 import HomeScreen from 'screens/HomeScreen';
 import OrderHistoryScreen from 'screens/OrderHistoryScreen';
-import {COLORS} from 'theme/theme';
+import {COLORS, SPACING} from 'theme/theme';
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
@@ -30,7 +30,7 @@ export default function TabNavigator() {
             <AntDesign
               name="home"
               size={25}
-              color={focused ? COLORS.primaryOrangeHex : COLORS.primaryGreyHex}
+              color={focused ? COLORS.primaryWhiteHex : COLORS.primaryGreyHex}
             />
           ),
         }}
@@ -43,7 +43,7 @@ export default function TabNavigator() {
             <AntDesign
               name="like2"
               size={25}
-              color={focused ? COLORS.primaryOrangeHex : COLORS.primaryGreyHex}
+              color={focused ? COLORS.primaryWhiteHex : COLORS.primaryGreyHex}
             />
           ),
         }}
@@ -56,7 +56,7 @@ export default function TabNavigator() {
             <AntDesign
               name="hearto"
               size={25}
-              color={focused ? COLORS.primaryOrangeHex : COLORS.primaryGreyHex}
+              color={focused ? COLORS.primaryWhiteHex : COLORS.primaryGreyHex}
             />
           ),
         }}
@@ -69,7 +69,7 @@ export default function TabNavigator() {
             <AntDesign
               name="bells"
               size={25}
-              color={focused ? COLORS.primaryOrangeHex : COLORS.primaryGreyHex}
+              color={focused ? COLORS.primaryWhiteHex : COLORS.primaryGreyHex}
             />
           ),
         }}
@@ -80,7 +80,7 @@ export default function TabNavigator() {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    height: 80,
+    height: SPACING.space_24 * 3,
     position: 'absolute',
     backgroundColor: COLORS.primaryBlackRGBA,
     borderTopWidth: 0,
