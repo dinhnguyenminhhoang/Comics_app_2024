@@ -1,19 +1,18 @@
+import HeightSpacer from 'components/Resuable/HeightSpacer';
+import resuable from 'components/Resuable/Resuable.style';
+import ResuableText from 'components/Resuable/ResuableText';
+import WidthSpacer from 'components/Resuable/WidthSpacer';
+import React from 'react';
 import {
   FlatList,
   Image,
-  ScrollView,
+  ImageBackground,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-import {ComicType} from 'utils/datatype';
-import resuable from 'components/Resuable/Resuable.style';
-import ResuableText from 'components/Resuable/ResuableText';
 import {BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
-import HeightSpacer from 'components/Resuable/HeightSpacer';
-import WidthSpacer from 'components/Resuable/WidthSpacer';
+import {ComicType} from 'utils/datatype';
 
 interface ComicsBoxProps {
   listComics: ComicType[];
@@ -30,16 +29,29 @@ const ComicsBox: React.FC<ComicsBoxProps> = ({listComics}) => {
         <TouchableOpacity
           onPress={() => {}}
           style={[resuable.withSpace, {marginBottom: SPACING.space_4}]}>
-          <Image
+          <ImageBackground
             source={{
               uri: item.image,
             }}
             alt=""
             resizeMode="cover"
-            height={125}
-            width={90}
-            style={styles.img}
-          />
+            style={styles.img}>
+            <View style={[styles.stickContainer]}>
+              <Image
+                source={require('../../../assets/app_images/hoticon.png')}
+                alt=""
+                style={styles.stickImg}
+              />
+              <ResuableText
+                text="Hot"
+                fontFamily={FONTFAMILY.poppins_bold}
+                size={FONTSIZE.size_10}
+                color={COLORS.primaryWhiteHex}
+                textAlign="left"
+                moreStyles={{}}
+              />
+            </View>
+          </ImageBackground>
           <HeightSpacer height={SPACING.space_10} />
           <View
             style={[
@@ -80,6 +92,26 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.space_4,
   },
   img: {
+    borderRadius: BORDERRADIUS.radius_10,
+    height: SPACING.space_30 * 4.5,
+    width: SPACING.space_30 * 3,
+    overflow: 'hidden',
+  },
+  stickContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 2,
+    top: 2,
+    left: 2,
+    maxWidth: SPACING.space_30 * 1.5,
+    backgroundColor: '#ff0000',
+    paddingHorizontal: SPACING.space_8,
+    paddingVertical: SPACING.space_4,
     borderRadius: BORDERRADIUS.radius_25,
+  },
+  stickImg: {
+    width: SPACING.space_12,
+    height: SPACING.space_12,
   },
 });
