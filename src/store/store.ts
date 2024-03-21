@@ -1,20 +1,18 @@
-import {create} from 'zustand';
-import {produce} from 'immer';
-import {persist, createJSONStorage} from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import CoffeeData from 'data/CoffeeData';
-import BeansData from 'data/BeansData';
+import {Action, ThunkAction, configureStore} from '@reduxjs/toolkit';
+import counterReducer from '../state/Slices/TodoSlice';
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+  },
+});
 
-export const useStore = create(
-  persist(
-    (set, get) => ({
-      coffeeList: CoffeeData,
-      BeanList: BeansData,
-      cartPrice: 0,
-      FavoritesList: [],
-      CartList: [],
-      OrderHistoryList: [],
-    }),
-    {name: 'coffee-app', storage: createJSONStorage(() => AsyncStorage)},
-  ),
-);
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;

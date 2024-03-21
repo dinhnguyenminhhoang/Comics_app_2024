@@ -6,6 +6,8 @@ import DetailScreen from 'screens/DetailScreen';
 import PaymentScreen from 'screens/PaymentScreen';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import {Provider} from 'react-redux';
+import {store} from 'store/store';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [fontLoaded] = useFonts({
@@ -26,19 +28,21 @@ export default function App() {
   }, [fontLoaded]);
   if (!fontLoaded) return null;
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen
-          name="Tab"
-          component={TabNavigator}
-          options={{animation: 'slide_from_bottom'}}
-        />
-        <Stack.Screen
-          name="Payment"
-          component={PaymentScreen}
-          options={{animation: 'slide_from_bottom'}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen
+            name="Tab"
+            component={TabNavigator}
+            options={{animation: 'slide_from_bottom'}}
+          />
+          <Stack.Screen
+            name="Payment"
+            component={PaymentScreen}
+            options={{animation: 'slide_from_bottom'}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }

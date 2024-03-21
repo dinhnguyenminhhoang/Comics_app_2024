@@ -16,8 +16,9 @@ import {ComicType} from 'utils/datatype';
 
 interface ComicsBoxProps {
   listComics: ComicType[];
+  stick?: string;
 }
-const ComicsBox: React.FC<ComicsBoxProps> = ({listComics}) => {
+const ComicsBox: React.FC<ComicsBoxProps> = ({listComics, stick}) => {
   return (
     <FlatList
       horizontal
@@ -36,20 +37,27 @@ const ComicsBox: React.FC<ComicsBoxProps> = ({listComics}) => {
             alt=""
             resizeMode="cover"
             style={styles.img}>
-            <View style={[styles.stickContainer]}>
-              <Image
-                source={require('../../../assets/app_images/hoticon.png')}
-                alt=""
-                style={styles.stickImg}
-              />
-              <ResuableText
-                text="Hot"
-                fontFamily={FONTFAMILY.poppins_bold}
-                size={FONTSIZE.size_10}
-                color={COLORS.primaryWhiteHex}
-                textAlign="left"
-                moreStyles={{}}
-              />
+            <View
+              style={[
+                stick ? styles.stickContainer : styles.nonStickContainer,
+              ]}>
+              {stick ? (
+                <>
+                  <Image
+                    source={require('../../../assets/app_images/hoticon.png')}
+                    alt=""
+                    style={styles.stickImg}
+                  />
+                  <ResuableText
+                    text={stick}
+                    fontFamily={FONTFAMILY.poppins_bold}
+                    size={FONTSIZE.size_10}
+                    color={COLORS.primaryWhiteHex}
+                    textAlign="left"
+                    moreStyles={{}}
+                  />
+                </>
+              ) : null}
             </View>
           </ImageBackground>
           <HeightSpacer height={SPACING.space_10} />
@@ -109,6 +117,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.space_8,
     paddingVertical: SPACING.space_4,
     borderRadius: BORDERRADIUS.radius_25,
+  },
+  nonStickContainer: {
+    display: 'none',
   },
   stickImg: {
     width: SPACING.space_12,
