@@ -9,9 +9,18 @@ import {
 import React from 'react';
 import {ComicType} from 'utils/datatype';
 import resuable from 'components/Resuable/Resuable.style';
-import {BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
+import {
+  BORDERRADIUS,
+  COLORS,
+  ColorType,
+  FONTFAMILY,
+  FONTSIZE,
+  SPACING,
+} from 'theme/theme';
 import ResuableText from 'components/Resuable/ResuableText';
 import HeightSpacer from 'components/Resuable/HeightSpacer';
+import {useAppSelector} from 'hooks/useAppSelector';
+import Shadow from 'components/Resuable/Shadow.style';
 
 interface boxImgProps {
   item: ComicType;
@@ -19,6 +28,10 @@ interface boxImgProps {
   moreStyles?: any;
 }
 const BoxImg: React.FC<boxImgProps> = ({item, stick, moreStyles}) => {
+  const ThemeDarkMode = useAppSelector(
+    (state: any) => state.ThemeDarkMode.darkMode,
+  );
+  let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   return (
     <>
       <ImageBackground
@@ -45,7 +58,7 @@ const BoxImg: React.FC<boxImgProps> = ({item, stick, moreStyles}) => {
                 text={stick}
                 fontFamily={FONTFAMILY.poppins_bold}
                 size={FONTSIZE.size_10}
-                color={COLORS.primaryWhiteHex}
+                color={ACTIVECOLORS.fixColorWhite}
                 textAlign="left"
                 moreStyles={{}}
               />
@@ -56,13 +69,14 @@ const BoxImg: React.FC<boxImgProps> = ({item, stick, moreStyles}) => {
       <HeightSpacer height={SPACING.space_10} />
       <View
         style={[
-          resuable.innerShadow,
+          Shadow(ACTIVECOLORS.darkShadow).innerShadow,
           styles.titleContainer,
           resuable.withSpace,
+          {backgroundColor: ACTIVECOLORS.primaryBacgroundContent},
         ]}>
         <ResuableText
           text={item.name}
-          color={COLORS.primaryWhiteHex}
+          color={ACTIVECOLORS.fixColorWhite}
           fontFamily={FONTFAMILY.poppins_regular}
           size={FONTSIZE.size_10}
           numberOfLines={1}
@@ -70,7 +84,7 @@ const BoxImg: React.FC<boxImgProps> = ({item, stick, moreStyles}) => {
         />
         <ResuableText
           text={item.lasted_chapter}
-          color={COLORS.primaryWhiteHex}
+          color={ACTIVECOLORS.fixColorWhite}
           fontFamily={FONTFAMILY.poppins_regular}
           size={FONTSIZE.size_10}
           numberOfLines={1}
@@ -85,7 +99,6 @@ export default BoxImg;
 
 const styles = StyleSheet.create({
   titleContainer: {
-    backgroundColor: COLORS.primaryBacgroundContent,
     borderRadius: BORDERRADIUS.radius_25,
     paddingHorizontal: SPACING.space_10,
     paddingVertical: SPACING.space_4,

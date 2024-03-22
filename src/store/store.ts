@@ -13,7 +13,7 @@ export const store = configureStore({
     listMostViewChapter: comicSlices.GetListMostViewChapterSlice.default,
     getListGenres: genresSlices.getListGenres.default,
     ComponentLoading: commonSlices.ComponentLoading.default,
-    ThemeDarkMore: commonSlices.ThemeDarkMore.default,
+    ThemeDarkMode: commonSlices.ThemeDarkMode.default,
   },
 });
 

@@ -1,2 +1,2 @@
 export * as ComponentLoading from './ComponentLoading';
-export * as ThemeDarkMore from './ThemeDarkMore';
+export * as ThemeDarkMode from './ThemeDarkMode';

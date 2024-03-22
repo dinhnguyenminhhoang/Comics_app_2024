@@ -35,7 +35,7 @@ const resuable: ResuableStyles = StyleSheet.create<ResuableStyles>({
   innerShadow: {
     ...Platform.select({
       ios: {
-        shadowColor: COLORS.darkShadow,
+        shadowColor: COLORS.dark.darkShadow,
         shadowOffset: {
           width: 0,
           height: 3,
@@ -44,17 +44,17 @@ const resuable: ResuableStyles = StyleSheet.create<ResuableStyles>({
         shadowRadius: 6,
       },
       android: {
-        shadowColor: COLORS.darkShadow,
+        shadowColor: COLORS.dark.darkShadow,
         shadowOpacity: 1,
         shadowRadius: 6,
-        elevation: 8,
+        elevation: 6,
       },
     }),
   },
   outnerShadow: {
     ...Platform.select({
       ios: {
-        shadowColor: COLORS.darkShadow,
+        shadowColor: COLORS.dark.darkShadow,
         shadowOffset: {
           width: 0,
           height: 3,

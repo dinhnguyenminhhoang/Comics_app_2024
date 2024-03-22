@@ -28,14 +28,23 @@ import {
   getListNewComics,
 } from 'state/Action/comicAction';
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
-import {COLORS, FONTSIZE, SPACING} from 'theme/theme';
+import {COLORS, ColorType, FONTSIZE, SPACING} from 'theme/theme';
 import {COMICPARAM} from 'utils/ApiType';
 import {ComicType} from 'utils/datatype';
+import {useColorScheme} from 'react-native';
+import {setDrakMode} from 'state/Slices/common/ThemeDarkMode';
+
 export default function HomeScreen() {
+  const systemColorScheme = useColorScheme();
   const [getMoreComics, setGetMoreComics] = useState<number>(12);
   const [Loading, setLoading] = useState<Boolean>(false);
   const tabBarHeight = useBottomTabBarHeight();
   const dispath = useDispatch<any>();
+  const ThemeDarkMode = useAppSelector(
+    (state: any) => state.ThemeDarkMode.darkMode,
+  );
+  let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
+  const dynamicStyle = styles(ACTIVECOLORS.primaryBlackHex);
   const listComics = useAppSelector((state: any) => state.listComics.data);
   const hasMoreComics = useAppSelector(
     (state: any) => state.listComics.hasMore,
@@ -58,6 +67,7 @@ export default function HomeScreen() {
     (state: any) => state.ComponentLoading.componentLevelLoading,
   );
   useEffect(() => {
+    dispath(setDrakMode(systemColorScheme === 'dark' ? false : true));
     dispath(setComponentLevelLoading(true));
     dispath(getListComics({...COMICPARAM, page: 1, page_size: getMoreComics}));
     dispath(
@@ -110,12 +120,12 @@ export default function HomeScreen() {
   ]);
   if (ComponentLoading) {
     return (
-      <View style={[styles.ScreenContainer, resuable.center]}>
+      <View style={[dynamicStyle.ScreenContainer, resuable.center]}>
         <ActivityIndicator size={40} />
         <ResuableText
           text="Loading..."
           size={FONTSIZE.size_20}
-          color={COLORS.secondaryLightGreyHex}
+          color={ACTIVECOLORS.secondaryLightGreyHex}
           moreStyles={{marginTop: SPACING.space_8}}
         />
       </View>
@@ -135,7 +145,9 @@ export default function HomeScreen() {
           setGetMoreComics(getMoreComics + 12);
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleScroll = async (event: any) => {
     const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
@@ -147,15 +159,19 @@ export default function HomeScreen() {
     }
   };
   return (
-    <SafeAreaView style={styles.ScreenContainer}>
-      <StatusBar backgroundColor={COLORS.primaryBlackHex} />
-      <View style={[styles.ScrollViewFlex]}>
+    <SafeAreaView style={dynamicStyle.ScreenContainer}>
+      <StatusBar
+        backgroundColor={ACTIVECOLORS.fixColorBlack}
+        barStyle={'default'}
+      />
+      <View style={[dynamicStyle.ScrollViewFlex]}>
         <HeaderBar title="Comics" />
         <ScrollView
           style={[{marginBottom: tabBarHeight}]}
-          onScroll={handleScroll}>
+          onScroll={handleScroll}
+          showsVerticalScrollIndicator={false}>
           {/* search  */}
-          <HeightSpacer height={SPACING.space_20} />
+
           <Search />
           {/* end search */}
 
@@ -167,6 +183,7 @@ export default function HomeScreen() {
           {/* Genres */}
           <HeightSpacer height={SPACING.space_16} />
           <Genres listGenres={listGenres} />
+
           {/* end genrtes */}
 
           {/* chapter */}
@@ -218,13 +235,14 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
-  ScreenContainer: {
-    flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
-    padding: SPACING.space_12,
-  },
-  ScrollViewFlex: {
-    flex: 1,
-  },
-});
+const styles = (backgroundColor: string) =>
+  StyleSheet.create({
+    ScreenContainer: {
+      flex: 1,
+      backgroundColor: backgroundColor,
+      padding: SPACING.space_8,
+    },
+    ScrollViewFlex: {
+      flex: 1,
+    },
+  });

@@ -32,7 +32,7 @@ export const SPACING: Spacing = {
   space_36: 36,
 };
 
-interface Color {
+export interface ColorType {
   primaryRedHex: string;
   primaryOrangeHex: string;
   primaryBlackHex: string;
@@ -47,23 +47,50 @@ interface Color {
   secondaryBlackRGBA: string;
   primaryBacgroundContent: string;
   darkShadow: string;
+  fixColorWhite: string;
+  fixColorBlack: string;
 }
-
-export const COLORS: Color = {
-  primaryBacgroundContent: '#614385',
-  darkShadow: '#B4B5E5',
-  primaryRedHex: '#DC3535',
-  primaryOrangeHex: '#D17842',
-  primaryBlackHex: '#0C0F14',
-  primaryDarkGreyHex: '#141921',
-  secondaryDarkGreyHex: '#21262E',
-  primaryGreyHex: '#252A32',
-  secondaryGreyHex: '#252A32',
-  primaryLightGreyHex: '#52555A',
-  secondaryLightGreyHex: '#AEAEAE',
-  primaryWhiteHex: '#FFFFFF',
-  primaryBlackRGBA: 'rgba(12,15,20,0.5)',
-  secondaryBlackRGBA: 'rgba(0,0,0,0.7)',
+interface themeDarkMode {
+  light: ColorType;
+  dark: ColorType;
+}
+export const COLORS: themeDarkMode = {
+  light: {
+    primaryBacgroundContent: '#614385',
+    darkShadow: '#1A1616',
+    primaryRedHex: '#DC3535',
+    primaryOrangeHex: '#FFA500',
+    primaryBlackHex: '#ffffff',
+    primaryDarkGreyHex: '#808080',
+    secondaryDarkGreyHex: '#C0C0C0',
+    primaryGreyHex: '#D3D3D3',
+    secondaryGreyHex: '#D3D3D3',
+    primaryLightGreyHex: '#52555A',
+    secondaryLightGreyHex: '#DCDCDC',
+    primaryWhiteHex: '#000000',
+    primaryBlackRGBA: 'rgba(255,255,255,0.5)',
+    secondaryBlackRGBA: 'rgba(255,255,255,0.7)',
+    fixColorWhite: '#ffffff',
+    fixColorBlack: '#000000',
+  },
+  dark: {
+    primaryBacgroundContent: '#614385',
+    darkShadow: '#B4B5E5',
+    primaryRedHex: '#DC3535',
+    primaryOrangeHex: '#D17842',
+    primaryBlackHex: '#0C0F14',
+    primaryDarkGreyHex: '#141921',
+    secondaryDarkGreyHex: '#21262E',
+    primaryGreyHex: '#252A32',
+    secondaryGreyHex: '#252A32',
+    primaryLightGreyHex: '#52555A',
+    secondaryLightGreyHex: '#AEAEAE',
+    primaryWhiteHex: '#FFFFFF',
+    primaryBlackRGBA: 'rgba(12,15,20,0.5)',
+    secondaryBlackRGBA: 'rgba(0,0,0,0.7)',
+    fixColorWhite: '#ffffff',
+    fixColorBlack: '#000000',
+  },
 };
 
 interface FontFamily {
