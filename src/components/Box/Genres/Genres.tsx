@@ -12,35 +12,40 @@ import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
 import {BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
 import HeightSpacer from 'components/Resuable/HeightSpacer';
+import {genresType} from 'utils/datatype';
+import WidthSpacer from 'components/Resuable/WidthSpacer';
 
 interface genresProps {
-  listGenres: {
-    id: number;
-    title: string;
-  }[];
+  listGenres: genresType[];
 }
 
+const srcListIcon = [
+  {
+    src: require('../../../assets/app_images/heart.png'),
+  },
+  {
+    src: require('../../../assets/app_images/laugh.png'),
+  },
+  {
+    src: require('../../../assets/app_images/swords.png'),
+  },
+  {
+    src: require('../../../assets/app_images/magnifyingglass.png'),
+  },
+  {
+    src: require('../../../assets/app_images/theatre.png'),
+  },
+  {
+    src: require('../../../assets/app_images/school.png'),
+  },
+  {
+    src: require('../../../assets/app_images/compass.png'),
+  },
+  {
+    src: require('../../../assets/app_images/horror.png'),
+  },
+];
 const Genres: React.FC<genresProps> = ({listGenres}) => {
-  const srcListIcon = [
-    {
-      src: require('../../../assets/app_images/heart.png'),
-    },
-    {
-      src: require('../../../assets/app_images/laugh.png'),
-    },
-    {
-      src: require('../../../assets/app_images/swords.png'),
-    },
-    {
-      src: require('../../../assets/app_images/magnifyingglass.png'),
-    },
-    {
-      src: require('../../../assets/app_images/theatre.png'),
-    },
-    {
-      src: require('../../../assets/app_images/school.png'),
-    },
-  ];
   const ViewItem: React.FC<{title: string; id: number}> = ({title, id}) => (
     <TouchableOpacity
       onPress={() => {}}
@@ -49,7 +54,13 @@ const Genres: React.FC<genresProps> = ({listGenres}) => {
         styles.boxGenresContainer,
         resuable.innerShadow,
       ]}>
-      <Image source={srcListIcon[id - 1]?.src} alt="" />
+      <Image
+        source={
+          srcListIcon[Math.floor(Math.random() * (srcListIcon.length - 1)) + 1]
+            ?.src
+        }
+        alt=""
+      />
       <HeightSpacer height={SPACING.space_4} />
       <ResuableText
         text={title}
@@ -60,17 +71,30 @@ const Genres: React.FC<genresProps> = ({listGenres}) => {
       />
     </TouchableOpacity>
   );
-
+  const middleIndex = Math.floor(listGenres.length / 2);
+  const firstHalf = listGenres.slice(0, middleIndex);
+  const secondHalf = listGenres.slice(middleIndex);
   return (
     <View
       style={[
         resuable.rowWithSpace,
         {gap: SPACING.space_10, flexWrap: 'wrap'},
       ]}>
-      {listGenres?.length &&
-        listGenres?.map(genre => (
-          <ViewItem title={genre.title} id={genre.id} key={genre.id} />
-        ))}
+      <FlatList
+        data={firstHalf}
+        keyExtractor={item => item.id.toString()}
+        ItemSeparatorComponent={() => <WidthSpacer width={SPACING.space_10} />}
+        horizontal
+        renderItem={({item, index}) => (
+          <View style={{gap: SPACING.space_10}}>
+            <ViewItem title={item.name} id={item.id} />
+            <ViewItem
+              title={secondHalf[index].name}
+              id={secondHalf[index].id}
+            />
+          </View>
+        )}
+      />
     </View>
   );
 };

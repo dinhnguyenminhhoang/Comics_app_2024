@@ -1,99 +1,220 @@
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import ComicsBox from 'components/Box/ComicsBox/ComicsBox';
+import ComicsBoxLoadPage from 'components/Box/ComicsBox/ComicsBoxLoadPage';
+import Genres from 'components/Box/Genres/Genres';
+import HeaderBar from 'components/Header/HeaderBar';
+import HeightSpacer from 'components/Resuable/HeightSpacer';
+import resuable from 'components/Resuable/Resuable.style';
+import ResuableText from 'components/Resuable/ResuableText';
+import ResuableTitle from 'components/Resuable/ResuableTitle';
+import Search from 'components/Search/Search';
+import {useAppSelector} from 'hooks/useAppSelector';
+import React, {useEffect, useRef, useState} from 'react';
 import {
+  ActivityIndicator,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   View,
-  Platform,
-  TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useStore} from 'store/store';
-import {get} from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
-import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
-import {COLORS, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
-import HeaderBar from 'components/Header/HeaderBar';
-import Search from 'components/Search/Search';
-import ResuableText from 'components/Resuable/ResuableText';
-import HeightSpacer from 'components/Resuable/HeightSpacer';
-import Genres from 'components/Box/Genres/Genres';
-import resuable from 'components/Resuable/Resuable.style';
-import ResuableTitle from 'components/Resuable/ResuableTitle';
-import ComicsBox from 'components/Box/ComicsBox/ComicsBox';
-import {conmicsData} from 'data/ComicsData';
+import {useDispatch} from 'react-redux';
+import {getListGenres} from 'state/Action/GenresAction';
+import {
+  getListComics,
+  getListMostViewChapter,
+  getListMostViewComics,
+  getListNewChapter,
+  getListNewComics,
+} from 'state/Action/comicAction';
+import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
+import {COLORS, FONTSIZE, SPACING} from 'theme/theme';
+import {COMICPARAM} from 'utils/ApiType';
 import {ComicType} from 'utils/datatype';
-
-const getCategoriesFromData = (data: any) => {
-  let temp: any = {};
-  for (let i = 0; i < data.length; i++) {
-    if (temp[data[i].name] == undefined) {
-      temp[data[i].name] = 1;
-    } else {
-      temp[data[i].name]++;
-    }
-  }
-  let categories = Object.keys(temp);
-  categories.unshift('All');
-  return categories;
-};
-const getCoffeeList = (category: string, data: any) => {
-  if (category === 'All') {
-    return data;
-  } else {
-    let coffeeList = data.filter((item: any) => item.name === category);
-    return coffeeList;
-  }
-};
 export default function HomeScreen() {
-  const CoffeeList = useStore((state: any) => state.coffeeList);
-  const BeanList = useStore((state: any) => state.BeanList);
-  const [categories, setCategories] = useState(
-    getCategoriesFromData(CoffeeList),
-  );
-  const [searchIndex, setSearchIndex] = useState(undefined);
-  const [categoryIndex, setCategoryIndex] = useState({
-    index: 0,
-    category: categories[0],
-  });
-  const [sortCoffee, setSortCoffee] = useState(
-    getCoffeeList(categoryIndex.category, CoffeeList),
-  );
+  const [getMoreComics, setGetMoreComics] = useState<number>(12);
+  const [Loading, setLoading] = useState<Boolean>(false);
   const tabBarHeight = useBottomTabBarHeight();
+  const dispath = useDispatch<any>();
+  const listComics = useAppSelector((state: any) => state.listComics.data);
+  const hasMoreComics = useAppSelector(
+    (state: any) => state.listComics.hasMore,
+  ) as boolean;
+
+  const listNewChapter = useAppSelector(
+    (state: any) => state.listNewChapter.data,
+  );
+  const listNewComics = useAppSelector(
+    (state: any) => state.listNewComics.data,
+  );
+  const listMostViewComics = useAppSelector(
+    (state: any) => state.listMostViewComics.data,
+  );
+  const listMostViewChapter = useAppSelector(
+    (state: any) => state.listMostViewChapter.data,
+  );
+  const listGenres = useAppSelector((state: any) => state.getListGenres.data);
+  const ComponentLoading = useAppSelector(
+    (state: any) => state.ComponentLoading.componentLevelLoading,
+  );
+  useEffect(() => {
+    dispath(setComponentLevelLoading(true));
+    dispath(getListComics({...COMICPARAM, page: 1, page_size: getMoreComics}));
+    dispath(
+      getListNewComics({...COMICPARAM, page: 1, page_size: 10, sort_by: 0}),
+    );
+    dispath(
+      getListMostViewComics({
+        ...COMICPARAM,
+        page: 1,
+        page_size: 12,
+        sort_by: 2,
+      }),
+    );
+    dispath(
+      getListNewChapter({
+        ...COMICPARAM,
+        page: 1,
+        page_size: 12,
+        sort_by: 1,
+      }),
+    );
+    dispath(
+      getListMostViewChapter({
+        ...COMICPARAM,
+        page: 1,
+        page_size: 12,
+        sort_by: 3,
+      }),
+    );
+    dispath(getListGenres());
+  }, [dispath]);
+  useEffect(() => {
+    if (
+      listComics?.length &&
+      listNewChapter?.length &&
+      listNewComics?.length &&
+      listMostViewComics?.length &&
+      listMostViewChapter?.length &&
+      listGenres?.length
+    ) {
+      dispath(setComponentLevelLoading(false));
+    }
+  }, [
+    listComics,
+    listNewChapter,
+    listNewComics,
+    listMostViewComics,
+    listMostViewChapter,
+    listGenres,
+  ]);
+  if (ComponentLoading) {
+    return (
+      <View style={[styles.ScreenContainer, resuable.center]}>
+        <ActivityIndicator size={40} />
+        <ResuableText
+          text="Loading..."
+          size={FONTSIZE.size_20}
+          color={COLORS.secondaryLightGreyHex}
+          moreStyles={{marginTop: SPACING.space_8}}
+        />
+      </View>
+    );
+  }
+  const handleLoadMore = async () => {
+    try {
+      if (Loading) {
+        await dispath(
+          getListComics({
+            ...COMICPARAM,
+            page: 1,
+            page_size: getMoreComics + 12,
+          }),
+        ).then(() => {
+          setLoading(false);
+          setGetMoreComics(getMoreComics + 12);
+        });
+      }
+    } catch (error) {}
+  };
+  const handleScroll = async (event: any) => {
+    const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
+    const isAtEnd =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height;
+    if (isAtEnd && hasMoreComics) {
+      setLoading(true);
+      await handleLoadMore();
+    }
+  };
   return (
     <SafeAreaView style={styles.ScreenContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={[styles.ScrollViewFlex]}>
+      <View style={[styles.ScrollViewFlex]}>
         <HeaderBar title="Comics" />
-        <ScrollView style={[{marginBottom: tabBarHeight}]}>
+        <ScrollView
+          style={[{marginBottom: tabBarHeight}]}
+          onScroll={handleScroll}>
+          {/* search  */}
           <HeightSpacer height={SPACING.space_20} />
           <Search />
+          {/* end search */}
+
+          {/* category */}
           <HeightSpacer height={SPACING.space_30} />
           <ResuableTitle titleLeft="Categories" titleRight="More" />
+          {/* end categories */}
+
+          {/* Genres */}
           <HeightSpacer height={SPACING.space_16} />
-          <Genres
-            listGenres={[
-              {id: 1, title: 'action'},
-              {id: 2, title: 'manga'},
-              {id: 3, title: 'manhuo'},
-              {id: 4, title: 'love'},
-              {id: 5, title: 'drama'},
-              {id: 6, title: 'school'},
-            ]}
-          />
+          <Genres listGenres={listGenres} />
+          {/* end genrtes */}
+
+          {/* chapter */}
           <HeightSpacer height={SPACING.space_30} />
           <ResuableTitle titleLeft="Trending" titleRight="More" />
-          <ComicsBox listComics={conmicsData as ComicType[]} />
+          <ComicsBox listComics={listNewChapter as ComicType[]} />
           <HeightSpacer height={SPACING.space_30} />
+          {/* end chapter */}
+
+          {/* New */}
           <ResuableTitle titleLeft="New" titleRight="More" />
-          <ComicsBox listComics={conmicsData as ComicType[]} />
+          <ComicsBox listComics={listNewComics as ComicType[]} stick="new" />
           <HeightSpacer height={SPACING.space_30} />
+          {/* end new comic */}
+
+          {/* Hot commic */}
+
+          <ResuableTitle titleLeft="Hot Comics" titleRight="More" />
+          <ComicsBox
+            listComics={listMostViewComics as ComicType[]}
+            stick="hot"
+          />
+          <HeightSpacer height={SPACING.space_30} />
+          {/* end */}
+
+          {/* hot chapter */}
+          <ResuableTitle titleLeft="Hot Chapters" titleRight="More" />
+          <ComicsBox
+            listComics={listMostViewChapter as ComicType[]}
+            stick="hot"
+          />
+
+          <HeightSpacer height={SPACING.space_30} />
+          {/* end */}
           <ResuableTitle titleLeft="Hot" titleRight="More" />
-          <ComicsBox listComics={conmicsData as ComicType[]} />
+
+          <ComicsBoxLoadPage
+            listComics={listComics as ComicType[]}
+            stick="hot"
+            setMoreComic={setGetMoreComics}
+          />
+          {Loading ? (
+            <View style={{marginVertical: SPACING.space_8}}>
+              <ActivityIndicator size={40} />
+            </View>
+          ) : null}
         </ScrollView>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }

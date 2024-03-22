@@ -1,12 +1,12 @@
-import {AntDesign} from '@expo/vector-icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import CustomIcon from 'components/Resuable/CustomIcon';
 import {BlurView} from 'expo-blur';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import CartScreen from 'screens/CartScreen';
 import FacoriesScreen from 'screens/FacoriesScreen';
 import HomeScreen from 'screens/HomeScreen';
-import OrderHistoryScreen from 'screens/OrderHistoryScreen';
+import LoginScreen from 'screens/LoginScreen';
 import {COLORS, SPACING} from 'theme/theme';
 const Tab = createBottomTabNavigator();
 
@@ -27,7 +27,7 @@ export default function TabNavigator() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
-            <AntDesign
+            <CustomIcon
               name="home"
               size={25}
               color={focused ? COLORS.primaryWhiteHex : COLORS.primaryGreyHex}
@@ -40,7 +40,7 @@ export default function TabNavigator() {
         component={CartScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
-            <AntDesign
+            <CustomIcon
               name="like2"
               size={25}
               color={focused ? COLORS.primaryWhiteHex : COLORS.primaryGreyHex}
@@ -53,7 +53,7 @@ export default function TabNavigator() {
         component={FacoriesScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
-            <AntDesign
+            <CustomIcon
               name="hearto"
               size={25}
               color={focused ? COLORS.primaryWhiteHex : COLORS.primaryGreyHex}
@@ -62,12 +62,12 @@ export default function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="History"
-        component={OrderHistoryScreen}
+        name="LoginScreen"
+        component={LoginScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
-            <AntDesign
-              name="bells"
+            <CustomIcon
+              name="user"
               size={25}
               color={focused ? COLORS.primaryWhiteHex : COLORS.primaryGreyHex}
             />
