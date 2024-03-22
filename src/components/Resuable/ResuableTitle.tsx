@@ -2,7 +2,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import resuable from './Resuable.style';
 import ResuableText from './ResuableText';
-import {COLORS, FONTFAMILY, FONTSIZE} from 'theme/theme';
+import {COLORS, ColorType, FONTFAMILY, FONTSIZE} from 'theme/theme';
+import {useAppSelector} from 'hooks/useAppSelector';
 
 interface ResuableTextProps {
   titleRight?: string;
@@ -13,10 +14,14 @@ const ResuableTitle: React.FC<ResuableTextProps> = ({
   titleLeft,
   titleRight,
 }) => {
+  const ThemeDarkMode = useAppSelector(
+    (state: any) => state.ThemeDarkMode.darkMode,
+  );
+  let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   return (
     <View style={[resuable.rowWithSpace]}>
       <ResuableText
-        color={COLORS.primaryWhiteHex}
+        color={ACTIVECOLORS.primaryWhiteHex}
         fontFamily={FONTFAMILY.poppins_bold}
         text={titleLeft}
         textAlign="right"
@@ -24,7 +29,7 @@ const ResuableTitle: React.FC<ResuableTextProps> = ({
       />
       <TouchableOpacity>
         <ResuableText
-          color={COLORS.primaryWhiteHex}
+          color={ACTIVECOLORS.primaryWhiteHex}
           fontFamily={FONTFAMILY.poppins_regular}
           text={titleRight}
           textAlign="left"

@@ -9,10 +9,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {BORDERRADIUS, COLORS, SPACING} from 'theme/theme';
+import {BORDERRADIUS, COLORS, ColorType, SPACING} from 'theme/theme';
 import {ComicType} from 'utils/datatype';
 import BoxImg from './BoxImg';
 import resuable from 'components/Resuable/Resuable.style';
+import {useAppSelector} from 'hooks/useAppSelector';
 
 interface ComicsBoxLoadPageprops {
   listComics: ComicType[];
@@ -24,6 +25,10 @@ const ComicsBoxLoadPage: React.FC<ComicsBoxLoadPageprops> = ({
   stick,
   setMoreComic,
 }) => {
+  const ThemeDarkMode = useAppSelector(
+    (state: any) => state.ThemeDarkMode.darkMode,
+  );
+  let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   return listComics?.length ? (
     <View style={[resuable.rowWithSpace, {flexWrap: 'wrap'}]}>
       {listComics?.map(item => (
@@ -31,7 +36,16 @@ const ComicsBoxLoadPage: React.FC<ComicsBoxLoadPageprops> = ({
           onPress={() => {}}
           style={styles.itemContainer}
           key={item.id}>
-          <BoxImg item={item} stick={stick} moreStyles={styles.img} />
+          <BoxImg
+            item={item}
+            stick={stick}
+            moreStyles={[
+              styles.img,
+              {
+                borderColor: ACTIVECOLORS.primaryBlackRGBA,
+              },
+            ]}
+          />
         </TouchableOpacity>
       ))}
     </View>
@@ -50,7 +64,6 @@ const styles = StyleSheet.create({
   },
   img: {
     flex: 1,
-    borderColor: COLORS.primaryBlackRGBA,
     borderWidth: 1,
   },
 });
