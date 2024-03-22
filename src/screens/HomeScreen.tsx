@@ -4,12 +4,15 @@ import ComicsBoxLoadPage from 'components/Box/ComicsBox/ComicsBoxLoadPage';
 import Genres from 'components/Box/Genres/Genres';
 import HeaderBar from 'components/Header/HeaderBar';
 import HeightSpacer from 'components/Resuable/HeightSpacer';
+import resuable from 'components/Resuable/Resuable.style';
+import ResuableText from 'components/Resuable/ResuableText';
 import ResuableTitle from 'components/Resuable/ResuableTitle';
 import Search from 'components/Search/Search';
 import {conmicsData} from 'data/ComicsData';
 import {useAppSelector} from 'hooks/useAppSelector';
 import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -25,7 +28,8 @@ import {
   getListNewChapter,
   getListNewComics,
 } from 'state/Action/comicAction';
-import {COLORS, SPACING} from 'theme/theme';
+import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
+import {COLORS, FONTSIZE, SPACING} from 'theme/theme';
 import {COMICPARAM} from 'utils/ApiType';
 import {ComicType} from 'utils/datatype';
 
@@ -47,10 +51,15 @@ export default function HomeScreen() {
     (state: any) => state.listMostViewChapter.data,
   );
   const listGenres = useAppSelector((state: any) => state.getListGenres.data);
+  const ComponentLoading = useAppSelector(
+    (state: any) => state.ComponentLoading.componentLevelLoading,
+  );
+
   useEffect(() => {
     dispath(getListComics({...COMICPARAM, page: 1, page_size: getMoreComics}));
   }, [dispath, getMoreComics]);
   useEffect(() => {
+    dispath(setComponentLevelLoading(true));
     dispath(
       getListNewComics({...COMICPARAM, page: 1, page_size: 10, sort_by: 0}),
     );
@@ -80,6 +89,38 @@ export default function HomeScreen() {
     );
     dispath(getListGenres());
   }, [dispath]);
+  useEffect(() => {
+    if (
+      listComics.length &&
+      listNewChapter.length &&
+      listNewComics.length &&
+      listMostViewComics.length &&
+      listMostViewChapter.length &&
+      listGenres.length
+    ) {
+      dispath(setComponentLevelLoading(false));
+    }
+  }, [
+    listComics,
+    listNewChapter,
+    listNewComics,
+    listMostViewComics,
+    listMostViewChapter,
+    listGenres,
+  ]);
+  if (ComponentLoading) {
+    return (
+      <View style={[styles.ScreenContainer, resuable.center]}>
+        <ActivityIndicator size={40} />
+        <ResuableText
+          text="Wait a minute..."
+          size={FONTSIZE.size_20}
+          color={COLORS.secondaryLightGreyHex}
+          moreStyles={{marginTop: SPACING.space_8}}
+        />
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={styles.ScreenContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />

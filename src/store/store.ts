@@ -2,6 +2,7 @@ import {Action, ThunkAction, configureStore} from '@reduxjs/toolkit';
 import counterReducer from '../state/Slices/TodoSlice';
 import * as comicSlices from '../state/Slices/Comic';
 import * as genresSlices from '../state/Slices/Genres';
+import * as commonSlices from '../state/Slices/common';
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
@@ -11,6 +12,8 @@ export const store = configureStore({
     listNewChapter: comicSlices.GetListNewChapterSlice.default,
     listMostViewChapter: comicSlices.GetListMostViewChapterSlice.default,
     getListGenres: genresSlices.getListGenres.default,
+    ComponentLoading: commonSlices.ComponentLoading.default,
+    ThemeDarkMore: commonSlices.ThemeDarkMore.default,
   },
 });
 
