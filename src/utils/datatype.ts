@@ -9,4 +9,10 @@ export interface ComicType {
   is_finished: boolean;
   viewed: number;
   updated_at: Date | null;
+  lasted_chapter: string;
+}
+export interface genresType {
+  id: number;
+  name: string;
+  description: string;
 }
