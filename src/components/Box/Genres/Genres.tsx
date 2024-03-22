@@ -13,6 +13,7 @@ import ResuableText from 'components/Resuable/ResuableText';
 import {BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
 import HeightSpacer from 'components/Resuable/HeightSpacer';
 import {genresType} from 'utils/datatype';
+import WidthSpacer from 'components/Resuable/WidthSpacer';
 
 interface genresProps {
   listGenres: genresType[];
@@ -82,9 +83,10 @@ const Genres: React.FC<genresProps> = ({listGenres}) => {
       <FlatList
         data={firstHalf}
         keyExtractor={item => item.id.toString()}
+        ItemSeparatorComponent={() => <WidthSpacer width={SPACING.space_10} />}
         horizontal
         renderItem={({item, index}) => (
-          <View>
+          <View style={{gap: SPACING.space_10}}>
             <ViewItem title={item.name} id={item.id} />
             <ViewItem
               title={secondHalf[index].name}

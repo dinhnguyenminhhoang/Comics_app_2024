@@ -1,3 +1,4 @@
+import {pagintype} from './../../utils/datatype';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {comicsApiParams} from 'utils/ApiType';
 import * as comicApi from '../../service/ComicApi';
@@ -7,7 +8,7 @@ export const getListComics = createAsyncThunk(
     try {
       const response = await comicApi.handleGetListComics(formData);
       let data = response;
-      return data.data;
+      return data;
     } catch (error) {
       throw error;
     }

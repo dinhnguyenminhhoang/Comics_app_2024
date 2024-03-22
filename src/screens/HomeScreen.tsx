@@ -8,9 +8,8 @@ import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
 import ResuableTitle from 'components/Resuable/ResuableTitle';
 import Search from 'components/Search/Search';
-import {conmicsData} from 'data/ComicsData';
 import {useAppSelector} from 'hooks/useAppSelector';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -32,12 +31,16 @@ import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 import {COLORS, FONTSIZE, SPACING} from 'theme/theme';
 import {COMICPARAM} from 'utils/ApiType';
 import {ComicType} from 'utils/datatype';
-
 export default function HomeScreen() {
   const [getMoreComics, setGetMoreComics] = useState<number>(12);
+  const [Loading, setLoading] = useState<Boolean>(false);
   const tabBarHeight = useBottomTabBarHeight();
   const dispath = useDispatch<any>();
   const listComics = useAppSelector((state: any) => state.listComics.data);
+  const hasMoreComics = useAppSelector(
+    (state: any) => state.listComics.hasMore,
+  ) as boolean;
+
   const listNewChapter = useAppSelector(
     (state: any) => state.listNewChapter.data,
   );
@@ -54,12 +57,9 @@ export default function HomeScreen() {
   const ComponentLoading = useAppSelector(
     (state: any) => state.ComponentLoading.componentLevelLoading,
   );
-
-  useEffect(() => {
-    dispath(getListComics({...COMICPARAM, page: 1, page_size: getMoreComics}));
-  }, [dispath, getMoreComics]);
   useEffect(() => {
     dispath(setComponentLevelLoading(true));
+    dispath(getListComics({...COMICPARAM, page: 1, page_size: getMoreComics}));
     dispath(
       getListNewComics({...COMICPARAM, page: 1, page_size: 10, sort_by: 0}),
     );
@@ -91,12 +91,12 @@ export default function HomeScreen() {
   }, [dispath]);
   useEffect(() => {
     if (
-      listComics.length &&
-      listNewChapter.length &&
-      listNewComics.length &&
-      listMostViewComics.length &&
-      listMostViewChapter.length &&
-      listGenres.length
+      listComics?.length &&
+      listNewChapter?.length &&
+      listNewComics?.length &&
+      listMostViewComics?.length &&
+      listMostViewChapter?.length &&
+      listGenres?.length
     ) {
       dispath(setComponentLevelLoading(false));
     }
@@ -113,7 +113,7 @@ export default function HomeScreen() {
       <View style={[styles.ScreenContainer, resuable.center]}>
         <ActivityIndicator size={40} />
         <ResuableText
-          text="Wait a minute..."
+          text="Loading..."
           size={FONTSIZE.size_20}
           color={COLORS.secondaryLightGreyHex}
           moreStyles={{marginTop: SPACING.space_8}}
@@ -121,43 +121,98 @@ export default function HomeScreen() {
       </View>
     );
   }
+  const handleLoadMore = async () => {
+    try {
+      if (Loading) {
+        await dispath(
+          getListComics({
+            ...COMICPARAM,
+            page: 1,
+            page_size: getMoreComics + 12,
+          }),
+        ).then(() => {
+          setLoading(false);
+          setGetMoreComics(getMoreComics + 12);
+        });
+      }
+    } catch (error) {}
+  };
+  const handleScroll = async (event: any) => {
+    const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
+    const isAtEnd =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height;
+    if (isAtEnd && hasMoreComics) {
+      setLoading(true);
+      await handleLoadMore();
+    }
+  };
   return (
     <SafeAreaView style={styles.ScreenContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
       <View style={[styles.ScrollViewFlex]}>
         <HeaderBar title="Comics" />
-        <ScrollView style={[{marginBottom: tabBarHeight}]}>
+        <ScrollView
+          style={[{marginBottom: tabBarHeight}]}
+          onScroll={handleScroll}>
+          {/* search  */}
           <HeightSpacer height={SPACING.space_20} />
           <Search />
+          {/* end search */}
+
+          {/* category */}
           <HeightSpacer height={SPACING.space_30} />
           <ResuableTitle titleLeft="Categories" titleRight="More" />
+          {/* end categories */}
+
+          {/* Genres */}
           <HeightSpacer height={SPACING.space_16} />
           <Genres listGenres={listGenres} />
+          {/* end genrtes */}
+
+          {/* chapter */}
           <HeightSpacer height={SPACING.space_30} />
           <ResuableTitle titleLeft="Trending" titleRight="More" />
           <ComicsBox listComics={listNewChapter as ComicType[]} />
           <HeightSpacer height={SPACING.space_30} />
+          {/* end chapter */}
+
+          {/* New */}
           <ResuableTitle titleLeft="New" titleRight="More" />
           <ComicsBox listComics={listNewComics as ComicType[]} stick="new" />
           <HeightSpacer height={SPACING.space_30} />
+          {/* end new comic */}
+
+          {/* Hot commic */}
+
           <ResuableTitle titleLeft="Hot Comics" titleRight="More" />
           <ComicsBox
             listComics={listMostViewComics as ComicType[]}
             stick="hot"
           />
           <HeightSpacer height={SPACING.space_30} />
+          {/* end */}
+
+          {/* hot chapter */}
           <ResuableTitle titleLeft="Hot Chapters" titleRight="More" />
           <ComicsBox
             listComics={listMostViewChapter as ComicType[]}
             stick="hot"
           />
+
           <HeightSpacer height={SPACING.space_30} />
+          {/* end */}
           <ResuableTitle titleLeft="Hot" titleRight="More" />
+
           <ComicsBoxLoadPage
             listComics={listComics as ComicType[]}
             stick="hot"
             setMoreComic={setGetMoreComics}
           />
+          {Loading ? (
+            <View style={{marginVertical: SPACING.space_8}}>
+              <ActivityIndicator size={40} />
+            </View>
+          ) : null}
         </ScrollView>
       </View>
     </SafeAreaView>

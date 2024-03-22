@@ -1,14 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   FlatList,
+  RefreshControl,
+  ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {BORDERRADIUS, COLORS, SPACING} from 'theme/theme';
 import {ComicType} from 'utils/datatype';
 import BoxImg from './BoxImg';
+import resuable from 'components/Resuable/Resuable.style';
 
 interface ComicsBoxLoadPageprops {
   listComics: ComicType[];
@@ -21,19 +25,16 @@ const ComicsBoxLoadPage: React.FC<ComicsBoxLoadPageprops> = ({
   setMoreComic,
 }) => {
   return listComics?.length ? (
-    <FlatList
-      onEndReached={() => console.log('end list')}
-      showsVerticalScrollIndicator={false}
-      scrollEnabled={false}
-      data={listComics}
-      keyExtractor={(item, index) => item.id.toString()}
-      numColumns={3}
-      renderItem={({item}) => (
-        <TouchableOpacity onPress={() => {}} style={styles.itemContainer}>
+    <View style={[resuable.rowWithSpace, {flexWrap: 'wrap'}]}>
+      {listComics?.map(item => (
+        <TouchableOpacity
+          onPress={() => {}}
+          style={styles.itemContainer}
+          key={item.id}>
           <BoxImg item={item} stick={stick} moreStyles={styles.img} />
         </TouchableOpacity>
-      )}
-    />
+      ))}
+    </View>
   ) : (
     <></>
   );

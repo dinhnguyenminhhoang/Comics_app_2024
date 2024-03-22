@@ -16,3 +16,10 @@ export interface genresType {
   name: string;
   description: string;
 }
+export interface pagintype {
+  page: number;
+  page_size: number;
+  total: number;
+  total_page: number;
+  has_more?: boolean;
+}

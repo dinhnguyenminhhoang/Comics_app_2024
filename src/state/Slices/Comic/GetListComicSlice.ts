@@ -7,6 +7,7 @@ const GetListComicSlice = createSlice({
   name: 'get-list-comics',
   initialState: {
     data: [] as ComicType[],
+    hasMore: false,
     isLoading: false,
     error: null as string | null,
   },
@@ -16,9 +17,10 @@ const GetListComicSlice = createSlice({
       .addCase(getListComics.pending, state => {
         state.isLoading = true;
       })
-      .addCase(getListComics.fulfilled, (state, action) => {
+      .addCase(getListComics.fulfilled, (state, action: {payload: any}) => {
         state.isLoading = false;
-        state.data = action.payload;
+        state.data = action.payload.data;
+        state.hasMore = action.payload?.paging?.has_more;
       })
       .addCase(getListComics.rejected, (state, action) => {
         state.isLoading = false;
