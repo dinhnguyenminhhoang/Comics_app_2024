@@ -9,14 +9,14 @@ import FacoriesScreen from 'screens/FacoriesScreen';
 import HomeScreen from 'screens/HomeScreen';
 import LoginScreen from 'screens/LoginScreen';
 import {COLORS, ColorType, SPACING} from 'theme/theme';
-const Tab = createBottomTabNavigator();
+import {RootStackParamList} from 'utils/datatype';
 
-export default function TabNavigator() {
+const Tab = createBottomTabNavigator<RootStackParamList>();
+const TabNavigator = () => {
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
   );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
-
   return (
     <Tab.Navigator
       screenOptions={{
@@ -101,8 +101,8 @@ export default function TabNavigator() {
       />
     </Tab.Navigator>
   );
-}
-
+};
+export default TabNavigator;
 const styles = StyleSheet.create({
   tabBarStyle: {
     height: SPACING.space_24 * 3,

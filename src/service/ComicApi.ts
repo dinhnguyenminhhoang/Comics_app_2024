@@ -20,4 +20,7 @@ const handleGetListComics = (formData: comicsApiParams) => {
     params: queryParams,
   });
 };
-export {handleGetListComics};
+const handleGetComicByID = (comicID: number) => {
+  return axios.get(`/api/v1/comics/${comicID.toString()}`);
+};
+export {handleGetListComics, handleGetComicByID};

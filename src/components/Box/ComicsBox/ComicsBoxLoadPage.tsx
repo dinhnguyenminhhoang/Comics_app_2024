@@ -1,30 +1,26 @@
-import React, {useState} from 'react';
-import {
-  Dimensions,
-  FlatList,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {BORDERRADIUS, COLORS, ColorType, SPACING} from 'theme/theme';
-import {ComicType} from 'utils/datatype';
-import BoxImg from './BoxImg';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import resuable from 'components/Resuable/Resuable.style';
 import {useAppSelector} from 'hooks/useAppSelector';
+import React from 'react';
+import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {BORDERRADIUS, COLORS, ColorType, SPACING} from 'theme/theme';
+import {ComicType, RootAppParamList} from 'utils/datatype';
+import BoxImg from './BoxImg';
 
 interface ComicsBoxLoadPageprops {
   listComics: ComicType[];
   stick?: string;
   setMoreComic: (numberComics: number) => void;
 }
+
 const ComicsBoxLoadPage: React.FC<ComicsBoxLoadPageprops> = ({
   listComics,
   stick,
   setMoreComic,
 }) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootAppParamList>>();
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
   );
@@ -33,7 +29,7 @@ const ComicsBoxLoadPage: React.FC<ComicsBoxLoadPageprops> = ({
     <View style={[resuable.rowWithSpace, {flexWrap: 'wrap'}]}>
       {listComics?.map(item => (
         <TouchableOpacity
-          onPress={() => {}}
+          onPress={() => navigation.navigate('Details', {comicId: item.id})}
           style={styles.itemContainer}
           key={item.id}>
           <BoxImg
