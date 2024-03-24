@@ -18,6 +18,10 @@ export const store = configureStore({
     ComponentLoading: commonSlices.ComponentLoading.default,
     ThemeDarkMode: commonSlices.ThemeDarkMode.default,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
