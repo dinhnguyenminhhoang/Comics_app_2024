@@ -3,6 +3,7 @@ import ComicInfo from 'components/ComicInfo/ComicInfo';
 import IntroductionComic from 'components/IntroductionComic/IntroductionComic';
 import ListChapter from 'components/ListChapter/ListChapter';
 import HeightSpacer from 'components/Resuable/HeightSpacer';
+import BackBtn from 'components/ResuableButton/BackBtn';
 import BottomButton from 'components/ResuableButton/BottomButton';
 import BtnSwich from 'components/ResuableButton/BtnSwich';
 import Review from 'components/Review/Review';
@@ -54,21 +55,18 @@ const DetailScreen: React.FC<Props> = ({route, navigation}) => {
             setContentSwitch={setContentSwitch}
           />
           <HeightSpacer height={SPACING.space_18} />
-          <ScrollView
-            // style={[{marginBottom: tabBarHeight}]}
-            showsVerticalScrollIndicator={false}
-            scrollEventThrottle={16}>
+          <View>
             {ContentSwitch === 0 ? (
               <IntroductionComic
                 comic={comicById}
                 ACTIVECOLORS={ACTIVECOLORS}
               />
-            ) : ContentSwitch === 2 ? (
-              <ListChapter />
+            ) : ContentSwitch === 1 ? (
+              <ListChapter comic={comicById} ACTIVECOLORS={ACTIVECOLORS} />
             ) : (
               <Review />
             )}
-          </ScrollView>
+          </View>
         </View>
       </ScrollView>
       <BottomButton ACTIVESCOLORS={ACTIVECOLORS} />

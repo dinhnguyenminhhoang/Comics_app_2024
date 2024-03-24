@@ -20,6 +20,7 @@ import {ComicDetailType} from 'utils/datatype';
 import WidthSpacer from 'components/Resuable/WidthSpacer';
 import ResuableText from 'components/Resuable/ResuableText';
 import HeightSpacer from 'components/Resuable/HeightSpacer';
+import BackBtn from 'components/ResuableButton/BackBtn';
 
 interface ComicInfoProps {
   comicById: ComicDetailType;
@@ -38,6 +39,7 @@ const ComicInfo: React.FC<ComicInfoProps> = ({comicById}) => {
         style={dynamicStyle.image}
         resizeMode="cover"
       />
+      <BackBtn />
       <View style={dynamicStyle.overlayImg}></View>
       <View style={[dynamicStyle.titleContainer]}>
         <Image source={{uri: comicById.image}} style={dynamicStyle.ImgSub} />
@@ -56,33 +58,38 @@ const ComicInfo: React.FC<ComicInfoProps> = ({comicById}) => {
             size={FONTSIZE.size_16}
             color={ACTIVECOLORS.fixColorWhite}
             fontFamily={FONTFAMILY.poppins_regular}
-            text={`Authors : ${
+            text={`Tác giả : ${
               comicById.authors?.map(item => item.name).join(' ') || 'updating'
             } `}
             textAlign="left"
           />
-          <HeightSpacer height={SPACING.space_12} />
+          <HeightSpacer height={SPACING.space_18} />
           <ResuableText
             size={FONTSIZE.size_14}
             color={ACTIVECOLORS.primaryWhiteHex}
             fontFamily={FONTFAMILY.poppins_regular}
-            text={`Chapter : ${comicById.chapters?.length || 0}`}
+            text={`Chương : ${comicById.chapters?.length || 0}`}
             textAlign="left"
           />
           <ResuableText
             size={FONTSIZE.size_14}
             color={ACTIVECOLORS.primaryWhiteHex}
             fontFamily={FONTFAMILY.poppins_regular}
-            text={`Status:${comicById.is_finished ? 'Finished' : 'Unfinshed'}`}
+            text={`Trạng thái:${
+              comicById.is_finished ? ' Đã hoàn' : ' Chưa hoàn'
+            }`}
             textAlign="left"
           />
           <ResuableText
             size={FONTSIZE.size_14}
             color={ACTIVECOLORS.primaryWhiteHex}
             fontFamily={FONTFAMILY.poppins_regular}
-            text={comicById.genres?.map(item => item.name).join(' . ')}
-            moreStyles={{maxWidth: SPACING.space_30 * 5}}
+            text={`Thể loại : ${comicById.genres
+              ?.map(item => item.name)
+              .join(' & ')}`}
+            moreStyles={{maxWidth: SPACING.space_30 * 6}}
             textAlign="left"
+            numberOfLines={3}
           />
         </View>
       </View>
@@ -127,6 +134,7 @@ const styles = (bg: string) =>
     },
     comicInfo: {
       marginTop: SPACING.space_8,
-      gap: 5,
+      gap: 2,
+      maxWidth: SPACING.space_20 * 10,
     },
   });

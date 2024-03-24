@@ -17,7 +17,7 @@ const Boxtext: React.FC<BoxtextProps> = ({
     <View
       style={[
         styles.container,
-        {borderColor: ACTIVECOLORS.primaryDarkGreyHex},
+        {borderColor: ACTIVECOLORS.primaryLightGreyHex},
       ]}>
       <ResuableText text={textTop} color={ACTIVECOLORS.primaryWhiteHex} />
       <ResuableText
@@ -34,6 +34,7 @@ export default Boxtext;
 
 const styles = StyleSheet.create({
   container: {
+    minWidth: 110,
     paddingVertical: SPACING.space_10,
     paddingHorizontal: SPACING.space_12,
     borderRadius: BORDERRADIUS.radius_20,

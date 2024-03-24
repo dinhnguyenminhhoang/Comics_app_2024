@@ -24,6 +24,12 @@ const IntroductionComic: React.FC<IntroductionComicProps> = ({
         textAlign="center"
         fontFamily={FONTFAMILY.poppins_semibold}
       />
+      <ResuableText
+        color={ACTIVECOLORS.primaryWhiteHex}
+        text={comic.genres?.map(item => item.name).join(' - ')}
+        textAlign="center"
+        fontFamily={FONTFAMILY.poppins_semibold}
+      />
       <HeightSpacer height={SPACING.space_10} />
       <View
         style={[
