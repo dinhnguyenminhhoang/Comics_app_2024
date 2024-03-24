@@ -3,6 +3,8 @@ import ComicInfo from 'components/ComicInfo/ComicInfo';
 import IntroductionComic from 'components/IntroductionComic/IntroductionComic';
 import ListChapter from 'components/ListChapter/ListChapter';
 import HeightSpacer from 'components/Resuable/HeightSpacer';
+import resuable from 'components/Resuable/Resuable.style';
+import ResuableText from 'components/Resuable/ResuableText';
 import BackBtn from 'components/ResuableButton/BackBtn';
 import BottomButton from 'components/ResuableButton/BottomButton';
 import BtnSwich from 'components/ResuableButton/BtnSwich';
@@ -10,6 +12,7 @@ import Review from 'components/Review/Review';
 import {useAppSelector} from 'hooks/useAppSelector';
 import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   ScrollView,
   StatusBar,
@@ -18,7 +21,8 @@ import {
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import {getComicById} from 'state/Action/comicAction';
-import {COLORS, ColorType, SPACING} from 'theme/theme';
+import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
+import {COLORS, ColorType, FONTSIZE, SPACING} from 'theme/theme';
 import {ComicDetailType, RootAppParamList} from 'utils/datatype';
 
 type Props = NativeStackScreenProps<RootAppParamList, 'Details'>;
@@ -29,18 +33,37 @@ const DetailScreen: React.FC<Props> = ({route, navigation}) => {
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
   );
+  const ComponentLoading = useAppSelector(
+    (state: any) => state.ComponentLoading.componentLevelLoading,
+  );
   const comicById = useAppSelector(
     (state: any) => state.comicById.data,
   ) as ComicDetailType;
-
   useEffect(() => {
-    dispatch(getComicById(route.params?.comicId));
+    dispatch(setComponentLevelLoading(true));
+  }, [dispatch]);
+  useEffect(() => {
+    dispatch(getComicById(route.params?.comicId)).then(() => {
+      dispatch(setComponentLevelLoading(false));
+    });
   }, [dispatch, route.params?.comicId]);
 
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
 
   const dynamicStyle = styles(ACTIVECOLORS.primaryBlackHex);
-
+  if (ComponentLoading) {
+    return (
+      <View style={[dynamicStyle.ScreenContainer, resuable.center]}>
+        <ActivityIndicator size={40} />
+        <ResuableText
+          text="Loading..."
+          size={FONTSIZE.size_20}
+          color={ACTIVECOLORS.secondaryLightGreyHex}
+          moreStyles={{marginTop: SPACING.space_8}}
+        />
+      </View>
+    );
+  }
   return (
     <View style={{flex: 1, position: 'relative'}}>
       <ScrollView

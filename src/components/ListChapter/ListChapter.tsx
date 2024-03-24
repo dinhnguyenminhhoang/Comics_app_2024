@@ -16,10 +16,11 @@ const ListChapter: React.FC<ListChapterProps> = ({ACTIVECOLORS, comic}) => {
     const formattedDate = format(new Date(date), 'dd/MM/yyyy');
     return formattedDate;
   };
+  const chapterSort = comic?.chapters?.slice().reverse();
   return (
     <View>
-      {comic.chapters?.length &&
-        comic.chapters.map(chapter => (
+      {chapterSort.length &&
+        chapterSort.map(chapter => (
           <TouchableOpacity
             onPress={() => {}}
             key={chapter.id}
