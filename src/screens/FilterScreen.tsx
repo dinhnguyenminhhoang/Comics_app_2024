@@ -9,15 +9,21 @@ import TextIcon from 'components/Resuable/TextIcon';
 import {useAppSelector} from 'hooks/useAppSelector';
 import React, {useState} from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   Modal,
   Pressable,
   StatusBar,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useDispatch} from 'react-redux';
+import {getComiFilter} from 'state/Action/comicAction';
+import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
+import {RootState} from 'store/store';
 import {
   BORDERRADIUS,
   COLORS,
@@ -26,20 +32,28 @@ import {
   FONTSIZE,
   SPACING,
 } from 'theme/theme';
+import {COMICPARAM} from 'utils/ApiType';
 import {ComicType, RootAppParamList, genresType} from 'utils/datatype';
 const FilterScreen = () => {
   const [listIdFilttered, setListIdFiltered] = useState<number[]>([]);
+  const [showModal, setShowModal] = useState(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootAppParamList>>();
-  const [showModal, setShowModal] = useState(false);
+  const dispatch = useDispatch<any>();
   const listComics = useAppSelector(
-    (state: any) => state.listComics.data,
+    (state: RootState) => state.listComics.data,
   ) as ComicType[];
   const listGenres = useAppSelector(
-    (state: any) => state.getListGenres.data,
+    (state: RootState) => state.getListGenres.data,
   ) as genresType[];
+  const ListComicsFilter = useAppSelector(
+    (state: RootState) => state.ListComicsFilter.data,
+  ) as ComicType[];
   const ThemeDarkMode = useAppSelector(
-    (state: any) => state.ThemeDarkMode.darkMode,
+    (state: RootState) => state.ThemeDarkMode.darkMode,
+  );
+  const ComponentLoading = useAppSelector(
+    (state: RootState) => state.ComponentLoading.componentLevelLoading,
   );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const tabBarHeight = useBottomTabBarHeight();
@@ -47,6 +61,13 @@ const FilterScreen = () => {
     if (listIdFilttered.length === 0) {
       return 0;
     }
+    dispatch(setComponentLevelLoading(true));
+    dispatch(getComiFilter({...COMICPARAM, genres: listIdFilttered})).then(
+      () => {
+        setShowModal(false);
+        dispatch(setComponentLevelLoading(false));
+      },
+    );
   };
   const handleAddOrRemoveIdFilter = (id: number) => {
     const idIndex = listIdFilttered.indexOf(id);
@@ -61,6 +82,19 @@ const FilterScreen = () => {
     }
   };
 
+  if (ComponentLoading) {
+    return (
+      <View style={[styles.container, resuable.center]}>
+        <ActivityIndicator size={40} />
+        <ResuableText
+          text="Loading..."
+          size={FONTSIZE.size_20}
+          color={ACTIVECOLORS.secondaryLightGreyHex}
+          moreStyles={{marginTop: SPACING.space_8}}
+        />
+      </View>
+    );
+  }
   return (
     <View
       style={[
@@ -78,21 +112,51 @@ const FilterScreen = () => {
         <FlatList
           ListHeaderComponent={() => (
             <View style={[resuable.rowWithSpace]}>
-              <TouchableOpacity
-                onPress={() => setShowModal(true)}
-                style={[
-                  styles.btnFilter,
-                  {borderColor: ACTIVECOLORS.primaryWhiteHex},
-                ]}>
-                <TextIcon
-                  colorIcon={ACTIVECOLORS.primaryWhiteHex}
-                  nameIcon="filter"
-                  sizeIcon={FONTSIZE.size_24}
-                  text="Chọn để lọc"
-                  textColor={ACTIVECOLORS.primaryWhiteHex}
-                  textSize={FONTSIZE.size_18}
-                />
-              </TouchableOpacity>
+              <View>
+                <TouchableOpacity
+                  onPress={() => setShowModal(true)}
+                  style={[
+                    styles.btnFilter,
+                    {borderColor: ACTIVECOLORS.primaryWhiteHex},
+                  ]}>
+                  <TextIcon
+                    colorIcon={ACTIVECOLORS.primaryWhiteHex}
+                    nameIcon="filter"
+                    sizeIcon={FONTSIZE.size_24}
+                    text="Chọn để lọc"
+                    textColor={ACTIVECOLORS.primaryWhiteHex}
+                    textSize={FONTSIZE.size_16}
+                  />
+                </TouchableOpacity>
+                {listIdFilttered.length ? (
+                  <View
+                    style={[
+                      styles.btnFilter,
+                      {borderColor: ACTIVECOLORS.primaryWhiteHex},
+                    ]}>
+                    <TextIcon
+                      colorIcon={ACTIVECOLORS.primaryWhiteHex}
+                      nameIcon="checkcircleo"
+                      sizeIcon={FONTSIZE.size_24}
+                      text={`${listIdFilttered
+                        .map(id => {
+                          const matched = listGenres.find(
+                            item => item.id === id,
+                          );
+                          return matched ? matched.name : null;
+                        })
+                        .filter(name => name !== null)
+                        .join(' - ')}`}
+                      textColor={ACTIVECOLORS.primaryWhiteHex}
+                      textSize={FONTSIZE.size_16}
+                      moreStyle={{
+                        maxWidth:
+                          Dimensions.get('window').width - SPACING.space_30 * 2,
+                      }}
+                    />
+                  </View>
+                ) : null}
+              </View>
               <Modal
                 animationType="slide"
                 transparent={true}
@@ -157,6 +221,20 @@ const FilterScreen = () => {
                         />
                       </TouchableOpacity>
                       <TouchableOpacity
+                        style={[styles.btnAction, {backgroundColor: '#6c757d'}]}
+                        onPress={() => {
+                          setListIdFiltered([]);
+                        }}>
+                        <TextIcon
+                          nameIcon="minuscircleo"
+                          colorIcon={ACTIVECOLORS.fixColorWhite}
+                          sizeIcon={FONTSIZE.size_20}
+                          text="Làm mới"
+                          textColor={ACTIVECOLORS.fixColorWhite}
+                          textSize={FONTSIZE.size_16}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
                         style={[styles.btnAction, {backgroundColor: '#dc3545'}]}
                         onPress={() => setShowModal(false)}>
                         <TextIcon
@@ -174,7 +252,19 @@ const FilterScreen = () => {
               </Modal>
             </View>
           )}
-          data={listComics}
+          ListEmptyComponent={
+            <ResuableText
+              text=" Không tìm thấy truyện nào phù hợp"
+              size={FONTSIZE.size_24}
+              color={ACTIVECOLORS.primaryWhiteHex}
+              fontFamily={FONTFAMILY.poppins_semibold}
+            />
+          }
+          data={
+            ListComicsFilter.length && listIdFilttered.length
+              ? ListComicsFilter
+              : listComics
+          }
           showsVerticalScrollIndicator={false}
           numColumns={3}
           renderItem={({item}) => (
@@ -261,5 +351,6 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.space_12,
     borderRadius: BORDERRADIUS.radius_25,
     marginVertical: SPACING.space_10,
+    maxWidth: Dimensions.get('screen').width - SPACING.space_20,
   },
 });

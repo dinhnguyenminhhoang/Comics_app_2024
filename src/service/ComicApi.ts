@@ -17,10 +17,17 @@ const fillParams = (formData: comicsApiParams) => {
 const handleGetListComics = (formData: comicsApiParams) => {
   const queryParams = fillParams(formData);
   return axios.get('/api/v1/comics', {
-    params: queryParams,
+    params: {
+      genres: queryParams.genres,
+      ...queryParams,
+    },
+    paramsSerializer: {
+      indexes: null, // by default: false
+    },
   });
 };
 const handleGetComicByID = (comicID: number) => {
   return axios.get(`/api/v1/comics/${comicID.toString()}`);
 };
+
 export {handleGetListComics, handleGetComicByID};

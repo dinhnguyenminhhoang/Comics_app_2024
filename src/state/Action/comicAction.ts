@@ -74,3 +74,15 @@ export const getComicById = createAsyncThunk(
     }
   },
 );
+export const getComiFilter = createAsyncThunk(
+  'getComiFilter/handleGetComiFilter',
+  async (formData: comicsApiParams) => {
+    try {
+      const response = await comicApi.handleGetListComics(formData);
+      let data = response;
+      return data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
