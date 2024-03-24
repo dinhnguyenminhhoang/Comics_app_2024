@@ -10,7 +10,7 @@ export interface comicsApiParams {
 }
 export const COMICPARAM: comicsApiParams = {
   page: 1,
-  page_size: 10,
+  page_size: 12,
   author: -1,
   genres: [],
   min_chapter: -1,

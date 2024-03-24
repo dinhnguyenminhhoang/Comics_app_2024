@@ -4,8 +4,8 @@ import {BlurView} from 'expo-blur';
 import {useAppSelector} from 'hooks/useAppSelector';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import CartScreen from 'screens/CartScreen';
 import FacoriesScreen from 'screens/FacoriesScreen';
+import FilterScreen from 'screens/FilterScreen';
 import HomeScreen from 'screens/HomeScreen';
 import LoginScreen from 'screens/LoginScreen';
 import {COLORS, ColorType, SPACING} from 'theme/theme';
@@ -49,12 +49,12 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Cart"
-        component={CartScreen}
+        name="Filter"
+        component={FilterScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
             <CustomIcon
-              name="like2"
+              name="filter"
               size={25}
               color={
                 focused

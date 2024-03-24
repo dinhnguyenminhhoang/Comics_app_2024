@@ -9,7 +9,7 @@ import ResuableText from 'components/Resuable/ResuableText';
 import ResuableTitle from 'components/Resuable/ResuableTitle';
 import Search from 'components/Search/Search';
 import {useAppSelector} from 'hooks/useAppSelector';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -17,6 +17,7 @@ import {
   StatusBar,
   StyleSheet,
   View,
+  useColorScheme,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import {getListGenres} from 'state/Action/GenresAction';
@@ -30,10 +31,7 @@ import {
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 import {COLORS, ColorType, FONTSIZE, SPACING} from 'theme/theme';
 import {COMICPARAM} from 'utils/ApiType';
-import {ComicType, RootStackParamList} from 'utils/datatype';
-import {useColorScheme} from 'react-native';
-import {setDrakMode} from 'state/Slices/common/ThemeDarkMode';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {ComicType} from 'utils/datatype';
 
 export default function HomeScreen() {
   const systemColorScheme = useColorScheme();
@@ -213,7 +211,6 @@ export default function HomeScreen() {
           <ComicsBoxLoadPage
             listComics={listComics as ComicType[]}
             stick="hot"
-            setMoreComic={setGetMoreComics}
           />
           {Loading ? (
             <View style={{marginVertical: SPACING.space_8}}>

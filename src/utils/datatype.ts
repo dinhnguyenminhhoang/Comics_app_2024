@@ -25,7 +25,7 @@ export interface pagintype {
 }
 export type RootStackParamList = {
   Home: undefined;
-  Cart: undefined;
+  Filter: undefined;
   Favorite: undefined;
   LoginScreen: undefined;
 };
