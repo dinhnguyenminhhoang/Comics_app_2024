@@ -1,26 +1,23 @@
-import HeightSpacer from 'components/Resuable/HeightSpacer';
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import resuable from 'components/Resuable/Resuable.style';
-import ResuableText from 'components/Resuable/ResuableText';
 import WidthSpacer from 'components/Resuable/WidthSpacer';
 import React from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  ImageBackground,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
-import {ComicType} from 'utils/datatype';
+import {Dimensions, FlatList, TouchableOpacity} from 'react-native';
+import {SPACING} from 'theme/theme';
+import {ComicType, RootAppParamList} from 'utils/datatype';
 import BoxImg from './BoxImg';
+import {useNavigation} from '@react-navigation/native';
 
 interface ComicsBoxProps {
   listComics: ComicType[];
   stick?: string;
 }
 const ComicsBox: React.FC<ComicsBoxProps> = ({listComics, stick}) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootAppParamList>>();
   return (
     <FlatList
       horizontal
@@ -30,7 +27,11 @@ const ComicsBox: React.FC<ComicsBoxProps> = ({listComics, stick}) => {
       ItemSeparatorComponent={() => <WidthSpacer width={SPACING.space_4} />}
       renderItem={({item}) => (
         <TouchableOpacity
-          onPress={() => {}}
+          onPress={() =>
+            navigation.navigate('Details', {
+              comicId: item.id,
+            })
+          }
           style={[
             resuable.withSpace,
             {

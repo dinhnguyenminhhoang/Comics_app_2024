@@ -11,10 +11,17 @@ export const store = configureStore({
     listMostViewComics: comicSlices.GetListMostViewComicSlice.default,
     listNewChapter: comicSlices.GetListNewChapterSlice.default,
     listMostViewChapter: comicSlices.GetListMostViewChapterSlice.default,
+    comicById: comicSlices.GetComicByIdSlice.default,
+    //
     getListGenres: genresSlices.getListGenres.default,
+    //
     ComponentLoading: commonSlices.ComponentLoading.default,
     ThemeDarkMode: commonSlices.ThemeDarkMode.default,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

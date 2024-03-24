@@ -43,6 +43,7 @@ export interface ColorType {
   primaryLightGreyHex: string;
   secondaryLightGreyHex: string;
   primaryWhiteHex: string;
+  primaryWhiteHexRBGA: string;
   primaryBlackRGBA: string;
   secondaryBlackRGBA: string;
   primaryBacgroundContent: string;
@@ -72,6 +73,7 @@ export const COLORS: themeDarkMode = {
     secondaryBlackRGBA: 'rgba(255,255,255,0.7)',
     fixColorWhite: '#ffffff',
     fixColorBlack: '#000000',
+    primaryWhiteHexRBGA: 'rgba(0,0,0,0.7)',
   },
   dark: {
     primaryBacgroundContent: '#614385',
@@ -90,6 +92,7 @@ export const COLORS: themeDarkMode = {
     secondaryBlackRGBA: 'rgba(0,0,0,0.7)',
     fixColorWhite: '#ffffff',
     fixColorBlack: '#000000',
+    primaryWhiteHexRBGA: 'rgba(255,255,255,0.7)',
   },
 };
 

@@ -8,7 +8,9 @@ import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import {Provider} from 'react-redux';
 import {store} from 'store/store';
-const Stack = createNativeStackNavigator();
+import {RootAppParamList} from 'utils/datatype';
+
+const Stack = createNativeStackNavigator<RootAppParamList>();
 export default function App() {
   const [fontLoaded] = useFonts({
     Poppins_Black: require('./assets/fonts/Poppins-Black.ttf'),
@@ -27,6 +29,7 @@ export default function App() {
     }
   }, [fontLoaded]);
   if (!fontLoaded) return null;
+
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -34,6 +37,11 @@ export default function App() {
           <Stack.Screen
             name="Tab"
             component={TabNavigator}
+            options={{animation: 'slide_from_bottom'}}
+          />
+          <Stack.Screen
+            name="Details"
+            component={DetailScreen}
             options={{animation: 'slide_from_bottom'}}
           />
           <Stack.Screen

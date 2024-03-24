@@ -30,9 +30,10 @@ import {
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 import {COLORS, ColorType, FONTSIZE, SPACING} from 'theme/theme';
 import {COMICPARAM} from 'utils/ApiType';
-import {ComicType} from 'utils/datatype';
+import {ComicType, RootStackParamList} from 'utils/datatype';
 import {useColorScheme} from 'react-native';
 import {setDrakMode} from 'state/Slices/common/ThemeDarkMode';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 export default function HomeScreen() {
   const systemColorScheme = useColorScheme();
@@ -67,7 +68,6 @@ export default function HomeScreen() {
     (state: any) => state.ComponentLoading.componentLevelLoading,
   );
   useEffect(() => {
-    dispath(setDrakMode(systemColorScheme === 'dark' ? false : true));
     dispath(setComponentLevelLoading(true));
     dispath(getListComics({...COMICPARAM, page: 1, page_size: getMoreComics}));
     dispath(
@@ -169,38 +169,31 @@ export default function HomeScreen() {
         <ScrollView
           style={[{marginBottom: tabBarHeight}]}
           onScroll={handleScroll}
-          showsVerticalScrollIndicator={false}>
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}>
           {/* search  */}
-
           <Search />
           {/* end search */}
-
           {/* category */}
           <HeightSpacer height={SPACING.space_30} />
           <ResuableTitle titleLeft="Categories" titleRight="More" />
           {/* end categories */}
-
           {/* Genres */}
           <HeightSpacer height={SPACING.space_16} />
           <Genres listGenres={listGenres} />
-
           {/* end genrtes */}
-
           {/* chapter */}
           <HeightSpacer height={SPACING.space_30} />
           <ResuableTitle titleLeft="Trending" titleRight="More" />
           <ComicsBox listComics={listNewChapter as ComicType[]} />
           <HeightSpacer height={SPACING.space_30} />
           {/* end chapter */}
-
           {/* New */}
           <ResuableTitle titleLeft="New" titleRight="More" />
           <ComicsBox listComics={listNewComics as ComicType[]} stick="new" />
           <HeightSpacer height={SPACING.space_30} />
           {/* end new comic */}
-
           {/* Hot commic */}
-
           <ResuableTitle titleLeft="Hot Comics" titleRight="More" />
           <ComicsBox
             listComics={listMostViewComics as ComicType[]}
@@ -208,18 +201,15 @@ export default function HomeScreen() {
           />
           <HeightSpacer height={SPACING.space_30} />
           {/* end */}
-
           {/* hot chapter */}
           <ResuableTitle titleLeft="Hot Chapters" titleRight="More" />
           <ComicsBox
             listComics={listMostViewChapter as ComicType[]}
             stick="hot"
           />
-
           <HeightSpacer height={SPACING.space_30} />
           {/* end */}
           <ResuableTitle titleLeft="Hot" titleRight="More" />
-
           <ComicsBoxLoadPage
             listComics={listComics as ComicType[]}
             stick="hot"

@@ -62,3 +62,15 @@ export const getListNewChapter = createAsyncThunk(
     }
   },
 );
+export const getComicById = createAsyncThunk(
+  'getComicById/handleGetComicById',
+  async (id: number) => {
+    try {
+      const response = await comicApi.handleGetComicByID(id);
+      let data = response;
+      return data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
