@@ -11,13 +11,11 @@ import BoxImg from './BoxImg';
 interface ComicsBoxLoadPageprops {
   listComics: ComicType[];
   stick?: string;
-  setMoreComic: (numberComics: number) => void;
 }
 
 const ComicsBoxLoadPage: React.FC<ComicsBoxLoadPageprops> = ({
   listComics,
   stick,
-  setMoreComic,
 }) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootAppParamList>>();

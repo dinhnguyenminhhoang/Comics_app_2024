@@ -213,7 +213,6 @@ export default function HomeScreen() {
           <ComicsBoxLoadPage
             listComics={listComics as ComicType[]}
             stick="hot"
-            setMoreComic={setGetMoreComics}
           />
           {Loading ? (
             <View style={{marginVertical: SPACING.space_8}}>
