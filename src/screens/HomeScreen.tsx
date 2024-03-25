@@ -1,4 +1,6 @@
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import ComicsBox from 'components/Box/ComicsBox/ComicsBox';
 import ComicsBoxLoadPage from 'components/Box/ComicsBox/ComicsBoxLoadPage';
 import Genres from 'components/Box/Genres/Genres';
@@ -31,10 +33,13 @@ import {
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 import {COLORS, ColorType, FONTSIZE, SPACING} from 'theme/theme';
 import {COMICPARAM} from 'utils/ApiType';
-import {ComicType} from 'utils/datatype';
+import {ComicType, RootAppParamList, RootStackParamList} from 'utils/datatype';
 
 export default function HomeScreen() {
   const systemColorScheme = useColorScheme();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const [getMoreComics, setGetMoreComics] = useState<number>(12);
   const [Loading, setLoading] = useState<Boolean>(false);
   const tabBarHeight = useBottomTabBarHeight();
@@ -174,7 +179,11 @@ export default function HomeScreen() {
           {/* end search */}
           {/* category */}
           <HeightSpacer height={SPACING.space_30} />
-          <ResuableTitle titleLeft="Categories" titleRight="More" />
+          <ResuableTitle
+            titleLeft="Categories"
+            titleRight="More"
+            onPress={() => navigation.navigate('Filter', {})}
+          />
           {/* end categories */}
           {/* Genres */}
           <HeightSpacer height={SPACING.space_16} />
@@ -182,17 +191,29 @@ export default function HomeScreen() {
           {/* end genrtes */}
           {/* chapter */}
           <HeightSpacer height={SPACING.space_30} />
-          <ResuableTitle titleLeft="Trending" titleRight="More" />
+          <ResuableTitle
+            onPress={() => navigation.navigate('Filter', {})}
+            titleLeft="Trending"
+            titleRight="More"
+          />
           <ComicsBox listComics={listNewChapter as ComicType[]} />
           <HeightSpacer height={SPACING.space_30} />
           {/* end chapter */}
           {/* New */}
-          <ResuableTitle titleLeft="New" titleRight="More" />
+          <ResuableTitle
+            onPress={() => navigation.navigate('Filter', {})}
+            titleLeft="New"
+            titleRight="More"
+          />
           <ComicsBox listComics={listNewComics as ComicType[]} stick="new" />
           <HeightSpacer height={SPACING.space_30} />
           {/* end new comic */}
           {/* Hot commic */}
-          <ResuableTitle titleLeft="Hot Comics" titleRight="More" />
+          <ResuableTitle
+            onPress={() => navigation.navigate('Filter', {})}
+            titleLeft="Hot Comics"
+            titleRight="More"
+          />
           <ComicsBox
             listComics={listMostViewComics as ComicType[]}
             stick="hot"
@@ -200,14 +221,22 @@ export default function HomeScreen() {
           <HeightSpacer height={SPACING.space_30} />
           {/* end */}
           {/* hot chapter */}
-          <ResuableTitle titleLeft="Hot Chapters" titleRight="More" />
+          <ResuableTitle
+            onPress={() => navigation.navigate('Filter', {})}
+            titleLeft="Hot Chapters"
+            titleRight="More"
+          />
           <ComicsBox
             listComics={listMostViewChapter as ComicType[]}
             stick="hot"
           />
           <HeightSpacer height={SPACING.space_30} />
           {/* end */}
-          <ResuableTitle titleLeft="Hot" titleRight="More" />
+          <ResuableTitle
+            onPress={() => navigation.navigate('Filter', {})}
+            titleLeft="Hot"
+            titleRight="More"
+          />
           <ComicsBoxLoadPage
             listComics={listComics as ComicType[]}
             stick="hot"

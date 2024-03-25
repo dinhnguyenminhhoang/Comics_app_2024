@@ -25,7 +25,9 @@ export interface pagintype {
 }
 export type RootStackParamList = {
   Home: undefined;
-  Filter: undefined;
+  Filter: {
+    genresId?: number;
+  };
   Favorite: undefined;
   LoginScreen: undefined;
 };

@@ -8,11 +8,13 @@ import {useAppSelector} from 'hooks/useAppSelector';
 interface ResuableTextProps {
   titleRight?: string;
   titleLeft?: string;
+  onPress?: () => void;
 }
 
 const ResuableTitle: React.FC<ResuableTextProps> = ({
   titleLeft,
   titleRight,
+  onPress,
 }) => {
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
@@ -27,7 +29,7 @@ const ResuableTitle: React.FC<ResuableTextProps> = ({
         textAlign="right"
         size={FONTSIZE.size_20}
       />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={onPress}>
         <ResuableText
           color={ACTIVECOLORS.primaryWhiteHex}
           fontFamily={FONTFAMILY.poppins_regular}
