@@ -33,7 +33,7 @@ import {
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 import {COLORS, ColorType, FONTSIZE, SPACING} from 'theme/theme';
 import {COMICPARAM} from 'utils/ApiType';
-import {ComicType, RootAppParamList, RootStackParamList} from 'utils/datatype';
+import {ComicType, RootStackParamList} from 'utils/datatype';
 
 export default function HomeScreen() {
   const systemColorScheme = useColorScheme();

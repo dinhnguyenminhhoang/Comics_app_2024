@@ -69,13 +69,13 @@ const FilterScreen: React.FC<Props> = ({route}) => {
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const tabBarHeight = useBottomTabBarHeight();
   useEffect(() => {
-    if (route.params.genresId && route.params.genresId > 0) {
-      setListIdFiltered([route.params.genresId]);
+    if (route.params?.genresId && route.params?.genresId > 0) {
+      setListIdFiltered([route.params?.genresId]);
       dispatch(setComponentLevelLoading(true));
       dispatch(
         getComiFilter({
           ...COMICPARAM,
-          genres: [route.params.genresId],
+          genres: [route.params?.genresId],
           page_size: 22,
         }),
       ).then(() => {

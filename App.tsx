@@ -1,12 +1,12 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import TabNavigator from 'navigators/TabNavigator';
-import React, {useCallback} from 'react';
-import DetailScreen from 'screens/DetailScreen';
-import PaymentScreen from 'screens/PaymentScreen';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import TabNavigator from 'navigators/TabNavigator';
+import React, {useCallback} from 'react';
 import {Provider} from 'react-redux';
+import ChapterDetail from 'screens/ChapterDetailScreen';
+import DetailScreen from 'screens/DetailScreen';
 import {store} from 'store/store';
 import {RootAppParamList} from 'utils/datatype';
 
@@ -45,8 +45,8 @@ export default function App() {
             options={{animation: 'slide_from_bottom'}}
           />
           <Stack.Screen
-            name="Payment"
-            component={PaymentScreen}
+            name="Chapters"
+            component={ChapterDetail}
             options={{animation: 'slide_from_bottom'}}
           />
         </Stack.Navigator>

@@ -36,7 +36,12 @@ export type RootAppParamList = {
   Details: {
     comicId: number;
   };
-  Payment: undefined;
+  Chapters: {
+    chapter: chapterType;
+    comicId: number;
+    startChapterId: number;
+    endChapterId: number;
+  };
 };
 export interface authorsType {
   id: number;
@@ -59,4 +64,14 @@ export interface ComicDetailType {
   authors: authorsType[];
   genres: genresType[];
   chapters: chapterType[];
+}
+export interface chapterDetailType {
+  id: number;
+  name: string;
+  updated_at: Date;
+  viewed: number;
+  images: {
+    original: string;
+    cdn: string;
+  }[];
 }

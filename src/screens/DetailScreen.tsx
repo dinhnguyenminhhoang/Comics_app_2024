@@ -85,14 +85,30 @@ const DetailScreen: React.FC<Props> = ({route, navigation}) => {
                 ACTIVECOLORS={ACTIVECOLORS}
               />
             ) : ContentSwitch === 1 ? (
-              <ListChapter comic={comicById} ACTIVECOLORS={ACTIVECOLORS} />
+              <ListChapter
+                comic={comicById}
+                ACTIVECOLORS={ACTIVECOLORS}
+                navigation={navigation}
+              />
             ) : (
               <Review />
             )}
           </View>
         </View>
       </ScrollView>
-      <BottomButton ACTIVESCOLORS={ACTIVECOLORS} />
+      <BottomButton
+        text="Read now"
+        ACTIVESCOLORS={ACTIVECOLORS}
+        onPress={() =>
+          navigation.navigate('Chapters', {
+            chapter: comicById.chapters[comicById.chapters.length - 1],
+            comicId: comicById.id,
+            startChapterId:
+              comicById.chapters[comicById.chapters.length - 1].id,
+            endChapterId: comicById.chapters[0].id,
+          })
+        }
+      />
     </View>
   );
 };
