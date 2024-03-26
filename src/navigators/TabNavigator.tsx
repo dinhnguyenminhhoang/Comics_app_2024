@@ -10,6 +10,7 @@ import HomeScreen from 'screens/HomeScreen';
 import LoginScreen from 'screens/LoginScreen';
 import {COLORS, ColorType, SPACING} from 'theme/theme';
 import {RootStackParamList} from 'utils/datatype';
+import AuthTopTab from './AuthTopTab';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const TabNavigator = () => {
@@ -84,7 +85,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="LoginScreen"
-        component={LoginScreen}
+        component={AuthTopTab}
         options={{
           tabBarIcon: ({focused, color, size}) => (
             <CustomIcon

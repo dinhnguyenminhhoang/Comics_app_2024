@@ -12,6 +12,7 @@ import {
   FlatList,
   Image,
   Platform,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -104,6 +105,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
   }
   return (
     <>
+      <StatusBar hidden />
       <View
         style={[
           resuable.rowWithSpace,

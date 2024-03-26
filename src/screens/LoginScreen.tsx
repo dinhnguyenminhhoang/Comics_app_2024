@@ -1,13 +1,10 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import resuable from 'components/Resuable/Resuable.style';
+import RegistionScreen from './authenication/RegistionScreen';
 
 const LoginScreen = () => {
-  return (
-    <View style={[styles.loginContainer, resuable.center]}>
-      <View></View>
-    </View>
-  );
+  return <RegistionScreen />;
 };
 
 export default LoginScreen;
