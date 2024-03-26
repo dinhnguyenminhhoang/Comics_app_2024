@@ -12,11 +12,18 @@ import ResuableText from 'components/Resuable/ResuableText';
 import {BORDERRADIUS, COLORS, ColorType, FONTSIZE, SPACING} from 'theme/theme';
 interface BottomButtonProps {
   ACTIVESCOLORS: ColorType;
+  onPress: () => void;
+  text: string;
 }
-const BottomButton: React.FC<BottomButtonProps> = ({ACTIVESCOLORS}) => {
+const BottomButton: React.FC<BottomButtonProps> = ({
+  ACTIVESCOLORS,
+  onPress,
+  text,
+}) => {
   return (
     <View style={styles.btnContainer}>
       <TouchableOpacity
+        onPress={onPress}
         style={[
           styles.btn,
           {backgroundColor: ACTIVESCOLORS.primaryWhiteHexRBGA},
@@ -27,7 +34,7 @@ const BottomButton: React.FC<BottomButtonProps> = ({ACTIVESCOLORS}) => {
             color: ACTIVESCOLORS.primaryBlackHex,
             fontSize: FONTSIZE.size_14,
           }}>
-          Read now
+          {text}
         </Text>
       </TouchableOpacity>
     </View>

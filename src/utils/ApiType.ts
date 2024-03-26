@@ -18,3 +18,8 @@ export const COMICPARAM: comicsApiParams = {
   sort_by: -1,
   status: -1,
 };
+export interface AuthenApiParams {
+  email: string;
+  username?: string;
+  password: string;
+}

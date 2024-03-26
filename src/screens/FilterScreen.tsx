@@ -1,22 +1,26 @@
-import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import {
+  BottomTabNavigationProp,
+  useBottomTabBarHeight,
+} from '@react-navigation/bottom-tabs';
 import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import BoxImg from 'components/Box/ComicsBox/BoxImg';
 import HeaderBar from 'components/Header/HeaderBar';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
 import TextIcon from 'components/Resuable/TextIcon';
 import {useAppSelector} from 'hooks/useAppSelector';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Dimensions,
   FlatList,
   Modal,
-  Pressable,
   StatusBar,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -33,8 +37,15 @@ import {
   SPACING,
 } from 'theme/theme';
 import {COMICPARAM} from 'utils/ApiType';
-import {ComicType, RootAppParamList, genresType} from 'utils/datatype';
-const FilterScreen = () => {
+import {
+  ComicType,
+  RootAppParamList,
+  RootStackParamList,
+  genresType,
+} from 'utils/datatype';
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Filter'>;
+const FilterScreen: React.FC<Props> = ({route}) => {
   const [listIdFilttered, setListIdFiltered] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
   const navigation =
@@ -57,17 +68,32 @@ const FilterScreen = () => {
   );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const tabBarHeight = useBottomTabBarHeight();
+  useEffect(() => {
+    if (route.params?.genresId && route.params?.genresId > 0) {
+      setListIdFiltered([route.params?.genresId]);
+      dispatch(setComponentLevelLoading(true));
+      dispatch(
+        getComiFilter({
+          ...COMICPARAM,
+          genres: [route.params?.genresId],
+          page_size: 22,
+        }),
+      ).then(() => {
+        dispatch(setComponentLevelLoading(false));
+      });
+    }
+  }, [route.params?.genresId]);
   const handleFilter = () => {
     if (listIdFilttered.length === 0) {
       return 0;
     }
     dispatch(setComponentLevelLoading(true));
-    dispatch(getComiFilter({...COMICPARAM, genres: listIdFilttered})).then(
-      () => {
-        setShowModal(false);
-        dispatch(setComponentLevelLoading(false));
-      },
-    );
+    dispatch(
+      getComiFilter({...COMICPARAM, genres: listIdFilttered, page_size: 22}),
+    ).then(() => {
+      setShowModal(false);
+      dispatch(setComponentLevelLoading(false));
+    });
   };
   const handleAddOrRemoveIdFilter = (id: number) => {
     const idIndex = listIdFilttered.indexOf(id);
@@ -193,13 +219,12 @@ const FilterScreen = () => {
                               },
                               listIdFilttered.find(id => genres.id === id)
                                 ? {
-                                    backgroundColor:
-                                      ACTIVECOLORS.primaryWhiteHex,
-                                    color: ACTIVECOLORS.primaryBlackHex,
+                                    backgroundColor: ACTIVECOLORS.fixColorBlack,
+                                    color: ACTIVECOLORS.fixColorWhite,
                                   }
                                 : {
                                     backgroundColor: 'transparent',
-                                    color: ACTIVECOLORS.primaryWhiteHex,
+                                    color: ACTIVECOLORS.fixColorBlack,
                                   },
                             ]}
                             numberOfLines={1}
@@ -224,6 +249,7 @@ const FilterScreen = () => {
                         style={[styles.btnAction, {backgroundColor: '#6c757d'}]}
                         onPress={() => {
                           setListIdFiltered([]);
+                          setShowModal(false);
                         }}>
                         <TextIcon
                           nameIcon="minuscircleo"

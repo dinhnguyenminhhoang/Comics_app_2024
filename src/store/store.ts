@@ -3,6 +3,8 @@ import counterReducer from '../state/Slices/TodoSlice';
 import * as comicSlices from '../state/Slices/Comic';
 import * as genresSlices from '../state/Slices/Genres';
 import * as commonSlices from '../state/Slices/common';
+import * as chapterSlices from '../state/Slices/Chapter';
+import * as authSlice from '../state/Slices/Auth';
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
@@ -18,6 +20,13 @@ export const store = configureStore({
     //
     ComponentLoading: commonSlices.ComponentLoading.default,
     ThemeDarkMode: commonSlices.ThemeDarkMode.default,
+    //chapter
+    detailChapter: chapterSlices.GetDetailChapterSlice.default,
+    //auth
+    loginData: authSlice.UserLoginSlice.default,
+    LogoutData: authSlice.UserLogoutSlice.default,
+    RegisterData: authSlice.UserRegisterSlice.default,
+    isLogger: authSlice.auth.default,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

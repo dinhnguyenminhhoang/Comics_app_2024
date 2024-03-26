@@ -1,28 +1,38 @@
-import {format} from 'date-fns';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
-import {ComicDetailType} from 'utils/datatype';
-import {COLORS, ColorType, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
 import {Feather} from '@expo/vector-icons';
-import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import ResuableText from 'components/Resuable/ResuableText';
+import {format} from 'date-fns';
+import React from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ColorType, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
+import {ComicDetailType, RootAppParamList} from 'utils/datatype';
 interface ListChapterProps {
   comic: ComicDetailType;
   ACTIVECOLORS: ColorType;
+  navigation: NativeStackNavigationProp<RootAppParamList, 'Details', undefined>;
 }
-const ListChapter: React.FC<ListChapterProps> = ({ACTIVECOLORS, comic}) => {
-  const Navigation = useNavigation();
+const ListChapter: React.FC<ListChapterProps> = ({
+  ACTIVECOLORS,
+  comic,
+  navigation,
+}) => {
   const handleDate = (date: any) => {
     const formattedDate = format(new Date(date), 'dd/MM/yyyy');
     return formattedDate;
   };
-  const chapterSort = comic?.chapters?.slice().reverse();
   return (
     <View>
-      {chapterSort.length &&
-        chapterSort.map(chapter => (
+      {comic.chapters?.length &&
+        comic.chapters.map(chapter => (
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() =>
+              navigation.navigate('Chapters', {
+                chapter: chapter,
+                comicId: comic.id,
+                startChapterId: comic.chapters[comic.chapters.length - 1].id,
+                endChapterId: comic.chapters[0].id,
+              })
+            }
             key={chapter.id}
             style={[
               styles.chapterContainer,

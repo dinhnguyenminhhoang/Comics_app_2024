@@ -25,7 +25,9 @@ export interface pagintype {
 }
 export type RootStackParamList = {
   Home: undefined;
-  Filter: undefined;
+  Filter: {
+    genresId?: number;
+  };
   Favorite: undefined;
   LoginScreen: undefined;
 };
@@ -34,7 +36,12 @@ export type RootAppParamList = {
   Details: {
     comicId: number;
   };
-  Payment: undefined;
+  Chapters: {
+    chapter: chapterType;
+    comicId: number;
+    startChapterId: number;
+    endChapterId: number;
+  };
 };
 export interface authorsType {
   id: number;
@@ -57,4 +64,22 @@ export interface ComicDetailType {
   authors: authorsType[];
   genres: genresType[];
   chapters: chapterType[];
+}
+export interface chapterDetailType {
+  id: number;
+  name: string;
+  updated_at: Date;
+  viewed: number;
+  images: {
+    original: string;
+    cdn: string;
+  }[];
+}
+export interface userinfoType {
+  avatar: string;
+  email: string;
+  exp: number;
+  jti: number;
+  user_id: number;
+  username: string;
 }

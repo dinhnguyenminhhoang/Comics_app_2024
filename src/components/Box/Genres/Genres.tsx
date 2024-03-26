@@ -1,15 +1,19 @@
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {useNavigation} from '@react-navigation/native';
+import HeightSpacer from 'components/Resuable/HeightSpacer';
+import resuable from 'components/Resuable/Resuable.style';
+import ResuableText from 'components/Resuable/ResuableText';
+import Shadow from 'components/Resuable/Shadow.style';
+import WidthSpacer from 'components/Resuable/WidthSpacer';
+import {useAppSelector} from 'hooks/useAppSelector';
+import React from 'react';
 import {
   FlatList,
   Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-import CustomIcon from 'components/Resuable/CustomIcon';
-import resuable from 'components/Resuable/Resuable.style';
-import ResuableText from 'components/Resuable/ResuableText';
 import {
   BORDERRADIUS,
   COLORS,
@@ -18,11 +22,7 @@ import {
   FONTSIZE,
   SPACING,
 } from 'theme/theme';
-import HeightSpacer from 'components/Resuable/HeightSpacer';
-import {genresType} from 'utils/datatype';
-import WidthSpacer from 'components/Resuable/WidthSpacer';
-import {useAppSelector} from 'hooks/useAppSelector';
-import Shadow from 'components/Resuable/Shadow.style';
+import {RootStackParamList, genresType} from 'utils/datatype';
 
 interface genresProps {
   listGenres: genresType[];
@@ -55,13 +55,19 @@ const srcListIcon = [
   },
 ];
 const Genres: React.FC<genresProps> = ({listGenres}) => {
+  const navigation =
+    useNavigation<BottomTabNavigationProp<RootStackParamList>>();
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
   );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const ViewItem: React.FC<{title: string; id: number}> = ({title, id}) => (
     <TouchableOpacity
-      onPress={() => {}}
+      onPress={() =>
+        navigation.navigate('Filter', {
+          genresId: id,
+        })
+      }
       style={[
         resuable.center,
         styles.boxGenresContainer,
