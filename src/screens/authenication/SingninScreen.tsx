@@ -26,20 +26,16 @@ import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 interface FormValues {
   email: string;
   password: string;
-  username: string;
 }
 
 const validationSchema = Yup.object().shape({
   password: Yup.string()
     .min(8, 'password must be at least 8 characters')
     .required('Required'),
-  username: Yup.string()
-    .min(3, 'username must be at least 3 characters')
-    .required('Required'),
   email: Yup.string().email('provide a valid email').required('Required'),
 });
 
-const RegistionScreen: React.FC = () => {
+const SingninScreen: React.FC = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [resData, setResData] = useState<string | null>(null);
   const [obsecureText, setObsecureText] = useState<boolean>(false);
@@ -52,7 +48,7 @@ const RegistionScreen: React.FC = () => {
   return (
     <View style={dynamicStyle.container}>
       <Formik
-        initialValues={{email: '', password: '', username: ''}}
+        initialValues={{email: '', password: ''}}
         validationSchema={validationSchema}
         onSubmit={(values: FormValues) => {
           console.log(values);
@@ -98,36 +94,6 @@ const RegistionScreen: React.FC = () => {
               </View>
             </View>
             <View style={dynamicStyle.wrapper}>
-              <Text style={dynamicStyle.label}>Username</Text>
-              <View>
-                <View style={dynamicStyle.inputWrapper}>
-                  <MaterialCommunityIcons
-                    name="face-man-profile"
-                    size={20}
-                    color={ACTIVECOLORS.primaryGreyHex}
-                  />
-                  <WidthSpacer width={10} />
-                  <TextInput
-                    placeholder="Enter username"
-                    onFocus={() => {
-                      setFieldTouched('username');
-                    }}
-                    onBlur={() => {
-                      setFieldTouched('username');
-                    }}
-                    value={values.username}
-                    onChangeText={handleChange('username')}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    style={{flex: 1}}
-                  />
-                </View>
-                {touched.username && errors.username && (
-                  <Text style={dynamicStyle.errMessage}>{errors.username}</Text>
-                )}
-              </View>
-            </View>
-            <View style={dynamicStyle.wrapper}>
               <Text style={dynamicStyle.label}>password</Text>
               <View>
                 <View style={dynamicStyle.inputWrapper}>
@@ -150,8 +116,8 @@ const RegistionScreen: React.FC = () => {
                     value={values.password}
                     autoCapitalize="none"
                     autoCorrect={false}
-                    textContentType="password"
                     style={{flex: 1}}
+                    textContentType="password"
                   />
                   <TouchableOpacity
                     onPress={() => {
@@ -171,7 +137,7 @@ const RegistionScreen: React.FC = () => {
             <HeightSpacer height={20} />
             <TouchableOpacity onPress={handleSubmit}>
               <ResuableText
-                text={'REGISTER'}
+                text={'LOGIN'}
                 color={ACTIVECOLORS.primaryWhiteHex}
                 fontFamily={FONTFAMILY.poppins_semibold}
                 moreStyles={{
@@ -191,7 +157,7 @@ const RegistionScreen: React.FC = () => {
   );
 };
 
-export default RegistionScreen;
+export default SingninScreen;
 const styles = (borderColor: string) =>
   StyleSheet.create({
     container: {
