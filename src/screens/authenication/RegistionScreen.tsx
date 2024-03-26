@@ -3,7 +3,14 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {useAppSelector} from 'hooks/useAppSelector';
-import {COLORS, ColorType, FONTFAMILY, FONTSIZE} from 'theme/theme';
+import {
+  BORDERRADIUS,
+  COLORS,
+  ColorType,
+  FONTFAMILY,
+  FONTSIZE,
+  SPACING,
+} from 'theme/theme';
 import {
   StyleSheet,
   Text,
@@ -13,6 +20,8 @@ import {
 } from 'react-native';
 import WidthSpacer from 'components/Resuable/WidthSpacer';
 import HeightSpacer from 'components/Resuable/HeightSpacer';
+import ResuableText from 'components/Resuable/ResuableText';
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 
 interface FormValues {
   email: string;
@@ -39,6 +48,7 @@ const RegistionScreen: React.FC = () => {
   );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const dynamicStyle = styles(ACTIVECOLORS.primaryLightGreyHex);
+  const tabBarHeight = useBottomTabBarHeight();
   return (
     <View style={dynamicStyle.container}>
       <Formik
@@ -56,7 +66,7 @@ const RegistionScreen: React.FC = () => {
           isValid,
           setFieldTouched,
         }) => (
-          <View>
+          <View style={{marginBottom: tabBarHeight}}>
             <View style={dynamicStyle.wrapper}>
               <Text style={dynamicStyle.label}>Email</Text>
               <View>
@@ -73,7 +83,7 @@ const RegistionScreen: React.FC = () => {
                       setFieldTouched('email');
                     }}
                     onBlur={() => {
-                      setFieldTouched('email', '');
+                      setFieldTouched('email');
                     }}
                     value={values.email}
                     onChangeText={handleChange('email')}
@@ -103,7 +113,7 @@ const RegistionScreen: React.FC = () => {
                       setFieldTouched('username');
                     }}
                     onBlur={() => {
-                      setFieldTouched('username', '');
+                      setFieldTouched('username');
                     }}
                     value={values.username}
                     onChangeText={handleChange('username')}
@@ -134,7 +144,7 @@ const RegistionScreen: React.FC = () => {
                       setFieldTouched('password');
                     }}
                     onBlur={() => {
-                      setFieldTouched('password', '');
+                      setFieldTouched('password');
                     }}
                     onChangeText={handleChange('password')}
                     value={values.password}
@@ -158,15 +168,21 @@ const RegistionScreen: React.FC = () => {
               </View>
             </View>
             <HeightSpacer height={20} />
-            {/* <ResuableBtn
-                onPress={handleSubmit}
+            <TouchableOpacity onPress={handleSubmit}>
+              <ResuableText
                 text={'REGISTER'}
-                width={SIZES.width - 40}
-                bgColor={COLORS.green}
-                borderColor={COLORS.green}
-                borderWidth={0}
-                textColor={COLORS.white}
-              /> */}
+                color={ACTIVECOLORS.primaryWhiteHex}
+                fontFamily={FONTFAMILY.poppins_semibold}
+                moreStyles={{
+                  borderWidth: 1,
+                  borderColor: ACTIVECOLORS.primaryWhiteHex,
+                  backgroundColor: 'transparent',
+                  paddingVertical: SPACING.space_10,
+                  borderRadius: BORDERRADIUS.radius_10,
+                }}
+                size={FONTSIZE.size_20}
+              />
+            </TouchableOpacity>
           </View>
         )}
       </Formik>
@@ -182,6 +198,9 @@ const styles = (borderColor: string) =>
       backgroundColor: 'white',
       flex: 1,
     },
+    wrapper: {
+      marginBottom: SPACING.space_10,
+    },
     inputWrapper: {
       borderColor: borderColor,
       backgroundColor: 'white',
@@ -191,9 +210,6 @@ const styles = (borderColor: string) =>
       flexDirection: 'row',
       paddingHorizontal: 15,
       alignItems: 'center',
-    },
-    wrapper: {
-      marginBottom: 20,
     },
     label: {
       fontFamily: FONTFAMILY.poppins_medium,

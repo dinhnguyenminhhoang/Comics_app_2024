@@ -24,7 +24,7 @@ const AuthTopTab = () => {
         </View>
         <View
           style={{
-            height: Dimensions.get('window').height - SPACING.space_30 * 8,
+            height: Dimensions.get('window').height - SPACING.space_30 * 6,
           }}>
           <Tab.Navigator>
             <Tab.Screen component={SingninScreen} name="Singnin" />
