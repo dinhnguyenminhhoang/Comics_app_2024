@@ -3,12 +3,14 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import TabNavigator from 'navigators/TabNavigator';
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Provider} from 'react-redux';
 import ChapterDetail from 'screens/ChapterDetailScreen';
 import DetailScreen from 'screens/DetailScreen';
-import {store} from 'store/store';
+import {RootState, store} from 'store/store';
 import {RootAppParamList} from 'utils/datatype';
+import ToastMessage from 'react-native-toast-message';
+import {useAppSelector} from 'hooks/useAppSelector';
 
 const Stack = createNativeStackNavigator<RootAppParamList>();
 export default function App() {
@@ -29,7 +31,6 @@ export default function App() {
     }
   }, [fontLoaded]);
   if (!fontLoaded) return null;
-
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -51,6 +52,7 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      <ToastMessage />
     </Provider>
   );
 }

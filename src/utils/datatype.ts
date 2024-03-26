@@ -75,3 +75,11 @@ export interface chapterDetailType {
     cdn: string;
   }[];
 }
+export interface userinfoType {
+  avatar: string;
+  email: string;
+  exp: number;
+  jti: number;
+  user_id: number;
+  username: string;
+}

@@ -3,6 +3,8 @@ import React from 'react';
 import {COLORS, ColorType, SPACING} from 'theme/theme';
 import resuable from 'components/Resuable/Resuable.style';
 import {useAppSelector} from 'hooks/useAppSelector';
+import {RootState} from 'store/store';
+import {userinfoType} from 'utils/datatype';
 
 interface ProfilePicProps {}
 const ProfilePic: React.FC<ProfilePicProps> = ({}) => {
@@ -10,7 +12,12 @@ const ProfilePic: React.FC<ProfilePicProps> = ({}) => {
     (state: any) => state.ThemeDarkMode.darkMode,
   );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
-
+  const isLoggedId = useAppSelector(
+    (state: RootState) => state.isLogger.isLoggedIn,
+  );
+  const userInfo = useAppSelector(
+    (state: RootState) => state.isLogger.userInfo,
+  );
   return (
     <View>
       <View
@@ -19,10 +26,9 @@ const ProfilePic: React.FC<ProfilePicProps> = ({}) => {
           resuable.withSpace,
           {borderColor: ACTIVECOLORS.secondaryDarkGreyHex},
         ]}>
-        <Image
-          style={styles.img}
-          source={require('../../assets/app_images/avata.png')}
-        />
+        {isLoggedId ? (
+          <Image style={styles.img} source={{uri: userInfo.avatar}} />
+        ) : null}
       </View>
     </View>
   );

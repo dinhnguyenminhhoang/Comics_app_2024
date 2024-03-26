@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
@@ -22,7 +22,17 @@ import WidthSpacer from 'components/Resuable/WidthSpacer';
 import HeightSpacer from 'components/Resuable/HeightSpacer';
 import ResuableText from 'components/Resuable/ResuableText';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import {RootState} from 'store/store';
+import {useDispatch} from 'react-redux';
+import {UserLogin} from 'state/Action/AuthenAction';
+import {Buffer} from 'buffer';
 
+import Toast from 'react-native-toast-message';
+import {setIsLoggedIn} from 'state/Slices/Auth/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from 'utils/datatype';
 interface FormValues {
   email: string;
   password: string;
@@ -30,28 +40,58 @@ interface FormValues {
 
 const validationSchema = Yup.object().shape({
   password: Yup.string()
-    .min(8, 'password must be at least 8 characters')
+    .min(6, 'password must be at least 6 characters')
     .required('Required'),
   email: Yup.string().email('provide a valid email').required('Required'),
 });
 
 const SingninScreen: React.FC = () => {
-  const [loader, setLoader] = useState<boolean>(false);
-  const [resData, setResData] = useState<string | null>(null);
   const [obsecureText, setObsecureText] = useState<boolean>(false);
+  const dispatch = useDispatch<any>();
   const ThemeDarkMode = useAppSelector(
-    (state: any) => state.ThemeDarkMode.darkMode,
+    (state: RootState) => state.ThemeDarkMode.darkMode,
   );
+  const loginData = useAppSelector(
+    (state: RootState) => state.loginData,
+  ) as any;
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const dynamicStyle = styles(ACTIVECOLORS.primaryLightGreyHex);
   const tabBarHeight = useBottomTabBarHeight();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   return (
     <View style={dynamicStyle.container}>
       <Formik
         initialValues={{email: '', password: ''}}
         validationSchema={validationSchema}
-        onSubmit={(values: FormValues) => {
-          console.log(values);
+        onSubmit={(values: FormValues, {resetForm}) => {
+          dispatch(
+            UserLogin({email: values.email, password: values.password}),
+          ).then(async () => {
+            if (loginData.data?.message?.trim()) {
+              Toast.show({
+                visibilityTime: 1000,
+                type: 'error',
+                text1: 'Vui lòng thử lại !',
+                text2: loginData.data?.message,
+              });
+              return;
+            }
+            if (loginData.data.data?.token) {
+              Toast.show({
+                visibilityTime: 1000,
+                type: 'success',
+                text1: `Chào mừng quay trở lại`,
+              });
+              dispatch(setIsLoggedIn(true));
+              await AsyncStorage.setItem(
+                'token',
+                JSON.stringify(loginData.data.data?.token),
+              );
+              navigation.navigate('Home');
+            }
+          });
+          resetForm();
         }}>
         {({
           handleChange,

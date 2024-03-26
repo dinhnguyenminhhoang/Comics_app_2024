@@ -31,6 +31,7 @@ import {
   getListNewComics,
 } from 'state/Action/comicAction';
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
+import {RootState} from 'store/store';
 import {COLORS, ColorType, FONTSIZE, SPACING} from 'theme/theme';
 import {COMICPARAM} from 'utils/ApiType';
 import {ComicType, RootStackParamList} from 'utils/datatype';
@@ -45,30 +46,37 @@ export default function HomeScreen() {
   const tabBarHeight = useBottomTabBarHeight();
   const dispath = useDispatch<any>();
   const ThemeDarkMode = useAppSelector(
-    (state: any) => state.ThemeDarkMode.darkMode,
+    (state: RootState) => state.ThemeDarkMode.darkMode,
   );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const dynamicStyle = styles(ACTIVECOLORS.primaryBlackHex);
-  const listComics = useAppSelector((state: any) => state.listComics.data);
+  const listComics = useAppSelector(
+    (state: RootState) => state.listComics.data,
+  );
   const hasMoreComics = useAppSelector(
-    (state: any) => state.listComics.hasMore,
+    (state: RootState) => state.listComics.hasMore,
   ) as boolean;
 
   const listNewChapter = useAppSelector(
-    (state: any) => state.listNewChapter.data,
+    (state: RootState) => state.listNewChapter.data,
   );
   const listNewComics = useAppSelector(
-    (state: any) => state.listNewComics.data,
+    (state: RootState) => state.listNewComics.data,
   );
   const listMostViewComics = useAppSelector(
-    (state: any) => state.listMostViewComics.data,
+    (state: RootState) => state.listMostViewComics.data,
   );
   const listMostViewChapter = useAppSelector(
-    (state: any) => state.listMostViewChapter.data,
+    (state: RootState) => state.listMostViewChapter.data,
   );
-  const listGenres = useAppSelector((state: any) => state.getListGenres.data);
+  const listGenres = useAppSelector(
+    (state: RootState) => state.getListGenres.data,
+  );
   const ComponentLoading = useAppSelector(
-    (state: any) => state.ComponentLoading.componentLevelLoading,
+    (state: RootState) => state.ComponentLoading.componentLevelLoading,
+  );
+  const isLoggedId = useAppSelector(
+    (state: RootState) => state.isLogger.isLoggedIn,
   );
   useEffect(() => {
     dispath(setComponentLevelLoading(true));
