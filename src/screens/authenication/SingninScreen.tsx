@@ -59,40 +59,44 @@ const SingninScreen: React.FC = () => {
   const tabBarHeight = useBottomTabBarHeight();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const onSubmit = async (values: FormValues, resetForm: () => void) => {
+    await dispatch(UserLogin({email: values.email, password: values.password}));
+    resetForm();
+  };
+  useEffect(() => {
+    if (loginData.data) {
+      if (loginData.data?.message?.trim()) {
+        Toast.show({
+          visibilityTime: 1000,
+          type: 'error',
+          text1: 'Vui lòng thử lại !',
+          text2: loginData.data?.message,
+        });
+        return;
+      }
+      if (loginData.data.data?.token) {
+        Toast.show({
+          visibilityTime: 1000,
+          type: 'success',
+          text1: `Chào mừng quay trở lại`,
+        });
+        dispatch(setIsLoggedIn(true));
+        AsyncStorage.setItem(
+          'token',
+          JSON.stringify(loginData.data.data?.token),
+        );
+        navigation.navigate('Home');
+      }
+    }
+  }, [loginData]);
   return (
     <View style={dynamicStyle.container}>
       <Formik
         initialValues={{email: '', password: ''}}
         validationSchema={validationSchema}
-        onSubmit={(values: FormValues, {resetForm}) => {
-          dispatch(
-            UserLogin({email: values.email, password: values.password}),
-          ).then(async () => {
-            if (loginData.data?.message?.trim()) {
-              Toast.show({
-                visibilityTime: 1000,
-                type: 'error',
-                text1: 'Vui lòng thử lại !',
-                text2: loginData.data?.message,
-              });
-              return;
-            }
-            if (loginData.data.data?.token) {
-              Toast.show({
-                visibilityTime: 1000,
-                type: 'success',
-                text1: `Chào mừng quay trở lại`,
-              });
-              dispatch(setIsLoggedIn(true));
-              await AsyncStorage.setItem(
-                'token',
-                JSON.stringify(loginData.data.data?.token),
-              );
-              navigation.navigate('Home');
-            }
-          });
-          resetForm();
-        }}>
+        onSubmit={(values: FormValues, {resetForm}) =>
+          onSubmit(values, resetForm)
+        }>
         {({
           handleChange,
           touched,

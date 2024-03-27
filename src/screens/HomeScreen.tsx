@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -109,7 +110,7 @@ export default function HomeScreen() {
       }),
     );
     dispath(getListGenres());
-  }, [dispath]);
+  }, []);
   useEffect(() => {
     if (
       listComics?.length &&
@@ -120,6 +121,7 @@ export default function HomeScreen() {
       listGenres?.length
     ) {
       dispath(setComponentLevelLoading(false));
+    } else {
     }
   }, [
     listComics,
@@ -169,6 +171,7 @@ export default function HomeScreen() {
       await handleLoadMore();
     }
   };
+  // AsyncStorage.clear();
   return (
     <SafeAreaView style={dynamicStyle.ScreenContainer}>
       <StatusBar
@@ -176,7 +179,7 @@ export default function HomeScreen() {
         barStyle={'default'}
       />
       <View style={[dynamicStyle.ScrollViewFlex]}>
-        <HeaderBar title="Comics" />
+        <HeaderBar title="Comics" isLoggedIn={isLoggedId} />
         <ScrollView
           style={[{marginBottom: tabBarHeight}]}
           onScroll={handleScroll}
@@ -195,7 +198,7 @@ export default function HomeScreen() {
           {/* end categories */}
           {/* Genres */}
           <HeightSpacer height={SPACING.space_16} />
-          <Genres listGenres={listGenres} />
+          {/* <Genres listGenres={listGenres} /> */}
           {/* end genrtes */}
           {/* chapter */}
           <HeightSpacer height={SPACING.space_30} />

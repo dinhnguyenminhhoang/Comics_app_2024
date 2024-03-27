@@ -18,9 +18,10 @@ import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 
 interface HeaderNarProps {
   title?: string;
+  isLoggedIn: boolean;
 }
 
-const HeaderBar: React.FC<HeaderNarProps> = ({title}) => {
+const HeaderBar: React.FC<HeaderNarProps> = ({title, isLoggedIn}) => {
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
   );
@@ -45,7 +46,7 @@ const HeaderBar: React.FC<HeaderNarProps> = ({title}) => {
         {title}
       </Text>
       <View style={styles.profiContainer}>
-        <ProfilePic />
+        {isLoggedIn ? <ProfilePic /> : null}
         <View>
           <TouchableOpacity onPress={handleChangDarkMode}>
             {ThemeDarkMode ? (

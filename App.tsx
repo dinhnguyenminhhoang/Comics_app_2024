@@ -11,6 +11,8 @@ import {RootState, store} from 'store/store';
 import {RootAppParamList} from 'utils/datatype';
 import ToastMessage from 'react-native-toast-message';
 import {useAppSelector} from 'hooks/useAppSelector';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ProfileTopTab from 'navigators/ProfileTopTab';
 
 const Stack = createNativeStackNavigator<RootAppParamList>();
 export default function App() {
@@ -48,6 +50,11 @@ export default function App() {
           <Stack.Screen
             name="Chapters"
             component={ChapterDetail}
+            options={{animation: 'slide_from_bottom'}}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={ProfileTopTab}
             options={{animation: 'slide_from_bottom'}}
           />
         </Stack.Navigator>

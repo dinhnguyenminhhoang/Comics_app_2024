@@ -42,6 +42,7 @@ export type RootAppParamList = {
     startChapterId: number;
     endChapterId: number;
   };
+  Profile: undefined;
 };
 export interface authorsType {
   id: number;
@@ -82,4 +83,25 @@ export interface userinfoType {
   jti: number;
   user_id: number;
   username: string;
+}
+export interface ProfileType {
+  id: number;
+  username: string;
+  email: string;
+  avatar: string;
+  first_name: string;
+  last_name: string;
+  gender: boolean;
+}
+export interface comentHistoryType {
+  id: number;
+  content: string;
+  created_at: Date;
+  comic_name: string;
+  comic_image: string;
+  chapter_name: string;
+}
+export interface historyViewType {
+  chapter: chapterType;
+  comic: ComicType;
 }

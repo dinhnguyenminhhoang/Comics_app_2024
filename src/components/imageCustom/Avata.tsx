@@ -3,9 +3,16 @@ import React from 'react';
 import {COLORS} from 'theme/theme';
 interface AvataProps {
   src: string;
+  customerStyles?: any;
 }
-const Avata: React.FC<AvataProps> = ({src}) => {
-  return <Image source={{uri: src}} alt="avata" style={styles.img} />;
+const Avata: React.FC<AvataProps> = ({src, customerStyles}) => {
+  return (
+    <Image
+      source={{uri: src}}
+      alt="avata"
+      style={[styles.img, customerStyles]}
+    />
+  );
 };
 
 export default Avata;
