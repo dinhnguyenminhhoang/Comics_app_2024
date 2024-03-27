@@ -1,36 +1,43 @@
-import {Image, StyleSheet, Switch, Text, View} from 'react-native';
-import React from 'react';
-import {COLORS, ColorType, SPACING} from 'theme/theme';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import resuable from 'components/Resuable/Resuable.style';
 import {useAppSelector} from 'hooks/useAppSelector';
+import React from 'react';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {RootState} from 'store/store';
-import {userinfoType} from 'utils/datatype';
+import {COLORS, ColorType, SPACING} from 'theme/theme';
+import {RootAppParamList} from 'utils/datatype';
 
 interface ProfilePicProps {}
 const ProfilePic: React.FC<ProfilePicProps> = ({}) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootAppParamList>>();
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
   );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
-  const isLoggedId = useAppSelector(
-    (state: RootState) => state.isLogger.isLoggedIn,
-  );
+
   const userInfo = useAppSelector(
     (state: RootState) => state.isLogger.userInfo,
   );
+  console.log(userInfo);
   return (
-    <View>
-      <View
-        style={[
-          styles.imgContainer,
-          resuable.withSpace,
-          {borderColor: ACTIVECOLORS.secondaryDarkGreyHex},
-        ]}>
-        {isLoggedId ? (
-          <Image style={styles.img} source={{uri: userInfo.avatar}} />
-        ) : null}
-      </View>
-    </View>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Profile')}
+      style={[
+        styles.imgContainer,
+        resuable.withSpace,
+        {borderColor: ACTIVECOLORS.secondaryDarkGreyHex},
+      ]}>
+      <Image
+        style={styles.img}
+        source={{
+          uri:
+            userInfo?.avatar ||
+            'https://st3.depositphotos.com/23594922/31822/v/1600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg',
+        }}
+      />
+    </TouchableOpacity>
   );
 };
 

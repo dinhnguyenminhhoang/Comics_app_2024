@@ -1,36 +1,23 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Buffer} from 'buffer';
 import CustomIcon from 'components/Resuable/CustomIcon';
 import {BlurView} from 'expo-blur';
 import {useAppSelector} from 'hooks/useAppSelector';
 import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
+import Toast from 'react-native-toast-message';
+import {useDispatch} from 'react-redux';
 import FacoriesScreen from 'screens/FacoriesScreen';
 import FilterScreen from 'screens/FilterScreen';
 import HomeScreen from 'screens/HomeScreen';
-import LoginScreen from 'screens/LoginScreen';
+import {setIsLoggedIn, setUserInfo} from 'state/Slices/Auth/auth';
+import {RootState} from 'store/store';
 import {COLORS, ColorType, SPACING} from 'theme/theme';
 import {RootStackParamList, userinfoType} from 'utils/datatype';
 import AuthTopTab from './AuthTopTab';
-import {RootState} from 'store/store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Buffer} from 'buffer';
-import Toast from 'react-native-toast-message';
-import {useDispatch} from 'react-redux';
-import {setIsLoggedIn, setUserInfo} from 'state/Slices/Auth/auth';
+import ProfileTopTab from './ProfileTopTab';
 const Tab = createBottomTabNavigator<RootStackParamList>();
-const getData = async () => {
-  try {
-    const userinfo = await AsyncStorage.getItem('userinfo');
-    if (userinfo !== null) {
-      return userinfo;
-    } else {
-      console.log('Access token does not exist in local storage');
-    }
-  } catch (error) {
-    console.error('Error retrieving access token:', error);
-  }
-};
-
 const TabNavigator = () => {
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
@@ -44,13 +31,13 @@ const TabNavigator = () => {
   const getToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      if (token !== null) {
+      if (token?.length) {
         return JSON.parse(token);
       } else {
+        if (isLoggedId) dispatch(setIsLoggedIn(false));
         return null;
       }
     } catch (error) {
-      console.error('Lỗi khi lấy token từ AsyncStorage:', error);
       return null;
     }
   };
@@ -82,7 +69,7 @@ const TabNavigator = () => {
         });
       }
     });
-  }, []);
+  }, [dispatch, isLoggedId]);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -150,7 +137,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="LoginScreen"
-        component={AuthTopTab}
+        component={isLoggedId ? ProfileTopTab : AuthTopTab}
         options={{
           tabBarIcon: ({focused, color, size}) => (
             <CustomIcon

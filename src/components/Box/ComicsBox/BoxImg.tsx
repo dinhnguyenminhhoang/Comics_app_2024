@@ -40,7 +40,9 @@ const BoxImg: React.FC<boxImgProps> = ({item, stick, moreStyles}) => {
             ? {
                 uri: item.image,
               }
-            : require('../../../assets/app_images/noimg.png')
+            : {
+                uri: 'https://st3.depositphotos.com/23594922/31822/v/1600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg',
+              }
         }
         alt=""
         resizeMode="cover"
