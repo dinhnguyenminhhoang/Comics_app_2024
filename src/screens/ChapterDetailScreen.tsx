@@ -1,5 +1,5 @@
-import {Picker} from '@react-native-picker/picker';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import CommentScreen from 'components/Comment/Comment';
 import CustomIcon from 'components/Resuable/CustomIcon';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
@@ -181,6 +181,22 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
           </View>
         )}
         keyExtractor={(_, index) => index.toString()}
+        ListFooterComponent={
+          <CommentScreen
+            comments={[
+              {
+                id: 60017,
+                content: 'Hay nha 😎😎😎',
+                created_at: '2024-03-27T02:27:51Z',
+                username: 'mqthinh',
+                user_avatar:
+                  'https://dl.dropboxusercontent.com/s/xvkveeso8srxog9hrgdql/mqthinh.jfif?rlkey=jwgmzdjjp6n4uadjt0ege2os2',
+                is_owner: true,
+                reply_num: 0,
+              },
+            ]}
+          />
+        }
       />
       {Platform.OS === 'ios' ? (
         <BottomButton
