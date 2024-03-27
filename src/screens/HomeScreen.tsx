@@ -168,7 +168,6 @@ export default function HomeScreen() {
       await handleLoadMore();
     }
   };
-  console.log(isLoggedId);
   return (
     <SafeAreaView style={dynamicStyle.ScreenContainer}>
       <StatusBar

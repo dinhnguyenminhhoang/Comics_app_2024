@@ -68,7 +68,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
     ).then(() => {
       setChapterDetail({
         id: chapterDetail?.id + 1,
-        name: chapterDetail.name,
+        name: chapterDetail?.name,
         updated_at: chapterDetail.updated_at,
       });
       dispatch(setComponentLevelLoading(false));
@@ -138,7 +138,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
           />
         </TouchableOpacity>
         <ResuableText
-          text={detailChapter.name}
+          text={detailChapter?.name}
           color={ACTIVECOLORS.primaryWhiteHex}
           size={FONTSIZE.size_20}
           fontFamily={FONTFAMILY.poppins_extrabold}

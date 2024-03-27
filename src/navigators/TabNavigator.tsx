@@ -8,7 +8,6 @@ import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
-import FacoriesScreen from 'screens/FacoriesScreen';
 import FilterScreen from 'screens/FilterScreen';
 import HomeScreen from 'screens/HomeScreen';
 import {setIsLoggedIn, setUserInfo} from 'state/Slices/Auth/auth';
@@ -26,7 +25,6 @@ const TabNavigator = () => {
     (state: RootState) => state.isLogger.isLoggedIn,
   );
   const dispatch = useDispatch<any>();
-  const userData = useAppSelector((state: RootState) => state.loginData.data);
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const getToken = async () => {
     try {
@@ -69,7 +67,7 @@ const TabNavigator = () => {
         });
       }
     });
-  }, [dispatch, isLoggedId]);
+  }, [isLoggedId]);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -108,23 +106,6 @@ const TabNavigator = () => {
           tabBarIcon: ({focused, color, size}) => (
             <CustomIcon
               name="filter"
-              size={25}
-              color={
-                focused
-                  ? ACTIVECOLORS.primaryWhiteHex
-                  : ACTIVECOLORS.primaryGreyHex
-              }
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Favorite"
-        component={FacoriesScreen}
-        options={{
-          tabBarIcon: ({focused, color, size}) => (
-            <CustomIcon
-              name="hearto"
               size={25}
               color={
                 focused
