@@ -47,6 +47,7 @@ const validationSchema = Yup.object().shape({
 
 const SingninScreen: React.FC = () => {
   const [obsecureText, setObsecureText] = useState<boolean>(false);
+  const [reload, setReload] = useState<boolean>(false);
   const dispatch = useDispatch<any>();
   const ThemeDarkMode = useAppSelector(
     (state: RootState) => state.ThemeDarkMode.darkMode,
@@ -54,6 +55,9 @@ const SingninScreen: React.FC = () => {
   const loginData = useAppSelector(
     (state: RootState) => state.loginData,
   ) as any;
+  const isLoggedId = useAppSelector(
+    (state: RootState) => state.isLogger.isLoggedIn,
+  );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const dynamicStyle = styles(ACTIVECOLORS.primaryLightGreyHex);
   const tabBarHeight = useBottomTabBarHeight();
@@ -61,10 +65,11 @@ const SingninScreen: React.FC = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const onSubmit = async (values: FormValues, resetForm: () => void) => {
     await dispatch(UserLogin({email: values.email, password: values.password}));
+    setReload(true);
     resetForm();
   };
   useEffect(() => {
-    if (loginData.data) {
+    if (loginData.data && reload) {
       if (loginData.data?.message?.trim()) {
         Toast.show({
           visibilityTime: 1000,
@@ -85,10 +90,11 @@ const SingninScreen: React.FC = () => {
           'token',
           JSON.stringify(loginData.data.data?.token),
         );
+        setReload(false);
         navigation.navigate('Home');
       }
     }
-  }, [loginData]);
+  }, [loginData, isLoggedId, reload]);
   return (
     <View style={dynamicStyle.container}>
       <Formik

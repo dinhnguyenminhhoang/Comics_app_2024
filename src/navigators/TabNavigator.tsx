@@ -31,14 +31,13 @@ const TabNavigator = () => {
   const getToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      if (token !== null) {
+      if (token?.length) {
         return JSON.parse(token);
       } else {
         if (isLoggedId) dispatch(setIsLoggedIn(false));
         return null;
       }
     } catch (error) {
-      console.error('Lỗi khi lấy token từ AsyncStorage:', error);
       return null;
     }
   };

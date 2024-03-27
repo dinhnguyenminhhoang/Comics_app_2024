@@ -66,6 +66,9 @@ const FilterScreen: React.FC<Props> = ({route}) => {
   const ComponentLoading = useAppSelector(
     (state: RootState) => state.ComponentLoading.componentLevelLoading,
   );
+  const isLoggedIn = useAppSelector(
+    (state: RootState) => state.isLogger.isLoggedIn,
+  );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const tabBarHeight = useBottomTabBarHeight();
   useEffect(() => {
@@ -133,7 +136,7 @@ const FilterScreen: React.FC<Props> = ({route}) => {
         backgroundColor={ACTIVECOLORS.fixColorBlack}
         barStyle={'default'}
       />
-      <HeaderBar title="Comics" />
+      <HeaderBar title="Comics" isLoggedIn={isLoggedIn} />
       <View style={{marginBottom: tabBarHeight, flex: 1}}>
         <FlatList
           ListHeaderComponent={() => (

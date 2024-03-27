@@ -20,7 +20,7 @@ const GetHistoryViewSlice = createSlice({
       .addCase(getHistoryView.fulfilled, (state, action: {payload: any}) => {
         state.isLoading = false;
         state.data = action.payload.data;
-        state.isMore = action.payload.paging.has_more;
+        state.isMore = action.payload?.paging?.has_more;
       })
       .addCase(getHistoryView.rejected, (state, action) => {
         state.isLoading = false;

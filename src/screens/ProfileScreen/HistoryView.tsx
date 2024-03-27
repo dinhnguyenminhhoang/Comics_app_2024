@@ -36,9 +36,10 @@ const HistoryView = () => {
       onEndReached={() => (isMore ? setPageSize(pageSize + 10) : null)}
       ListEmptyComponent={
         <ResuableText
-          text="Bạn chưa xem chapter nào"
+          text="Có vẻ bạn chưa xem truyện nào nào"
           color={ACTIVECOLORS.primaryWhiteHex}
           size={FONTSIZE.size_20}
+          moreStyles={{marginTop: SPACING.space_20}}
         />
       }
       data={historyView}

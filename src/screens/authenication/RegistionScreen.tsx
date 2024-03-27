@@ -1,8 +1,24 @@
-import React, {useState} from 'react';
-import {Formik} from 'formik';
-import * as Yup from 'yup';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import HeightSpacer from 'components/Resuable/HeightSpacer';
+import ResuableText from 'components/Resuable/ResuableText';
+import WidthSpacer from 'components/Resuable/WidthSpacer';
+import {Formik} from 'formik';
 import {useAppSelector} from 'hooks/useAppSelector';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Toast from 'react-native-toast-message';
+import {useDispatch} from 'react-redux';
+import {UserRegister} from 'state/Action/AuthenAction';
+import {RootState} from 'store/store';
 import {
   BORDERRADIUS,
   COLORS,
@@ -11,17 +27,8 @@ import {
   FONTSIZE,
   SPACING,
 } from 'theme/theme';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import WidthSpacer from 'components/Resuable/WidthSpacer';
-import HeightSpacer from 'components/Resuable/HeightSpacer';
-import ResuableText from 'components/Resuable/ResuableText';
-import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import {RootStackParamList} from 'utils/datatype';
+import * as Yup from 'yup';
 
 interface FormValues {
   email: string;
@@ -31,7 +38,7 @@ interface FormValues {
 
 const validationSchema = Yup.object().shape({
   password: Yup.string()
-    .min(8, 'password must be at least 8 characters')
+    .min(6, 'password must be at least 6 characters')
     .required('Required'),
   username: Yup.string()
     .min(3, 'username must be at least 3 characters')
@@ -40,22 +47,51 @@ const validationSchema = Yup.object().shape({
 });
 
 const RegistionScreen: React.FC = () => {
-  const [loader, setLoader] = useState<boolean>(false);
-  const [resData, setResData] = useState<string | null>(null);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [obsecureText, setObsecureText] = useState<boolean>(false);
+  const dispach = useDispatch<any>();
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
   );
+  const userRegisterData = useAppSelector(
+    (state: RootState) => state.RegisterData.data,
+  ) as any;
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const dynamicStyle = styles(ACTIVECOLORS.primaryLightGreyHex);
   const tabBarHeight = useBottomTabBarHeight();
+  useEffect(() => {
+    if (userRegisterData?.message) {
+      if (userRegisterData?.message !== 'Register successfully.') {
+        Toast.show({
+          text1: 'Vui lòng thử lại!',
+          text2: userRegisterData?.message,
+          type: 'error',
+        });
+      } else {
+        Toast.show({
+          text1: 'Tọa tài khoản thành công!',
+          text2: userRegisterData?.message,
+          type: 'success',
+        });
+        navigation.navigate('LoginScreen');
+      }
+    }
+  }, [userRegisterData]);
   return (
     <View style={dynamicStyle.container}>
       <Formik
         initialValues={{email: '', password: '', username: ''}}
         validationSchema={validationSchema}
-        onSubmit={(values: FormValues) => {
-          console.log(values);
+        onSubmit={(values: FormValues, {resetForm}) => {
+          dispach(
+            UserRegister({
+              email: values.email,
+              password: values.password,
+              username: values.username,
+            }),
+          );
+          resetForm();
         }}>
         {({
           handleChange,

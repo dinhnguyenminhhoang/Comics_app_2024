@@ -20,7 +20,6 @@ const PrifileScreen = () => {
   useEffect(() => {
     dispatch(getProfileUser());
   }, [dispatch]);
-  console.log('prifileScreen', userProfile);
   return (
     <View
       style={[

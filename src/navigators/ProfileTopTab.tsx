@@ -12,6 +12,7 @@ import Avata from 'components/imageCustom/Avata';
 import {useAppSelector} from 'hooks/useAppSelector';
 import React, {useEffect} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
+import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
 import HistoryComment from 'screens/ProfileScreen/HistoryComment';
 import HistoryView from 'screens/ProfileScreen/HistoryView';
@@ -35,24 +36,24 @@ const ProfileTopTab = () => {
   const isLoggedId = useAppSelector(
     (state: RootState) => state.isLogger.isLoggedIn,
   );
-  console.log(isLoggedId);
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   useEffect(() => {
     if (isLoggedId === true) dispatch(getProfileUser());
   }, [dispatch, isLoggedId]);
   const handleLogout = async () => {
     dispatch(userLogout());
-    console.log('User logged out 1');
     dispatch(setIsLoggedIn(false));
-    console.log('User logged out 2');
-
     dispatch(setUserInfo({}));
-    console.log('User logged out 3');
-
-    await AsyncStorage.clear().then(() => {
-      navigation.navigate('Home');
-      console.log('User logged out 4');
-    });
+    try {
+      await AsyncStorage.clear().then(() => {
+        Toast.show({
+          type: 'success',
+          text1: 'Đăng xuất thành công',
+          text2: 'Chúc bạn có trãi nghiệm tuyệt vời',
+        });
+        navigation.navigate('Home');
+      });
+    } catch (error) {}
   };
   return userProfile?.id ? (
     <View
@@ -76,7 +77,9 @@ const ProfileTopTab = () => {
         />
         <View>
           <ResuableText
-            text={`${userProfile.first_name} ${userProfile.last_name}`}
+            text={`${userProfile?.first_name || 'chưa'} ${
+              userProfile?.last_name || 'cập nhật'
+            }`}
             textAlign="left"
             color={ACTIVECOLORS.primaryWhiteHex}
             fontFamily={FONTFAMILY.poppins_semibold}

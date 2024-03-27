@@ -20,6 +20,7 @@ const ProfilePic: React.FC<ProfilePicProps> = ({}) => {
   const userInfo = useAppSelector(
     (state: RootState) => state.isLogger.userInfo,
   );
+  console.log(userInfo);
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('Profile')}
@@ -28,7 +29,14 @@ const ProfilePic: React.FC<ProfilePicProps> = ({}) => {
         resuable.withSpace,
         {borderColor: ACTIVECOLORS.secondaryDarkGreyHex},
       ]}>
-      <Image style={styles.img} source={{uri: userInfo?.avatar || ''}} />
+      <Image
+        style={styles.img}
+        source={{
+          uri:
+            userInfo?.avatar ||
+            'https://st3.depositphotos.com/23594922/31822/v/1600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg',
+        }}
+      />
     </TouchableOpacity>
   );
 };

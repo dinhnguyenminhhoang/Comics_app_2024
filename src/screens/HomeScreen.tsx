@@ -121,7 +121,6 @@ export default function HomeScreen() {
       listGenres?.length
     ) {
       dispath(setComponentLevelLoading(false));
-    } else {
     }
   }, [
     listComics,
@@ -158,9 +157,7 @@ export default function HomeScreen() {
           setGetMoreComics(getMoreComics + 12);
         });
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   const handleScroll = async (event: any) => {
     const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
@@ -171,7 +168,7 @@ export default function HomeScreen() {
       await handleLoadMore();
     }
   };
-  // AsyncStorage.clear();
+  console.log(isLoggedId);
   return (
     <SafeAreaView style={dynamicStyle.ScreenContainer}>
       <StatusBar
