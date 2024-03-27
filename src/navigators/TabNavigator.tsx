@@ -64,6 +64,7 @@ const TabNavigator = () => {
           type: 'info',
           text1: 'Có vẻ bạn chưa đang nhập trước đây',
           text2: 'hãy đăng nhập hoặc tạo tài khoản để có trải nghiệm tốt nhất',
+          onPress: () => Toast.hide(),
         });
       }
     });

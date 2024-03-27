@@ -16,6 +16,7 @@ export const store = configureStore({
     listMostViewChapter: comicSlices.GetListMostViewChapterSlice.default,
     comicById: comicSlices.GetComicByIdSlice.default,
     ListComicsFilter: comicSlices.GetListComicFilterSlice.default,
+    searchComicData: comicSlices.GetResutSearchComicsSlice.default,
     //
     getListGenres: genresSlices.getListGenres.default,
     //

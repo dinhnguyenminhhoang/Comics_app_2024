@@ -18,18 +18,27 @@ import {
 import resuable from 'components/Resuable/Resuable.style';
 import {useAppSelector} from 'hooks/useAppSelector';
 import Shadow from 'components/Resuable/Shadow.style';
+import {RootState} from 'store/store';
+import {useDispatch} from 'react-redux';
+import {resetResultSearchComics} from 'state/Slices/Comic/GetResutSearchComicsSlice';
 
-const Search = () => {
+interface SearchProp {
+  onPress: (value: string) => void;
+}
+const Search: React.FC<SearchProp> = ({onPress}) => {
   const [searchText, setSearchText] = useState<string>('');
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
   );
+  const dispatch = useDispatch<any>();
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const dynamicStyle = styles(
     ACTIVECOLORS.primaryBlackHex,
     ACTIVECOLORS.primaryWhiteHex,
   );
-
+  const searchComicData = useAppSelector(
+    (state: RootState) => state.searchComicData.data,
+  );
   return (
     <View
       style={[
@@ -37,7 +46,7 @@ const Search = () => {
         resuable.rowWithSpace,
         Shadow(ACTIVECOLORS.darkShadow).innerShadow,
       ]}>
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity onPress={() => onPress(searchText)}>
         <CustomIcon
           styles={dynamicStyle.inputIcon}
           name="search1"
@@ -59,7 +68,12 @@ const Search = () => {
         style={dynamicStyle.TextInputContainer}
       />
       {searchText.length > 0 ? (
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            setSearchText('');
+            if (searchComicData?.length > 0)
+              dispatch(resetResultSearchComics([]));
+          }}>
           <CustomIcon
             name="close"
             size={FONTSIZE.size_18}

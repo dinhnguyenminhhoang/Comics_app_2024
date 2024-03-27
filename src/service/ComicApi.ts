@@ -29,5 +29,11 @@ const handleGetListComics = (formData: comicsApiParams) => {
 const handleGetComicByID = (comicID: number) => {
   return axios.get(`/api/v1/comics/${comicID.toString()}`);
 };
-
-export {handleGetListComics, handleGetComicByID};
+const handleGetResultSearchComics = (formData: {
+  keyword: string;
+  page: number;
+  page_size: number;
+}) => {
+  return axios.get(`/api/v1/comics/search`, {params: formData});
+};
+export {handleGetListComics, handleGetComicByID, handleGetResultSearchComics};

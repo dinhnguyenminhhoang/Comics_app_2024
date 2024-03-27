@@ -5,3 +5,4 @@ export * as GetListNewChapterSlice from './GetListNewChapterSlice';
 export * as GetListMostViewChapterSlice from './GetListMostViewChapterSlice';
 export * as GetComicByIdSlice from './GetComicByIdSlice';
 export * as GetListComicFilterSlice from './GetListComicFilterSlice';
+export * as GetResutSearchComicsSlice from './GetResutSearchComicsSlice';
