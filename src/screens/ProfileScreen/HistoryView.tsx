@@ -1,4 +1,11 @@
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useAppSelector} from 'hooks/useAppSelector';
 import {RootState} from 'store/store';
@@ -44,7 +51,11 @@ const HistoryView = () => {
       }
       data={historyView}
       renderItem={({item}) => (
-        <View style={styles.listContainer}>
+        <View
+          style={[
+            styles.listContainer,
+            {borderColor: ACTIVECOLORS.primaryLightGreyHex},
+          ]}>
           <View style={styles.comicContainer}>
             <Image source={{uri: item.comic.image}} style={styles.imgComic} />
             <View>
@@ -54,6 +65,11 @@ const HistoryView = () => {
                 color={ACTIVECOLORS.primaryWhiteHex}
                 fontFamily={FONTFAMILY.poppins_extrabold}
                 size={FONTSIZE.size_20}
+                moreStyles={{
+                  maxWidth:
+                    Dimensions.get('window').width - SPACING.space_30 * 5,
+                }}
+                numberOfLines={1}
               />
               <ResuableText
                 text={
@@ -65,6 +81,11 @@ const HistoryView = () => {
                 color={ACTIVECOLORS.primaryWhiteHexRBGA}
                 fontFamily={FONTFAMILY.poppins_regular}
                 size={FONTSIZE.size_12}
+                moreStyles={{
+                  maxWidth:
+                    Dimensions.get('window').width - SPACING.space_30 * 5,
+                }}
+                numberOfLines={1}
               />
               <ResuableText
                 text={item.chapter.name}
@@ -72,6 +93,11 @@ const HistoryView = () => {
                 color={ACTIVECOLORS.primaryWhiteHexRBGA}
                 fontFamily={FONTFAMILY.poppins_regular}
                 size={FONTSIZE.size_12}
+                moreStyles={{
+                  maxWidth:
+                    Dimensions.get('window').width - SPACING.space_30 * 5,
+                }}
+                numberOfLines={1}
               />
             </View>
           </View>

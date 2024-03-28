@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -30,6 +29,7 @@ import {
   getListMostViewComics,
   getListNewChapter,
   getListNewComics,
+  getResultSearchComics,
 } from 'state/Action/comicAction';
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 import {RootState} from 'store/store';
@@ -73,6 +73,9 @@ export default function HomeScreen() {
   const listGenres = useAppSelector(
     (state: RootState) => state.getListGenres.data,
   );
+  const searchComicData = useAppSelector(
+    (state: RootState) => state.searchComicData.data,
+  );
   const ComponentLoading = useAppSelector(
     (state: RootState) => state.ComponentLoading.componentLevelLoading,
   );
@@ -112,24 +115,10 @@ export default function HomeScreen() {
     dispath(getListGenres());
   }, []);
   useEffect(() => {
-    if (
-      listComics?.length &&
-      listNewChapter?.length &&
-      listNewComics?.length &&
-      listMostViewComics?.length &&
-      listMostViewChapter?.length &&
-      listGenres?.length
-    ) {
+    if (listComics?.length && listGenres?.length) {
       dispath(setComponentLevelLoading(false));
     }
-  }, [
-    listComics,
-    listNewChapter,
-    listNewComics,
-    listMostViewComics,
-    listMostViewChapter,
-    listGenres,
-  ]);
+  }, [listComics, listGenres]);
   if (ComponentLoading) {
     return (
       <View style={[dynamicStyle.ScreenContainer, resuable.center]}>
@@ -168,7 +157,11 @@ export default function HomeScreen() {
       await handleLoadMore();
     }
   };
-  console.log(isLoggedId);
+  const handlePressSearch = (value: string) => {
+    if (value && value?.trim() !== '') {
+      dispath(getResultSearchComics({keyword: value, page: 1, page_size: 10}));
+    }
+  };
   return (
     <SafeAreaView style={dynamicStyle.ScreenContainer}>
       <StatusBar
@@ -183,26 +176,39 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}>
           {/* search  */}
-          <Search />
+          <Search onPress={handlePressSearch} />
           {/* end search */}
           {/* category */}
           <HeightSpacer height={SPACING.space_30} />
           <ResuableTitle
-            titleLeft="Categories"
-            titleRight="More"
+            titleLeft="Thể loại"
+            titleRight="Xem thêm"
             onPress={() => navigation.navigate('Filter', {})}
           />
           {/* end categories */}
           {/* Genres */}
           <HeightSpacer height={SPACING.space_16} />
-          {/* <Genres listGenres={listGenres} /> */}
+          <Genres listGenres={listGenres} />
           {/* end genrtes */}
+          {/* search */}
+          {searchComicData.length ? (
+            <>
+              <HeightSpacer height={SPACING.space_30} />
+              <ResuableTitle
+                onPress={() => navigation.navigate('Filter', {})}
+                titleLeft="Kết quả tìm kiếm"
+                // titleRight="Xem thêm"
+              />
+              <ComicsBox listComics={searchComicData as ComicType[]} />
+            </>
+          ) : null}
+          {/* end search */}
           {/* chapter */}
           <HeightSpacer height={SPACING.space_30} />
           <ResuableTitle
             onPress={() => navigation.navigate('Filter', {})}
-            titleLeft="Trending"
-            titleRight="More"
+            titleLeft="Nỗi bật"
+            titleRight="Xem thêm"
           />
           <ComicsBox listComics={listNewChapter as ComicType[]} />
           <HeightSpacer height={SPACING.space_30} />
@@ -210,8 +216,8 @@ export default function HomeScreen() {
           {/* New */}
           <ResuableTitle
             onPress={() => navigation.navigate('Filter', {})}
-            titleLeft="New"
-            titleRight="More"
+            titleLeft="Mới nhất"
+            titleRight="Xem thêm"
           />
           <ComicsBox listComics={listNewComics as ComicType[]} stick="new" />
           <HeightSpacer height={SPACING.space_30} />
@@ -219,8 +225,8 @@ export default function HomeScreen() {
           {/* Hot commic */}
           <ResuableTitle
             onPress={() => navigation.navigate('Filter', {})}
-            titleLeft="Hot Comics"
-            titleRight="More"
+            titleLeft="Truyện nỗi bật"
+            titleRight="Xem thêm"
           />
           <ComicsBox
             listComics={listMostViewComics as ComicType[]}
@@ -231,8 +237,8 @@ export default function HomeScreen() {
           {/* hot chapter */}
           <ResuableTitle
             onPress={() => navigation.navigate('Filter', {})}
-            titleLeft="Hot Chapters"
-            titleRight="More"
+            titleLeft="Chapter nỗi bật"
+            titleRight="Xem thêm"
           />
           <ComicsBox
             listComics={listMostViewChapter as ComicType[]}
@@ -242,8 +248,8 @@ export default function HomeScreen() {
           {/* end */}
           <ResuableTitle
             onPress={() => navigation.navigate('Filter', {})}
-            titleLeft="Hot"
-            titleRight="More"
+            titleLeft="Xem thêm"
+            titleRight="Xem thêm"
           />
           <ComicsBoxLoadPage
             listComics={listComics as ComicType[]}

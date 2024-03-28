@@ -20,10 +20,9 @@ const ProfilePic: React.FC<ProfilePicProps> = ({}) => {
   const userInfo = useAppSelector(
     (state: RootState) => state.isLogger.userInfo,
   );
-  console.log(userInfo);
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Profile')}
+      // onPress={() => navigation.navigate('Profile')}
       style={[
         styles.imgContainer,
         resuable.withSpace,

@@ -1,7 +1,4 @@
-import {
-  BottomTabNavigationProp,
-  useBottomTabBarHeight,
-} from '@react-navigation/bottom-tabs';
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {useNavigation} from '@react-navigation/native';
 import {
   NativeStackNavigationProp,

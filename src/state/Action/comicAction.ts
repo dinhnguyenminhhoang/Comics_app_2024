@@ -86,3 +86,15 @@ export const getComiFilter = createAsyncThunk(
     }
   },
 );
+export const getResultSearchComics = createAsyncThunk(
+  'getResultSearchComics/handleGetResultSearchComics',
+  async (formData: {keyword: string; page: number; page_size: number}) => {
+    try {
+      const response = await comicApi.handleGetResultSearchComics(formData);
+      let data = response;
+      return data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+);

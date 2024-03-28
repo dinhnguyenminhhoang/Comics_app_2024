@@ -74,13 +74,7 @@ const Genres: React.FC<genresProps> = ({listGenres}) => {
         Shadow(ACTIVECOLORS.darkShadow).innerShadow,
         {backgroundColor: ACTIVECOLORS.primaryBlackHex},
       ]}>
-      <Image
-        source={
-          srcListIcon[Math.floor(Math.random() * (srcListIcon.length - 1)) + 1]
-            ?.src
-        }
-        alt=""
-      />
+      <Image source={srcListIcon[0].src} alt="" />
       <HeightSpacer height={SPACING.space_4} />
       <ResuableText
         text={title}

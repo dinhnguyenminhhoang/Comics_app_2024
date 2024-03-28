@@ -57,22 +57,6 @@ const BtnSwich: React.FC<BtnSwichProps> = ({
           Chapters
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        onPressIn={() => setContentSwitch(2)}
-        style={[
-          dynamicStyle.customBtn,
-          resuable.innerShadow,
-          active === 2 && dynamicStyle.activeBtn,
-        ]}
-        onPress={() => handlePress(2)}>
-        <Text
-          style={[
-            dynamicStyle.textStyle,
-            active === 2 && dynamicStyle.activeColor,
-          ]}>
-          Reviews
-        </Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -91,14 +75,18 @@ const styles = (
       gap: 4,
       justifyContent: 'center',
       backgroundColor: bgColor,
-      marginHorizontal: SPACING.space_20,
-      paddingVertical: SPACING.space_8,
+      marginHorizontal: SPACING.space_10,
       borderRadius: 999,
+      borderWidth: 1,
+      borderColor: colorBorder,
+      overflow: 'hidden',
     },
     customBtn: {
-      paddingVertical: SPACING.space_10,
-      paddingHorizontal: SPACING.space_16,
-
+      flex: 0.5,
+      paddingVertical: SPACING.space_18,
+      textAlign: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
       borderColor: colorBorder,
       borderRadius: BORDERRADIUS.radius_25,
     },

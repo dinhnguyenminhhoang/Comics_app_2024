@@ -1,4 +1,3 @@
-import {Picker} from '@react-native-picker/picker';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import CustomIcon from 'components/Resuable/CustomIcon';
 import resuable from 'components/Resuable/Resuable.style';
@@ -14,11 +13,13 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {getDetailChapter} from 'state/Action/ChapterAction';
+import {getListComment} from 'state/Action/CommentAction';
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 import {RootState} from 'store/store';
 import {
@@ -44,6 +45,9 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
   const detailChapter = useAppSelector(
     (state: RootState) => state.detailChapter.data,
   );
+  const listComment = useAppSelector(
+    (state: RootState) => state.listComment.data,
+  );
   const dispatch = useDispatch<any>();
   useEffect(() => {
     if (route.params?.chapter?.id > 0 && route.params?.comicId > 0) {
@@ -59,7 +63,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
     }
   }, [dispatch, route.params]);
   const handleNextChapter = () => {
-    dispatch(setComponentLevelLoading(true));
+    // dispatch(setComponentLevelLoading(true));
     dispatch(
       getDetailChapter({
         ChapterId: chapterDetail?.id + 1,
@@ -68,7 +72,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
     ).then(() => {
       setChapterDetail({
         id: chapterDetail?.id + 1,
-        name: chapterDetail.name,
+        name: chapterDetail?.name,
         updated_at: chapterDetail.updated_at,
       });
       dispatch(setComponentLevelLoading(false));
@@ -138,7 +142,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
           />
         </TouchableOpacity>
         <ResuableText
-          text={detailChapter.name}
+          text={detailChapter?.name}
           color={ACTIVECOLORS.primaryWhiteHex}
           size={FONTSIZE.size_20}
           fontFamily={FONTFAMILY.poppins_extrabold}
@@ -182,15 +186,28 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
         )}
         keyExtractor={(_, index) => index.toString()}
       />
-      {Platform.OS === 'ios' ? (
-        <BottomButton
-          text="Home"
-          ACTIVESCOLORS={ACTIVECOLORS}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-      ) : null}
+      <View style={styles.btnContainer}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('Comments', {
+              chapterId: chapterDetail.id,
+              comicId: comicId,
+            })
+          }
+          style={[
+            styles.btn,
+            {backgroundColor: ACTIVECOLORS.primaryWhiteHexRBGA},
+            resuable.innerShadow,
+          ]}>
+          <Text
+            style={{
+              color: ACTIVECOLORS.primaryBlackRGBA,
+              fontSize: FONTSIZE.size_14,
+            }}>
+            Comments
+          </Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -212,5 +229,16 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     width: Dimensions.get('screen').width,
     height: Dimensions.get('screen').height - SPACING.space_30,
+  },
+  btnContainer: {
+    position: 'absolute',
+    top: SPACING.space_30 * 3,
+    left: 10,
+  },
+  btn: {
+    borderWidth: 1,
+    paddingVertical: SPACING.space_8,
+    paddingHorizontal: SPACING.space_10,
+    borderRadius: BORDERRADIUS.radius_25,
   },
 });

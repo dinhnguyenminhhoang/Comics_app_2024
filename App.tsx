@@ -2,17 +2,16 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import ProfileTopTab from 'navigators/ProfileTopTab';
 import TabNavigator from 'navigators/TabNavigator';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
+import ToastMessage from 'react-native-toast-message';
 import {Provider} from 'react-redux';
 import ChapterDetail from 'screens/ChapterDetailScreen';
+import CommentScreen from 'screens/CommentScreen';
 import DetailScreen from 'screens/DetailScreen';
-import {RootState, store} from 'store/store';
+import {store} from 'store/store';
 import {RootAppParamList} from 'utils/datatype';
-import ToastMessage from 'react-native-toast-message';
-import {useAppSelector} from 'hooks/useAppSelector';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ProfileTopTab from 'navigators/ProfileTopTab';
 
 const Stack = createNativeStackNavigator<RootAppParamList>();
 export default function App() {
@@ -55,6 +54,11 @@ export default function App() {
           <Stack.Screen
             name="Profile"
             component={ProfileTopTab}
+            options={{animation: 'slide_from_bottom'}}
+          />
+          <Stack.Screen
+            name="Comments"
+            component={CommentScreen}
             options={{animation: 'slide_from_bottom'}}
           />
         </Stack.Navigator>

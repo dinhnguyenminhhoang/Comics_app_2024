@@ -1,10 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {CommonActions, useNavigation} from '@react-navigation/native';
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import HeaderBack from 'components/Resuable/HeaderBack';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
@@ -21,9 +19,10 @@ import {getProfileUser} from 'state/Action/profileAction';
 import {setIsLoggedIn, setUserInfo} from 'state/Slices/Auth/auth';
 import {RootState} from 'store/store';
 import {COLORS, ColorType, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
-import {RootAppParamList, RootStackParamList} from 'utils/datatype';
+import {RootStackParamList} from 'utils/datatype';
 const Tab = createMaterialTopTabNavigator();
 const ProfileTopTab = () => {
+  let tabBarHeight = useBottomTabBarHeight();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch<any>();
@@ -59,7 +58,9 @@ const ProfileTopTab = () => {
     <View
       style={[
         styles.container,
-        {backgroundColor: ACTIVECOLORS.primaryBlackHex},
+        {
+          backgroundColor: ACTIVECOLORS.primaryBlackHex,
+        },
       ]}>
       <HeaderBack onPress={() => navigation.goBack()} Onpress2={handleLogout} />
       <View
@@ -104,6 +105,7 @@ const ProfileTopTab = () => {
       <View
         style={{
           height: Dimensions.get('window').height - SPACING.space_30 * 6,
+          paddingBottom: tabBarHeight || 40,
         }}>
         <Tab.Navigator
           screenOptions={{
