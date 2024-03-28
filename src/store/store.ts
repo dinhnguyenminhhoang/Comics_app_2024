@@ -6,6 +6,7 @@ import * as commonSlices from '../state/Slices/common';
 import * as chapterSlices from '../state/Slices/Chapter';
 import * as authSlice from '../state/Slices/Auth';
 import * as ProfileSlice from '../state/Slices/Profile';
+import * as CommentSlice from '../state/Slices/Comment';
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
@@ -33,6 +34,12 @@ export const store = configureStore({
     userProfile: ProfileSlice.GetProfileSlice.default,
     historyView: ProfileSlice.GetHistoryViewSlice.default,
     historyComment: ProfileSlice.GetHistoryCommentSlice.default,
+    //comments
+    listComment: CommentSlice.getListCommentSlice.default,
+    listCommentReply: CommentSlice.getListCommentRelySlice.default,
+    createCommentData: CommentSlice.createCommentReplySlice.default,
+    createCommentReplyData: CommentSlice.createCommentSlice.default,
+    deleteCommentData: CommentSlice.deleteComment.default,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

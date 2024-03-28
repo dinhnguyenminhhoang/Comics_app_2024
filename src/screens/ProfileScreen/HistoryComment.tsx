@@ -1,4 +1,11 @@
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useAppSelector} from 'hooks/useAppSelector';
 import {RootState} from 'store/store';
@@ -46,24 +53,25 @@ const HistoryComment = () => {
       }
       data={historyComment}
       renderItem={({item}) => (
-        <View style={styles.listContainer}>
+        <View
+          style={[
+            styles.listContainer,
+            {borderColor: ACTIVECOLORS.primaryLightGreyHex},
+          ]}>
           <View style={styles.comicContainer}>
             <Image source={{uri: item.comic_image}} style={styles.imgComic} />
             <View>
               <ResuableText
-                text={item.content}
+                text={item.comic_name}
                 textAlign="left"
                 color={ACTIVECOLORS.primaryWhiteHex}
                 fontFamily={FONTFAMILY.poppins_extrabold}
-                size={FONTSIZE.size_20}
-                numberOfLines={3}
-              />
-              <ResuableText
-                text={item.comic_name}
-                textAlign="left"
-                color={ACTIVECOLORS.primaryWhiteHexRBGA}
-                fontFamily={FONTFAMILY.poppins_regular}
-                size={FONTSIZE.size_12}
+                size={FONTSIZE.size_18}
+                numberOfLines={1}
+                moreStyles={{
+                  maxWidth:
+                    Dimensions.get('window').width - SPACING.space_30 * 5,
+                }}
               />
               <ResuableText
                 text={item.chapter_name}
@@ -71,6 +79,23 @@ const HistoryComment = () => {
                 color={ACTIVECOLORS.primaryWhiteHexRBGA}
                 fontFamily={FONTFAMILY.poppins_regular}
                 size={FONTSIZE.size_12}
+                moreStyles={{
+                  maxWidth:
+                    Dimensions.get('window').width - SPACING.space_30 * 5,
+                }}
+                numberOfLines={1}
+              />
+              <ResuableText
+                text={item.content}
+                textAlign="left"
+                color={ACTIVECOLORS.primaryWhiteHexRBGA}
+                fontFamily={FONTFAMILY.poppins_regular}
+                size={FONTSIZE.size_12}
+                moreStyles={{
+                  maxWidth:
+                    Dimensions.get('window').width - SPACING.space_30 * 5,
+                }}
+                numberOfLines={3}
               />
             </View>
           </View>

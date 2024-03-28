@@ -43,6 +43,10 @@ export type RootAppParamList = {
     endChapterId: number;
   };
   Profile: undefined;
+  Comments: {
+    chapterId: number;
+    comicId: number;
+  };
 };
 export interface authorsType {
   id: number;
@@ -104,4 +108,14 @@ export interface comentHistoryType {
 export interface historyViewType {
   chapter: chapterType;
   comic: ComicType;
+}
+export interface replyCOmmentType {
+  id: number;
+  content: string;
+  parent_id: number;
+  created_at: Date;
+  is_owner: true;
+  reply_num: 0;
+  user_avatar: string;
+  username: string;
 }

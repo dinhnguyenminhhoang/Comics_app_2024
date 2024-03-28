@@ -1,20 +1,11 @@
 import resuable from 'components/Resuable/Resuable.style';
 import {useAppSelector} from 'hooks/useAppSelector';
 import React from 'react';
-import {
-  Image,
-  StyleSheet,
-  Switch,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {COLORS, ColorType, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
-import GrandientIcon from '../Resuable/GrandientIcon';
-import ProfilePic from './ProfilePic';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {setDrakMode} from 'state/Slices/common/ThemeDarkMode';
-import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
+import {COLORS, ColorType, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
+import ProfilePic from './ProfilePic';
 
 interface HeaderNarProps {
   title?: string;
@@ -37,31 +28,31 @@ const HeaderBar: React.FC<HeaderNarProps> = ({title, isLoggedIn}) => {
         resuable.rowWithSpace,
         {alignItems: 'flex-start'},
       ]}>
-      <GrandientIcon
+      <View>
+        <TouchableOpacity onPress={handleChangDarkMode}>
+          {ThemeDarkMode ? (
+            <Image
+              source={require('../../assets/app_images/sun.png')}
+              style={styles.switch}
+            />
+          ) : (
+            <Image
+              source={require('../../assets/app_images/moon.png')}
+              style={styles.switch}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
+      {/* <GrandientIcon
         name="menu-fold"
         color={ACTIVECOLORS.primaryWhiteHex}
         size={FONTSIZE.size_16}
-      />
+      /> */}
       <Text style={[styles.HeaderText, {color: ACTIVECOLORS.primaryWhiteHex}]}>
         {title}
       </Text>
       <View style={styles.profiContainer}>
         {isLoggedIn ? <ProfilePic /> : null}
-        <View>
-          <TouchableOpacity onPress={handleChangDarkMode}>
-            {ThemeDarkMode ? (
-              <Image
-                source={require('../../assets/app_images/sun.png')}
-                style={styles.switch}
-              />
-            ) : (
-              <Image
-                source={require('../../assets/app_images/moon.png')}
-                style={styles.switch}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
   );

@@ -1,5 +1,4 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import CommentScreen from 'components/Comment/Comment';
 import CustomIcon from 'components/Resuable/CustomIcon';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
@@ -14,11 +13,13 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {getDetailChapter} from 'state/Action/ChapterAction';
+import {getListComment} from 'state/Action/CommentAction';
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 import {RootState} from 'store/store';
 import {
@@ -44,6 +45,9 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
   const detailChapter = useAppSelector(
     (state: RootState) => state.detailChapter.data,
   );
+  const listComment = useAppSelector(
+    (state: RootState) => state.listComment.data,
+  );
   const dispatch = useDispatch<any>();
   useEffect(() => {
     if (route.params?.chapter?.id > 0 && route.params?.comicId > 0) {
@@ -59,7 +63,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
     }
   }, [dispatch, route.params]);
   const handleNextChapter = () => {
-    dispatch(setComponentLevelLoading(true));
+    // dispatch(setComponentLevelLoading(true));
     dispatch(
       getDetailChapter({
         ChapterId: chapterDetail?.id + 1,
@@ -181,32 +185,29 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
           </View>
         )}
         keyExtractor={(_, index) => index.toString()}
-        ListFooterComponent={
-          <CommentScreen
-            comments={[
-              {
-                id: 60017,
-                content: 'Hay nha 😎😎😎',
-                created_at: '2024-03-27T02:27:51Z',
-                username: 'mqthinh',
-                user_avatar:
-                  'https://dl.dropboxusercontent.com/s/xvkveeso8srxog9hrgdql/mqthinh.jfif?rlkey=jwgmzdjjp6n4uadjt0ege2os2',
-                is_owner: true,
-                reply_num: 0,
-              },
-            ]}
-          />
-        }
       />
-      {Platform.OS === 'ios' ? (
-        <BottomButton
-          text="Home"
-          ACTIVESCOLORS={ACTIVECOLORS}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-      ) : null}
+      <View style={styles.btnContainer}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('Comments', {
+              chapterId: chapterDetail.id,
+              comicId: comicId,
+            })
+          }
+          style={[
+            styles.btn,
+            {backgroundColor: ACTIVECOLORS.primaryWhiteHexRBGA},
+            resuable.innerShadow,
+          ]}>
+          <Text
+            style={{
+              color: ACTIVECOLORS.primaryBlackRGBA,
+              fontSize: FONTSIZE.size_14,
+            }}>
+            Comments
+          </Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -228,5 +229,16 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     width: Dimensions.get('screen').width,
     height: Dimensions.get('screen').height - SPACING.space_30,
+  },
+  btnContainer: {
+    position: 'absolute',
+    top: SPACING.space_30 * 3,
+    left: 10,
+  },
+  btn: {
+    borderWidth: 1,
+    paddingVertical: SPACING.space_8,
+    paddingHorizontal: SPACING.space_10,
+    borderRadius: BORDERRADIUS.radius_25,
   },
 });

@@ -22,7 +22,7 @@ const ProfilePic: React.FC<ProfilePicProps> = ({}) => {
   );
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Profile')}
+      // onPress={() => navigation.navigate('Profile')}
       style={[
         styles.imgContainer,
         resuable.withSpace,

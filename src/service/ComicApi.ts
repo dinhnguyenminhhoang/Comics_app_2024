@@ -22,7 +22,7 @@ const handleGetListComics = (formData: comicsApiParams) => {
       ...queryParams,
     },
     paramsSerializer: {
-      indexes: null, // by default: false
+      indexes: null,
     },
   });
 };

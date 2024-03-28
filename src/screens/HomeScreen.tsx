@@ -115,24 +115,10 @@ export default function HomeScreen() {
     dispath(getListGenres());
   }, []);
   useEffect(() => {
-    if (
-      listComics?.length &&
-      listNewChapter?.length &&
-      listNewComics?.length &&
-      listMostViewComics?.length &&
-      listMostViewChapter?.length &&
-      listGenres?.length
-    ) {
+    if (listComics?.length && listGenres?.length) {
       dispath(setComponentLevelLoading(false));
     }
-  }, [
-    listComics,
-    listNewChapter,
-    listNewComics,
-    listMostViewComics,
-    listMostViewChapter,
-    listGenres,
-  ]);
+  }, [listComics, listGenres]);
   if (ComponentLoading) {
     return (
       <View style={[dynamicStyle.ScreenContainer, resuable.center]}>
