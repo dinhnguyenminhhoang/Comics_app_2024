@@ -39,13 +39,12 @@ const TabNavigator = () => {
       return null;
     }
   };
-
   useEffect(() => {
     getToken().then(token => {
       if (token !== null) {
         const parts = token
           .split('.')
-          .map((part: string) =>
+          ?.map((part: string) =>
             Buffer.from(
               part.replace(/-/g, '+').replace(/_/g, '/'),
               'base64',
@@ -149,5 +148,10 @@ const styles = StyleSheet.create({
   BlurViewStyle: {
     position: 'absolute',
     elevation: 0,
+  },
+  ScreenContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: SPACING.space_8,
   },
 });

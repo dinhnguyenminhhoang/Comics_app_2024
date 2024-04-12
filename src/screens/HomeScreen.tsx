@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -76,62 +77,56 @@ export default function HomeScreen() {
   const searchComicData = useAppSelector(
     (state: RootState) => state.searchComicData.data,
   );
-  const ComponentLoading = useAppSelector(
-    (state: RootState) => state.ComponentLoading.componentLevelLoading,
-  );
   const isLoggedId = useAppSelector(
     (state: RootState) => state.isLogger.isLoggedIn,
   );
+  const ComponentLoading = useAppSelector(
+    (state: RootState) => state.ComponentLoading.componentLevelLoading,
+  );
   useEffect(() => {
-    dispath(setComponentLevelLoading(true));
-    dispath(getListComics({...COMICPARAM, page: 1, page_size: getMoreComics}));
-    dispath(
-      getListNewComics({...COMICPARAM, page: 1, page_size: 10, sort_by: 0}),
-    );
-    dispath(
-      getListMostViewComics({
-        ...COMICPARAM,
-        page: 1,
-        page_size: 12,
-        sort_by: 2,
-      }),
-    );
-    dispath(
-      getListNewChapter({
-        ...COMICPARAM,
-        page: 1,
-        page_size: 12,
-        sort_by: 1,
-      }),
-    );
-    dispath(
-      getListMostViewChapter({
-        ...COMICPARAM,
-        page: 1,
-        page_size: 12,
-        sort_by: 3,
-      }),
-    );
-    dispath(getListGenres());
+    try {
+      dispath(setComponentLevelLoading(true));
+      dispath(
+        getListComics({...COMICPARAM, page: 1, page_size: getMoreComics}),
+      );
+      dispath(
+        getListNewComics({...COMICPARAM, page: 1, page_size: 10, sort_by: 0}),
+      );
+      dispath(
+        getListMostViewComics({
+          ...COMICPARAM,
+          page: 1,
+          page_size: 12,
+          sort_by: 2,
+        }),
+      );
+      dispath(
+        getListNewChapter({
+          ...COMICPARAM,
+          page: 1,
+          page_size: 12,
+          sort_by: 1,
+        }),
+      );
+      dispath(
+        getListMostViewChapter({
+          ...COMICPARAM,
+          page: 1,
+          page_size: 12,
+          sort_by: 3,
+        }),
+      );
+      dispath(getListGenres());
+    } catch (error) {
+      dispath(setComponentLevelLoading(false));
+    }
   }, []);
   useEffect(() => {
     if (listComics?.length && listGenres?.length) {
       dispath(setComponentLevelLoading(false));
     }
   }, [listComics, listGenres]);
-  if (ComponentLoading) {
-    return (
-      <View style={[dynamicStyle.ScreenContainer, resuable.center]}>
-        <ActivityIndicator size={40} />
-        <ResuableText
-          text="Loading..."
-          size={FONTSIZE.size_20}
-          color={ACTIVECOLORS.secondaryLightGreyHex}
-          moreStyles={{marginTop: SPACING.space_8}}
-        />
-      </View>
-    );
-  }
+
   const handleLoadMore = async () => {
     try {
       if (Loading) {
@@ -149,19 +144,33 @@ export default function HomeScreen() {
     } catch (error) {}
   };
   const handleScroll = async (event: any) => {
-    const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
-    const isAtEnd =
-      layoutMeasurement.height + contentOffset.y >= contentSize.height;
-    if (isAtEnd && hasMoreComics) {
-      setLoading(true);
-      await handleLoadMore();
-    }
+    // const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
+    // const isAtEnd =
+    //   layoutMeasurement.height + contentOffset.y >= contentSize.height;
+    // if (isAtEnd && hasMoreComics) {
+    //   setLoading(true);
+    //   await handleLoadMore();
+    // }
   };
   const handlePressSearch = (value: string) => {
     if (value && value?.trim() !== '') {
       dispath(getResultSearchComics({keyword: value, page: 1, page_size: 10}));
     }
   };
+  if (ComponentLoading) {
+    return (
+      <View style={[dynamicStyle.ScreenContainer, resuable.center]}>
+        <ActivityIndicator size={40} />
+        <ResuableText
+          text="Loading..."
+          size={FONTSIZE.size_20}
+          color={ACTIVECOLORS.secondaryLightGreyHex}
+          moreStyles={{marginTop: SPACING.space_8}}
+        />
+      </View>
+    );
+  }
+  // AsyncStorage.clear();
   return (
     <SafeAreaView style={dynamicStyle.ScreenContainer}>
       <StatusBar
@@ -171,6 +180,10 @@ export default function HomeScreen() {
       <View style={[dynamicStyle.ScrollViewFlex]}>
         <HeaderBar title="Comics" isLoggedIn={isLoggedId} />
         <ScrollView
+          onMomentumScrollEnd={async () => {
+            await handleLoadMore();
+            setLoading(true);
+          }}
           style={[{marginBottom: tabBarHeight}]}
           onScroll={handleScroll}
           showsVerticalScrollIndicator={false}
@@ -255,6 +268,7 @@ export default function HomeScreen() {
             listComics={listComics as ComicType[]}
             stick="hot"
           />
+          {/* show loading comics spinner */}
           {Loading ? (
             <View style={{marginVertical: SPACING.space_8}}>
               <ActivityIndicator size={40} />

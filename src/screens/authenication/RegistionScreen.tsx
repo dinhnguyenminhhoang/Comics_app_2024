@@ -208,11 +208,13 @@ const RegistionScreen: React.FC = () => {
             <TouchableOpacity onPress={handleSubmit}>
               <ResuableText
                 text={'REGISTER'}
-                color={ACTIVECOLORS.primaryWhiteHex}
+                color={ACTIVECOLORS.fixColorBlack
+                }
                 fontFamily={FONTFAMILY.poppins_semibold}
                 moreStyles={{
                   borderWidth: 1,
-                  borderColor: ACTIVECOLORS.primaryWhiteHex,
+                  borderColor: ACTIVECOLORS.fixColorBlack
+                  ,
                   backgroundColor: 'transparent',
                   paddingVertical: SPACING.space_10,
                   borderRadius: BORDERRADIUS.radius_10,

@@ -78,21 +78,25 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
       dispatch(setComponentLevelLoading(false));
     });
   };
-  const handlePreChapter = () => {
-    dispatch(setComponentLevelLoading(true));
-    dispatch(
-      getDetailChapter({
-        ChapterId: chapterDetail.id - 1,
-        comicId: comicId,
-      }),
-    ).then(() => {
-      setChapterDetail({
-        id: chapterDetail?.id - 1,
-        name: chapterDetail?.name,
-        updated_at: chapterDetail?.updated_at,
+  const handlePreChapter = async () => {
+    try {
+      dispatch(setComponentLevelLoading(true));
+      dispatch(
+        getDetailChapter({
+          ChapterId: chapterDetail.id - 1,
+          comicId: comicId,
+        }),
+      ).then(() => {
+        setChapterDetail({
+          id: chapterDetail?.id - 1,
+          name: chapterDetail?.name,
+          updated_at: chapterDetail?.updated_at,
+        });
+        dispatch(setComponentLevelLoading(false));
       });
+    } catch (error) {
       dispatch(setComponentLevelLoading(false));
-    });
+    }
   };
   if (ComponentLoading) {
     return (

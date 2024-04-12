@@ -151,7 +151,7 @@ const CommentItem: React.FC<comicItemProp> = ({
         />
       ) : null}
 
-      {relyId === comment.id ? (
+      {/* {relyId === comment.id ? (
         <View style={styles.replyContainer}>
           <TextInput
             style={[
@@ -177,7 +177,7 @@ const CommentItem: React.FC<comicItemProp> = ({
             <Text style={{color: ACTIVECOLORS.primaryWhiteHex}}>Phản hồi</Text>
           </TouchableOpacity>
         </View>
-      ) : null}
+      ) : null} */}
     </View>
   );
 };
