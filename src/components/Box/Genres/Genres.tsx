@@ -85,9 +85,9 @@ const Genres: React.FC<genresProps> = ({listGenres}) => {
       />
     </TouchableOpacity>
   );
-  const middleIndex = Math.floor(listGenres.length / 2);
-  const firstHalf = listGenres.slice(0, middleIndex);
-  const secondHalf = listGenres.slice(middleIndex);
+  const middleIndex = Math.floor(listGenres?.length / 2);
+  const firstHalf = listGenres?.slice(0, middleIndex);
+  const secondHalf = listGenres?.slice(middleIndex);
   return (
     <View
       style={[

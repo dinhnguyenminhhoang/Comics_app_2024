@@ -51,7 +51,7 @@ const IntroductionComic: React.FC<IntroductionComicProps> = ({
           textTop="Tên khác"
           textBottom={
             comic.other_name?.length
-              ? comic.authors.map(item => item.name).join(' - ')
+              ? comic.authors?.map(item => item.name).join(' - ')
               : 'đang cập nhật'
           }
         />
