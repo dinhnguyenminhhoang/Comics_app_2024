@@ -2,7 +2,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import CustomIcon from 'components/Resuable/CustomIcon';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
-import BottomButton from 'components/ResuableButton/BottomButton';
 import {useAppSelector} from 'hooks/useAppSelector';
 import React, {useEffect, useState} from 'react';
 import {
@@ -10,7 +9,6 @@ import {
   Dimensions,
   FlatList,
   Image,
-  Platform,
   StatusBar,
   StyleSheet,
   Text,
@@ -19,7 +17,6 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {getDetailChapter} from 'state/Action/ChapterAction';
-import {getListComment} from 'state/Action/CommentAction';
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 import {RootState} from 'store/store';
 import {
@@ -176,6 +173,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
       <FlatList
+        // maxToRenderPerBatch={100}
         data={detailChapter?.images}
         renderItem={({item}) => (
           <View style={[styles.container]}>

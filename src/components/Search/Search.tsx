@@ -52,7 +52,7 @@ const Search: React.FC<SearchProp> = ({onPress}) => {
           name="search1"
           size={FONTSIZE.size_18}
           color={
-            searchText.length > 0
+            searchText?.length > 0
               ? ACTIVECOLORS.primaryWhiteHex
               : ACTIVECOLORS.primaryLightGreyHex
           }
@@ -67,7 +67,7 @@ const Search: React.FC<SearchProp> = ({onPress}) => {
         placeholderTextColor={ACTIVECOLORS.primaryLightGreyHex}
         style={dynamicStyle.TextInputContainer}
       />
-      {searchText.length > 0 ? (
+      {searchText?.length > 0 ? (
         <TouchableOpacity
           onPress={() => {
             setSearchText('');

@@ -108,19 +108,19 @@ const FilterScreen: React.FC<Props> = ({route}) => {
     }
   };
 
-  // if (ComponentLoading) {
-  //   return (
-  //     <View style={[styles.container, resuable.center]}>
-  //       <ActivityIndicator size={40} />
-  //       <ResuableText
-  //         text="Loading..."
-  //         size={FONTSIZE.size_20}
-  //         color={ACTIVECOLORS.secondaryLightGreyHex}
-  //         moreStyles={{marginTop: SPACING.space_8}}
-  //       />
-  //     </View>
-  //   );
-  // }
+  if (ComponentLoading) {
+    return (
+      <View style={[styles.container, resuable.center]}>
+        <ActivityIndicator size={40} />
+        <ResuableText
+          text="Loading..."
+          size={FONTSIZE.size_20}
+          color={ACTIVECOLORS.secondaryLightGreyHex}
+          moreStyles={{marginTop: SPACING.space_8}}
+        />
+      </View>
+    );
+  }
   return (
     <View
       style={[

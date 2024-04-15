@@ -31,7 +31,7 @@ const ListChapter: React.FC<ListChapterProps> = ({
               navigation.navigate('Chapters', {
                 chapter: item,
                 comicId: comic.id,
-                startChapterId: comic.chapters[comic.chapters.length - 1].id,
+                startChapterId: comic.chapters[comic.chapters?.length - 1].id,
                 endChapterId: comic.chapters[0].id,
               })
             }
