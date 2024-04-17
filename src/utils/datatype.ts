@@ -43,10 +43,6 @@ export type RootAppParamList = {
     endChapterId: number;
   };
   Profile: undefined;
-  Comments: {
-    chapterId: number;
-    comicId: number;
-  };
 };
 export interface authorsType {
   id: number;

@@ -1,4 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import CommentCpn from 'components/Comment/Comment';
+import CommentItem from 'components/Comment/CommentItem';
 import CustomIcon from 'components/Resuable/CustomIcon';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
@@ -173,7 +175,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
       <FlatList
-        // maxToRenderPerBatch={100}
+        maxToRenderPerBatch={100}
         data={detailChapter?.images}
         renderItem={({item}) => (
           <View style={[styles.container]}>
@@ -187,29 +189,10 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
           </View>
         )}
         keyExtractor={(_, index) => index.toString()}
+        ListFooterComponent={
+          <CommentCpn chapterId={chapter.id} comicId={comicId} />
+        }
       />
-      <View style={styles.btnContainer}>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('Comments', {
-              chapterId: chapterDetail.id,
-              comicId: comicId,
-            })
-          }
-          style={[
-            styles.btn,
-            {backgroundColor: ACTIVECOLORS.primaryWhiteHexRBGA},
-            resuable.innerShadow,
-          ]}>
-          <Text
-            style={{
-              color: ACTIVECOLORS.primaryBlackRGBA,
-              fontSize: FONTSIZE.size_14,
-            }}>
-            Comments
-          </Text>
-        </TouchableOpacity>
-      </View>
     </>
   );
 };

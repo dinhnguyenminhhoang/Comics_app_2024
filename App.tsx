@@ -8,7 +8,6 @@ import React, {useCallback} from 'react';
 import ToastMessage from 'react-native-toast-message';
 import {Provider} from 'react-redux';
 import ChapterDetail from 'screens/ChapterDetailScreen';
-import CommentScreen from 'screens/CommentScreen';
 import DetailScreen from 'screens/DetailScreen';
 import {store} from 'store/store';
 import {RootAppParamList} from 'utils/datatype';
@@ -54,11 +53,6 @@ export default function App() {
           <Stack.Screen
             name="Profile"
             component={ProfileTopTab}
-            options={{animation: 'slide_from_bottom'}}
-          />
-          <Stack.Screen
-            name="Comments"
-            component={CommentScreen}
             options={{animation: 'slide_from_bottom'}}
           />
         </Stack.Navigator>
