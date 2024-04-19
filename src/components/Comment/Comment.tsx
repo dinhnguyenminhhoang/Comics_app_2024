@@ -113,7 +113,7 @@ const CommentCpn: React.FC<CommentsProps> = ({chapterId, comicId}) => {
       style={[
         styles.container,
         {
-          backgroundColor: ACTIVECOLORS.primaryBlackHex,
+          backgroundColor: ACTIVECOLORS.primaryBlackRGBA,
           // paddingBottom: showKeyBoard ? 200 : 10,
         },
       ]}>
