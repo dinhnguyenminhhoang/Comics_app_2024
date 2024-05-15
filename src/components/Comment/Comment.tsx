@@ -1,16 +1,31 @@
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import CommentItem from 'components/Comment/CommentItem';
+import HeightSpacer from 'components/Resuable/HeightSpacer';
+import ResuableText from 'components/Resuable/ResuableText';
+import ResuableTitle from 'components/Resuable/ResuableTitle';
+import {useAppSelector} from 'hooks/useAppSelector';
+import React, {useEffect, useState} from 'react';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
-  ActivityIndicator,
   FlatList,
+  Keyboard,
   KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootAppParamList, RootStackParamList} from 'utils/datatype';
+import Toast from 'react-native-toast-message';
+import {useDispatch} from 'react-redux';
+import {
+  createComment,
+  createCommentReply,
+  getListComment,
+} from 'state/Action/CommentAction';
+import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
+import {RootState} from 'store/store';
 import {
   BORDERRADIUS,
   COLORS,
@@ -19,31 +34,15 @@ import {
   FONTSIZE,
   SPACING,
 } from 'theme/theme';
-import {RootState} from 'store/store';
-import {useAppSelector} from 'hooks/useAppSelector';
-import {useDispatch} from 'react-redux';
-import {getDetailChapter} from 'state/Action/ChapterAction';
-import {
-  createComment,
-  createCommentReply,
-  getListComment,
-} from 'state/Action/CommentAction';
-import CommentItem from 'components/Comment/CommentItem';
-import ResuableText from 'components/Resuable/ResuableText';
-import HeightSpacer from 'components/Resuable/HeightSpacer';
-import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
-import resuable from 'components/Resuable/Resuable.style';
-import Toast from 'react-native-toast-message';
 
-type Props = NativeStackScreenProps<
-  RootStackParamList & RootAppParamList,
-  'Comments'
->;
-const CommentScreen: React.FC<Props> = ({navigation, route}) => {
+interface CommentsProps {
+  chapterId: number;
+  comicId: number;
+}
+const CommentCpn: React.FC<CommentsProps> = ({chapterId, comicId}) => {
   const [comment, setComment] = useState<string>('');
-  const [Loading, setLoading] = useState<boolean>(false);
   const [showComment, setShowComment] = useState<boolean>(true);
-  const {chapterId, comicId} = route.params;
+  const [showKeyBoard, setShowKeyBoard] = useState<boolean>(true);
   const ThemeDarkMode = useAppSelector(
     (state: RootState) => state.ThemeDarkMode.darkMode,
   );
@@ -67,14 +66,11 @@ const CommentScreen: React.FC<Props> = ({navigation, route}) => {
   const createReplyData = useAppSelector(
     (state: RootState) => state.createCommentReplyData.data,
   );
-  const ComponentLoading = useAppSelector(
-    (state: RootState) => state.ComponentLoading.componentLevelLoading,
-  );
   const isLoggedIn = useAppSelector(
     (state: RootState) => state.isLogger.isLoggedIn,
   );
+
   useEffect(() => {
-    dispatch(setComponentLevelLoading(true));
     dispatch(
       getListComment({
         page: 1,
@@ -94,8 +90,6 @@ const CommentScreen: React.FC<Props> = ({navigation, route}) => {
             content: comment.trim(),
           }),
         ).then(() => {
-          // dispatch(setComponentLevelLoading(true));
-          // setLoading(true);
           Toast.show({
             text1: 'Đợi trong giây lát để hiển thị',
             text2: 'Bình luận thành công !',
@@ -114,50 +108,32 @@ const CommentScreen: React.FC<Props> = ({navigation, route}) => {
       } catch (error) {}
     }
   };
-  useEffect(() => {
-    if (ComponentLoading) {
-      dispatch(setComponentLevelLoading(false));
-    }
-  }, [listComments]);
-  // if (ComponentLoading) {
-  //   return (
-  //     <View style={[styles.container, resuable.center]}>
-  //       <ActivityIndicator size={40} />
-  //       <ResuableText
-  //         text="Loading..."
-  //         size={FONTSIZE.size_20}
-  //         color={ACTIVECOLORS.secondaryLightGreyHex}
-  //         moreStyles={{marginTop: SPACING.space_8}}
-  //       />
-  //     </View>
-  //   );
-  // }
   return (
     <View
       style={[
         styles.container,
-        {backgroundColor: ACTIVECOLORS.primaryBlackHex},
+        {
+          backgroundColor: ACTIVECOLORS.primaryBlackRGBA,
+          // paddingBottom: showKeyBoard ? 200 : 10,
+        },
       ]}>
+      <ResuableTitle
+        titleRight={`Tổng ${listComments?.length || 0} bình luận`}
+        titleLeft="Danh sách bình luận"
+        onPress={() => {}}
+      />
       <FlatList
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => (
           <HeightSpacer height={SPACING.space_10} />
         )}
-        ListHeaderComponent={
-          <ResuableText
-            text="Danh sách bình luận"
-            size={FONTSIZE.size_20}
-            color={ACTIVECOLORS.primaryWhiteHex}
-            fontFamily={FONTFAMILY.poppins_semibold}
-            moreStyles={{marginBottom: SPACING.space_20}}
-          />
-        }
         ListEmptyComponent={
           <ResuableText
             text="Trở thành người bình luận đầu điên nào !"
             size={FONTSIZE.size_16}
             color={ACTIVECOLORS.primaryWhiteHex}
             fontFamily={FONTFAMILY.poppins_medium}
+            moreStyles={{marginTop: 20}}
           />
         }
         data={listComments}
@@ -175,32 +151,32 @@ const CommentScreen: React.FC<Props> = ({navigation, route}) => {
       />
       {showComment ? (
         isLoggedIn ? (
-          <KeyboardAvoidingView behavior="padding" style={styles.footer}>
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  color: ACTIVECOLORS.primaryWhiteHex,
-                  borderColor: ACTIVECOLORS.primaryWhiteHex,
-                },
-              ]}
-              placeholder="Comment..."
-              placeholderTextColor={ACTIVECOLORS.primaryWhiteHex}
-              onChangeText={(value: string) => setComment(value)}
-            />
-            <TouchableOpacity
-              onPress={handleComment}
-              style={[
-                styles.replyButton,
-                {borderColor: ACTIVECOLORS.primaryWhiteHex},
-              ]}>
-              <Text style={[{color: ACTIVECOLORS.primaryWhiteHex}]}>Gửi</Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
+          <KeyboardAwareScrollView>
+            <View style={styles.footer}>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    color: ACTIVECOLORS.primaryWhiteHex,
+                    borderColor: ACTIVECOLORS.primaryWhiteHex,
+                  },
+                ]}
+                placeholder="Comment..."
+                placeholderTextColor={ACTIVECOLORS.primaryWhiteHex}
+                onChangeText={(value: string) => setComment(value)}
+              />
+              <TouchableOpacity
+                onPress={handleComment}
+                style={[
+                  styles.replyButton,
+                  {borderColor: ACTIVECOLORS.primaryWhiteHex},
+                ]}>
+                <Text style={[{color: ACTIVECOLORS.primaryWhiteHex}]}>Gửi</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAwareScrollView>
         ) : (
-          <TouchableOpacity
-            style={styles.btnLogin}
-            onPress={() => navigation.navigate('LoginScreen')}>
+          <TouchableOpacity style={styles.btnLogin} onPress={() => {}}>
             <ResuableText
               text="Đăng nhập để bình luận"
               color={ACTIVECOLORS.primaryWhiteHex}
@@ -216,8 +192,10 @@ const CommentScreen: React.FC<Props> = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: SPACING.space_10,
+    paddingHorizontal: SPACING.space_12,
+    paddingBottom: SPACING.space_18 * 2,
+    paddingTop: SPACING.space_10,
+    borderTopWidth: 1,
   },
   commentContainer: {
     marginBottom: 20,
@@ -266,7 +244,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: SPACING.space_12,
-    borderTopWidth: 1,
+    // borderTopWidth: 1,
   },
   btnLogin: {
     padding: SPACING.space_10,
@@ -275,4 +253,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CommentScreen;
+export default CommentCpn;

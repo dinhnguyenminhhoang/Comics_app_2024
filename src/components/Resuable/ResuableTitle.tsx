@@ -24,10 +24,10 @@ const ResuableTitle: React.FC<ResuableTextProps> = ({
     <View style={[resuable.rowWithSpace]}>
       <ResuableText
         color={ACTIVECOLORS.primaryWhiteHex}
-        fontFamily={FONTFAMILY.poppins_bold}
+        fontFamily={FONTFAMILY.poppins_semibold}
         text={titleLeft}
         textAlign="right"
-        size={FONTSIZE.size_20}
+        size={FONTSIZE.size_18}
       />
       <TouchableOpacity onPress={onPress}>
         <ResuableText
@@ -35,7 +35,7 @@ const ResuableTitle: React.FC<ResuableTextProps> = ({
           fontFamily={FONTFAMILY.poppins_regular}
           text={titleRight}
           textAlign="left"
-          size={FONTSIZE.size_16}
+          size={FONTSIZE.size_14}
           textDecorationLine="underline"
         />
       </TouchableOpacity>
