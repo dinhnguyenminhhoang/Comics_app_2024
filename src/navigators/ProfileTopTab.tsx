@@ -8,9 +8,18 @@ import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
 import Avata from 'components/imageCustom/Avata';
 import {useAppSelector} from 'hooks/useAppSelector';
-import React, {useEffect} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Alert,
+  Dimensions,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Toast from 'react-native-toast-message';
+import {Feather} from '@expo/vector-icons';
 import {useDispatch} from 'react-redux';
 import HistoryComment from 'screens/ProfileScreen/HistoryComment';
 import HistoryView from 'screens/ProfileScreen/HistoryView';
@@ -22,6 +31,7 @@ import {COLORS, ColorType, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
 import {RootStackParamList} from 'utils/datatype';
 const Tab = createMaterialTopTabNavigator();
 const ProfileTopTab = () => {
+  const [modalVisible, setModalVisible] = useState(false);
   let tabBarHeight = useBottomTabBarHeight();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -70,8 +80,8 @@ const ProfileTopTab = () => {
           {borderColor: ACTIVECOLORS.primaryWhiteHexRBGA},
         ]}>
         <Avata
-          src={userProfile?.avatar || ''}
-          customerStyles={{
+          src={userProfile?.avatar}
+          customStyles={{
             width: SPACING.space_30 * 3,
             height: SPACING.space_30 * 3,
           }}
@@ -100,6 +110,36 @@ const ProfileTopTab = () => {
             fontFamily={FONTFAMILY.poppins_regular}
             size={FONTSIZE.size_12}
           />
+        </View>
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>Hello World!</Text>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text style={styles.textStyle}>Hide Modal</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+          <Pressable
+            style={[styles.button]}
+            onPress={() => setModalVisible(true)}>
+            <Feather
+              name="more-vertical"
+              size={FONTSIZE.size_24}
+              color={ACTIVECOLORS.primaryWhiteHex}
+            />
+          </Pressable>
         </View>
       </View>
       <View
@@ -132,5 +172,43 @@ const styles = StyleSheet.create({
     paddingBottom: SPACING.space_16,
     paddingHorizontal: SPACING.space_20,
     paddingTop: SPACING.space_10,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });

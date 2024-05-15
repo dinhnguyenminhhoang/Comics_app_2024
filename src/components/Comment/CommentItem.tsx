@@ -71,18 +71,19 @@ const CommentItem: React.FC<comicItemProp> = ({
       setShowComment(true);
     }
   };
-  useEffect(() => {
-    dispatch(
-      getListCommentReply({
-        chapterID: chapterID,
-        comicID: comicID,
-        commentID: comment.id,
-        page: 1,
-        page_size: 10,
-      }),
-    );
-  }, [chapterID, comicID, comment]);
+  // useEffect(() => {
+  //   dispatch(
+  //     getListCommentReply({
+  //       chapterID: chapterID,
+  //       comicID: comicID,
+  //       commentID: comment.id,
+  //       page: 1,
+  //       page_size: 10,
+  //     }),
+  //   );
+  // }, [chapterID, comicID, comment]);
   // console.log('commentReply', commentReply);
+  console.log('re-render');
   return (
     <View style={[styles.commentContainer]}>
       <View style={styles.userInfoContainer}>
@@ -119,7 +120,7 @@ const CommentItem: React.FC<comicItemProp> = ({
           </Text>
         </TouchableOpacity>
       </View>
-      {commentReply?.length && commentReply[0].parent_id === comment.id ? (
+      {/* {commentReply?.length && commentReply[0].parent_id === comment.id ? (
         <FlatList
           data={commentReply}
           renderItem={({item}) => (
@@ -149,7 +150,7 @@ const CommentItem: React.FC<comicItemProp> = ({
             </View>
           )}
         />
-      ) : null}
+      ) : null} */}
 
       {/* {relyId === comment.id ? (
         <View style={styles.replyContainer}>
