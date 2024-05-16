@@ -1,13 +1,18 @@
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import ResuableText from 'components/Resuable/ResuableText';
+import {useAppSelector} from 'hooks/useAppSelector';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
   Image,
   StyleSheet,
-  Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useAppSelector} from 'hooks/useAppSelector';
+import {useDispatch} from 'react-redux';
+import {getHistoryView} from 'state/Action/profileAction';
 import {RootState} from 'store/store';
 import {
   BORDERRADIUS,
@@ -17,11 +22,11 @@ import {
   FONTSIZE,
   SPACING,
 } from 'theme/theme';
-import ResuableText from 'components/Resuable/ResuableText';
-import {useDispatch} from 'react-redux';
-import {getHistoryComment, getHistoryView} from 'state/Action/profileAction';
+import {RootAppParamList} from 'utils/datatype';
 
 const HistoryView = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootAppParamList>>();
   const [pageSize, setPageSize] = useState(10);
   const dispatch = useDispatch<any>();
   const ThemeDarkMode = useAppSelector(
@@ -51,7 +56,10 @@ const HistoryView = () => {
       }
       data={historyView}
       renderItem={({item}) => (
-        <View
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('Details', {comicId: item.comic.id})
+          }
           style={[
             styles.listContainer,
             {borderColor: ACTIVECOLORS.primaryLightGreyHex},
@@ -101,7 +109,7 @@ const HistoryView = () => {
               />
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       )}
     />
   );
