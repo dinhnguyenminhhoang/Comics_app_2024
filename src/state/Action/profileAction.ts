@@ -36,3 +36,19 @@ export const getHistoryComment = createAsyncThunk(
     }
   },
 );
+export const UpdateUserProfile = createAsyncThunk(
+  'UpdateUserProfile/handleUpdateUserProfiler',
+  async (formData: {
+    first_name: string;
+    last_name: string;
+    gender: boolean;
+  }) => {
+    try {
+      const response = await ProfileApi.handleUpdateUserProfile(formData);
+      let data = response;
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
