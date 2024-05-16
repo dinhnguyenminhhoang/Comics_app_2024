@@ -18,17 +18,20 @@ const handleUpdateUserProfile = async (formData: {
   const headers = {
     Authorization: `Bearer ${JSON.parse(token || '')}`,
   };
-  console.log(headers);
   return axios.patch('/api/v1/user/profile', formData, {headers: headers});
 };
 const handleUpdateImg = (file: File) => {
   return axios.put(`/api/v1/user/profile/avatar`, file);
 };
-const handleResetPassword = (formData: {
+const handleResetPassword = async (formData: {
   current_password: string;
   new_password: string;
 }) => {
-  return axios.put(`/api/v1/user/change-password`);
+  const token = await AsyncStorage.getItem('token');
+  const headers = {
+    Authorization: `Bearer ${JSON.parse(token || '')}`,
+  };
+  return axios.put(`/api/v1/user/change-password`, formData, {headers});
 };
 const handleGetHistory = async (formData: {
   page: number;

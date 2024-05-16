@@ -52,3 +52,15 @@ export const UpdateUserProfile = createAsyncThunk(
     }
   },
 );
+export const ChangePassword = createAsyncThunk(
+  'ChangePassword/handleChangePassword',
+  async (formData: {current_password: string; new_password: string}) => {
+    try {
+      const response = await ProfileApi.handleResetPassword(formData);
+      let data = response;
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+);

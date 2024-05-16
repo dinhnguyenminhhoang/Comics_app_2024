@@ -1,5 +1,8 @@
-import {AntDesign, MaterialCommunityIcons} from '@expo/vector-icons';
-import {Picker} from '@react-native-picker/picker';
+import {
+  AntDesign,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from '@expo/vector-icons';
 import HeightSpacer from 'components/Resuable/HeightSpacer';
 import ResuableText from 'components/Resuable/ResuableText';
 import WidthSpacer from 'components/Resuable/WidthSpacer';
@@ -14,8 +17,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
-import {UpdateUserProfile, getProfileUser} from 'state/Action/profileAction';
+import {ChangePassword} from 'state/Action/profileAction';
 import {RootState} from 'store/store';
 import {
   BORDERRADIUS,
@@ -29,32 +33,36 @@ import {ProfileType} from 'utils/datatype';
 import * as Yup from 'yup';
 
 interface FormValues {
-  firstName: string;
-  lastName: string;
-  gender: string;
+  currentPassword: string;
+  newPassword: string;
 }
 
 const validationSchema = Yup.object().shape({
-  firstName: Yup.string().min(4, 'Vui lòng nhập tên đệm').required('Required'),
-  lastName: Yup.string().min(4, 'Vui lòng nhập tên').required('Required'),
-  gender: Yup.string(),
+  currentPassword: Yup.string()
+    .min(6, 'Vui lòng nhập mật khẩu hiện tại')
+    .required('Required'),
+  newPassword: Yup.string()
+    .min(6, 'Vui lòng nhập mật khẩu mới gồm 1 kí tự đặc biệt')
+    .required('Required'),
 });
-interface UpdateProfileModelProps {
+interface ChangePasswordModelProps {
   modalVisible: boolean;
   setModalVisible: (isVisible: boolean) => void;
-  userProfile: ProfileType;
 }
-const UpdateProfileModel: React.FC<UpdateProfileModelProps> = ({
+const ChangePasswordModel: React.FC<ChangePasswordModelProps> = ({
   modalVisible,
   setModalVisible,
-  userProfile,
 }) => {
   const ThemeDarkMode = useAppSelector(
     (state: RootState) => state.ThemeDarkMode.darkMode,
   );
+  const ChangePasswordData = useAppSelector(
+    (state: RootState) => state.changePassword.data as any,
+  );
   const dispatch = useDispatch<any>();
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const dynamicStyle = styles(ACTIVECOLORS.primaryLightGreyHex);
+  console.log(ChangePasswordData);
   return (
     <>
       <Modal
@@ -77,24 +85,26 @@ const UpdateProfileModel: React.FC<UpdateProfileModelProps> = ({
               }}>
               <AntDesign name="close" size={24} color="black" />
             </TouchableOpacity>
-            <Text style={dynamicStyle.modalText}>Cập nhật thông tin</Text>
+            <Text style={dynamicStyle.modalText}>Cập Nhật Mật Khẩu</Text>
             <Formik
               initialValues={{
-                firstName: userProfile.first_name,
-                lastName: userProfile.last_name,
-                gender: userProfile.gender ? 'male' : 'female',
+                currentPassword: '',
+                newPassword: '',
               }}
               validationSchema={validationSchema}
               onSubmit={(values: FormValues, {resetForm}) => {
                 dispatch(
-                  UpdateUserProfile({
-                    first_name: values.firstName,
-                    last_name: values.lastName,
-                    gender: values.gender === 'male' ? true : false,
+                  ChangePassword({
+                    current_password: values.currentPassword,
+                    new_password: values.newPassword,
                   }),
-                ).then(() => {
-                  dispatch(getProfileUser());
+                ).then((req: any) => {
                   resetForm();
+                  Toast.show({
+                    text1: 'Thay đổi mật khẩu',
+                    type: 'info',
+                    text2: ` ${req?.payload?.message}`,
+                  });
                   setModalVisible(false);
                 });
               }}>
@@ -109,85 +119,70 @@ const UpdateProfileModel: React.FC<UpdateProfileModelProps> = ({
               }) => (
                 <View>
                   <View style={dynamicStyle.wrapper}>
-                    <Text style={dynamicStyle.label}>FirstName</Text>
+                    <Text style={dynamicStyle.label}>Mật khẩu hiện tại</Text>
                     <View>
                       <View style={dynamicStyle.inputWrapper}>
-                        <AntDesign
-                          name="user"
+                        <MaterialIcons
+                          name="password"
                           size={20}
                           color={ACTIVECOLORS.primaryGreyHex}
                         />
                         <WidthSpacer width={10} />
                         <TextInput
-                          placeholder="Enter your First Name"
+                          secureTextEntry={true}
+                          placeholder="Enter your password"
                           onFocus={() => {
-                            setFieldTouched('firstName');
+                            setFieldTouched('currentPassword');
                           }}
                           onBlur={() => {
-                            setFieldTouched('firstName');
+                            setFieldTouched('currentPassword');
                           }}
-                          value={values.firstName}
-                          onChangeText={handleChange('firstName')}
+                          value={values.currentPassword}
+                          onChangeText={handleChange('currentPassword')}
                           autoCapitalize="none"
                           autoCorrect={false}
                           style={{flex: 1}}
                         />
                       </View>
-                      {touched.firstName && errors.firstName && (
+                      {touched.currentPassword && errors.currentPassword && (
                         <Text style={dynamicStyle.errMessage}>
-                          {errors.firstName}
+                          {errors.currentPassword}
                         </Text>
                       )}
                     </View>
                   </View>
                   <View style={dynamicStyle.wrapper}>
-                    <Text style={dynamicStyle.label}>LastName</Text>
+                    <Text style={dynamicStyle.label}>Mật khẩu mới</Text>
                     <View>
                       <View style={dynamicStyle.inputWrapper}>
-                        <AntDesign
-                          name="user"
+                        <MaterialIcons
+                          name="password"
                           size={20}
                           color={ACTIVECOLORS.primaryGreyHex}
                         />
                         <WidthSpacer width={10} />
                         <TextInput
-                          placeholder="Enter your Last Name"
+                          secureTextEntry={true}
+                          placeholder="Enter your New Password"
                           onFocus={() => {
-                            setFieldTouched('lastName');
+                            setFieldTouched('newPassword');
                           }}
                           onBlur={() => {
-                            setFieldTouched('lastName');
+                            setFieldTouched('newPassword');
                           }}
-                          value={values.lastName}
-                          onChangeText={handleChange('lastName')}
+                          value={values.newPassword}
+                          onChangeText={handleChange('newPassword')}
                           autoCapitalize="none"
                           autoCorrect={false}
                           style={{flex: 1}}
                         />
                       </View>
-                      {touched.lastName && errors.lastName && (
+                      {touched.newPassword && errors.newPassword && (
                         <Text style={dynamicStyle.errMessage}>
-                          {errors.lastName}
+                          {errors.newPassword}
                         </Text>
                       )}
                     </View>
-                  </View>
-                  <View style={dynamicStyle.wrapper}>
-                    <Text style={dynamicStyle.label}>Gender</Text>
-                    <View style={dynamicStyle.inputWrapper}>
-                      <Picker
-                        selectedValue={values.gender}
-                        onValueChange={handleChange('gender')}
-                        style={{flex: 1}}>
-                        <Picker.Item label="Male" value="male" />
-                        <Picker.Item label="Female" value="female" />
-                      </Picker>
-                    </View>
-                    {touched.gender && errors.gender && (
-                      <Text style={dynamicStyle.errMessage}>
-                        {errors.gender}
-                      </Text>
-                    )}
                   </View>
                   <HeightSpacer height={20} />
                   <TouchableOpacity onPress={handleSubmit}>
@@ -215,7 +210,7 @@ const UpdateProfileModel: React.FC<UpdateProfileModelProps> = ({
   );
 };
 
-export default UpdateProfileModel;
+export default ChangePasswordModel;
 
 const styles = (borderColor: string) =>
   StyleSheet.create({

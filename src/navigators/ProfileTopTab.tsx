@@ -8,14 +8,16 @@ import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
 import Avata from 'components/imageCustom/Avata';
 import {useAppSelector} from 'hooks/useAppSelector';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Alert,
+  Animated,
   Dimensions,
   Modal,
   Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -27,12 +29,23 @@ import {userLogout} from 'state/Action/AuthenAction';
 import {getProfileUser} from 'state/Action/profileAction';
 import {setIsLoggedIn, setUserInfo} from 'state/Slices/Auth/auth';
 import {RootState} from 'store/store';
-import {COLORS, ColorType, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
+import {
+  BORDERRADIUS,
+  COLORS,
+  ColorType,
+  FONTFAMILY,
+  FONTSIZE,
+  SPACING,
+} from 'theme/theme';
 import {ProfileType, RootStackParamList} from 'utils/datatype';
 import UpdateProfileModel from 'components/Model/UpdateProfileModel';
+import ChangePasswordModel from 'components/Model/ChangePasswordModel';
 const Tab = createMaterialTopTabNavigator();
 const ProfileTopTab = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalChangePasswordVisible, setModalChangePasswordVisible] =
+    useState(false);
+  const [showMoreAction, setShowMoreAction] = useState(false);
   let tabBarHeight = useBottomTabBarHeight();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -65,6 +78,14 @@ const ProfileTopTab = () => {
       });
     } catch (error) {}
   };
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
   return userProfile?.id ? (
     <View
       style={[
@@ -120,13 +141,61 @@ const ProfileTopTab = () => {
             setModalVisible={setModalVisible}
             userProfile={userProfile}
           />
-          <Pressable onPress={() => setModalVisible(true)}>
-            <Feather
-              name="more-vertical"
-              size={FONTSIZE.size_24}
-              color={ACTIVECOLORS.primaryWhiteHex}
-            />
-          </Pressable>
+          <ChangePasswordModel
+            modalVisible={modalChangePasswordVisible}
+            setModalVisible={setModalChangePasswordVisible}
+          />
+          <View>
+            <Pressable onPress={() => setShowMoreAction(!showMoreAction)}>
+              <Feather
+                name="more-vertical"
+                size={FONTSIZE.size_24}
+                color={ACTIVECOLORS.primaryWhiteHex}
+              />
+            </Pressable>
+            {showMoreAction ? (
+              <Animated.View
+                style={[
+                  styles.moreAction,
+                  {
+                    backgroundColor: ACTIVECOLORS.primaryBlackRGBA,
+                    opacity: fadeAnim,
+                  },
+                ]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(true);
+                    setShowMoreAction(false);
+                    setModalChangePasswordVisible(false);
+                  }}>
+                  <ResuableText
+                    text="Cập nhật thông tin"
+                    color={ACTIVECOLORS.primaryWhiteHex}
+                    size={FONTSIZE.size_12}
+                    fontFamily={FONTFAMILY.poppins_bold}
+                    moreStyles={{
+                      borderBottomWidth: 1,
+                      padding: SPACING.space_4 + 2,
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalChangePasswordVisible(true);
+                    setShowMoreAction(false);
+                    setModalVisible(false);
+                  }}>
+                  <ResuableText
+                    text="Thay đổi mật khẩu"
+                    color={ACTIVECOLORS.primaryWhiteHex}
+                    size={FONTSIZE.size_12}
+                    fontFamily={FONTFAMILY.poppins_bold}
+                    moreStyles={{padding: SPACING.space_4 + 2}}
+                  />
+                </TouchableOpacity>
+              </Animated.View>
+            ) : null}
+          </View>
         </View>
       </View>
       <View
@@ -163,5 +232,13 @@ const styles = StyleSheet.create({
   ajd: {
     paddingTop: SPACING.space_30,
     paddingRight: SPACING.space_10,
+  },
+  moreAction: {
+    position: 'absolute',
+    borderRadius: BORDERRADIUS.radius_4,
+    borderWidth: 1,
+    width: SPACING.space_30 * 5,
+    top: SPACING.space_2,
+    right: SPACING.space_16,
   },
 });
