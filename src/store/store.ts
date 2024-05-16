@@ -35,6 +35,7 @@ export const store = configureStore({
     historyView: ProfileSlice.GetHistoryViewSlice.default,
     historyComment: ProfileSlice.GetHistoryCommentSlice.default,
     updateProfile: ProfileSlice.UpdateProfileCommentSlice.default,
+    changePassword: ProfileSlice.ChangePasswordSlice.default,
     //comments
     listComment: CommentSlice.getListCommentSlice.default,
     listCommentReply: CommentSlice.getListCommentRelySlice.default,
