@@ -28,7 +28,8 @@ import {getProfileUser} from 'state/Action/profileAction';
 import {setIsLoggedIn, setUserInfo} from 'state/Slices/Auth/auth';
 import {RootState} from 'store/store';
 import {COLORS, ColorType, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
-import {RootStackParamList} from 'utils/datatype';
+import {ProfileType, RootStackParamList} from 'utils/datatype';
+import UpdateProfileModel from 'components/Model/UpdateProfileModel';
 const Tab = createMaterialTopTabNavigator();
 const ProfileTopTab = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -73,67 +74,53 @@ const ProfileTopTab = () => {
         },
       ]}>
       <HeaderBack onPress={() => navigation.goBack()} Onpress2={handleLogout} />
-      <View
-        style={[
-          resuable.rowWithSpace,
-          styles.rowContainer,
-          {borderColor: ACTIVECOLORS.primaryWhiteHexRBGA},
-        ]}>
-        <Avata
-          src={userProfile?.avatar}
-          customStyles={{
-            width: SPACING.space_30 * 3,
-            height: SPACING.space_30 * 3,
-          }}
-        />
-        <View>
-          <ResuableText
-            text={`${userProfile?.first_name || 'chưa'} ${
-              userProfile?.last_name || 'cập nhật'
-            }`}
-            textAlign="left"
-            color={ACTIVECOLORS.primaryWhiteHex}
-            fontFamily={FONTFAMILY.poppins_semibold}
-            size={FONTSIZE.size_20}
+      <View style={[resuable.rowWithSpace, {alignItems: 'flex-start'}]}>
+        <View
+          style={[
+            resuable.rowWithSpace,
+            styles.rowContainer,
+            {borderColor: ACTIVECOLORS.primaryWhiteHexRBGA},
+          ]}>
+          <Avata
+            src={userProfile?.avatar}
+            customStyles={{
+              width: SPACING.space_30 * 3,
+              height: SPACING.space_30 * 3,
+            }}
           />
-          <ResuableText
-            text={userProfile.username}
-            textAlign="left"
-            color={ACTIVECOLORS.primaryWhiteHexRBGA}
-            fontFamily={FONTFAMILY.poppins_regular}
-            size={FONTSIZE.size_12}
-          />
-          <ResuableText
-            text={userProfile.email}
-            textAlign="left"
-            color={ACTIVECOLORS.primaryWhiteHexRBGA}
-            fontFamily={FONTFAMILY.poppins_regular}
-            size={FONTSIZE.size_12}
-          />
+          <View>
+            <ResuableText
+              text={`${userProfile?.first_name || 'chưa'} ${
+                userProfile?.last_name || 'cập nhật'
+              }`}
+              textAlign="left"
+              color={ACTIVECOLORS.primaryWhiteHex}
+              fontFamily={FONTFAMILY.poppins_semibold}
+              size={FONTSIZE.size_20}
+            />
+            <ResuableText
+              text={userProfile.username}
+              textAlign="left"
+              color={ACTIVECOLORS.primaryWhiteHexRBGA}
+              fontFamily={FONTFAMILY.poppins_regular}
+              size={FONTSIZE.size_12}
+            />
+            <ResuableText
+              text={userProfile.email}
+              textAlign="left"
+              color={ACTIVECOLORS.primaryWhiteHexRBGA}
+              fontFamily={FONTFAMILY.poppins_regular}
+              size={FONTSIZE.size_12}
+            />
+          </View>
         </View>
-        <View style={styles.centeredView}>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-              setModalVisible(!modalVisible);
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.modalText}>Hello World!</Text>
-                <Pressable
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}>
-                  <Text style={styles.textStyle}>Hide Modal</Text>
-                </Pressable>
-              </View>
-            </View>
-          </Modal>
-          <Pressable
-            style={[styles.button]}
-            onPress={() => setModalVisible(true)}>
+        <View style={styles.ajd}>
+          <UpdateProfileModel
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            userProfile={userProfile}
+          />
+          <Pressable onPress={() => setModalVisible(true)}>
             <Feather
               name="more-vertical"
               size={FONTSIZE.size_24}
@@ -173,42 +160,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.space_20,
     paddingTop: SPACING.space_10,
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+  ajd: {
+    paddingTop: SPACING.space_30,
+    paddingRight: SPACING.space_10,
   },
 });

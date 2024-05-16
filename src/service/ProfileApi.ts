@@ -9,12 +9,17 @@ const handleGetUserProfile = async () => {
 
   return axios.get('/api/v1/user/profile', {headers});
 };
-const handleUpdateUserProfile = (formData: {
+const handleUpdateUserProfile = async (formData: {
   first_name: string;
   last_name: string;
   gender: boolean;
 }) => {
-  return axios.patch('/api/v1/user/profile');
+  const token = await AsyncStorage.getItem('token');
+  const headers = {
+    Authorization: `Bearer ${JSON.parse(token || '')}`,
+  };
+  console.log(headers);
+  return axios.patch('/api/v1/user/profile', formData, {headers: headers});
 };
 const handleUpdateImg = (file: File) => {
   return axios.put(`/api/v1/user/profile/avatar`, file);
