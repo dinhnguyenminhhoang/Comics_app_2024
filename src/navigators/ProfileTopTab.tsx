@@ -24,9 +24,10 @@ import Toast from 'react-native-toast-message';
 import {Feather} from '@expo/vector-icons';
 import {useDispatch} from 'react-redux';
 import HistoryComment from 'screens/ProfileScreen/HistoryComment';
+import * as ImagePicker from 'expo-image-picker';
 import HistoryView from 'screens/ProfileScreen/HistoryView';
 import {userLogout} from 'state/Action/AuthenAction';
-import {getProfileUser} from 'state/Action/profileAction';
+import {getProfileUser, uploadAvata} from 'state/Action/profileAction';
 import {setIsLoggedIn, setUserInfo} from 'state/Slices/Auth/auth';
 import {RootState} from 'store/store';
 import {
@@ -86,6 +87,32 @@ const ProfileTopTab = () => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
+  //
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+
+      const formData = new FormData();
+      formData.append('file', {
+        uri: result.assets[0].uri,
+        type: 'image/jpeg',
+        name: result.assets[0].fileName || 'avatar.jpg',
+      });
+      dispatch(uploadAvata(formData)).then(req => {
+        console.log(req);
+      });
+    }
+  };
+  //
   return userProfile?.id ? (
     <View
       style={[
@@ -102,13 +129,15 @@ const ProfileTopTab = () => {
             styles.rowContainer,
             {borderColor: ACTIVECOLORS.primaryWhiteHexRBGA},
           ]}>
-          <Avata
-            src={userProfile?.avatar}
-            customStyles={{
-              width: SPACING.space_30 * 3,
-              height: SPACING.space_30 * 3,
-            }}
-          />
+          <TouchableOpacity onPress={pickImage}>
+            <Avata
+              src={!image ? userProfile?.avatar : image}
+              customStyles={{
+                width: SPACING.space_30 * 3,
+                height: SPACING.space_30 * 3,
+              }}
+            />
+          </TouchableOpacity>
           <View>
             <ResuableText
               text={`${userProfile?.first_name || 'chưa'} ${

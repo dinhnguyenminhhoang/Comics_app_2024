@@ -1,13 +1,16 @@
+import ResuableText from 'components/Resuable/ResuableText';
+import {useAppSelector} from 'hooks/useAppSelector';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
   Image,
   StyleSheet,
-  Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useAppSelector} from 'hooks/useAppSelector';
+import {useDispatch} from 'react-redux';
+import {getHistoryComment} from 'state/Action/profileAction';
 import {RootState} from 'store/store';
 import {
   BORDERRADIUS,
@@ -17,9 +20,6 @@ import {
   FONTSIZE,
   SPACING,
 } from 'theme/theme';
-import ResuableText from 'components/Resuable/ResuableText';
-import {getHistoryComment, getHistoryView} from 'state/Action/profileAction';
-import {useDispatch} from 'react-redux';
 
 const HistoryComment = () => {
   const [pageSize, setPageSize] = useState(10);
@@ -53,7 +53,7 @@ const HistoryComment = () => {
       }
       data={historyComment}
       renderItem={({item}) => (
-        <View
+        <TouchableOpacity
           style={[
             styles.listContainer,
             {borderColor: ACTIVECOLORS.primaryLightGreyHex},
@@ -99,7 +99,7 @@ const HistoryComment = () => {
               />
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       )}
     />
   );
