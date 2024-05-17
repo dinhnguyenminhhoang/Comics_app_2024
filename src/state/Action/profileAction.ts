@@ -66,7 +66,7 @@ export const ChangePassword = createAsyncThunk(
 );
 export const uploadAvata = createAsyncThunk(
   'uploadAvata/handleuploadAvata',
-  async (img: File) => {
+  async (img: any) => {
     try {
       const response = await ProfileApi.handleUpdateImg(img);
       let data = response;

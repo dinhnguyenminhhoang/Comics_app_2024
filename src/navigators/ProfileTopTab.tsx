@@ -92,15 +92,24 @@ const ProfileTopTab = () => {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
     if (!result.canceled) {
-      // setImage(result.assets[0].uri);
-      // dispatch(uploadAvata(result.assets[0].uri));
+      setImage(result.assets[0].uri);
+
+      const formData = new FormData();
+      formData.append('file', {
+        uri: result.assets[0].uri,
+        type: 'image/jpeg',
+        name: result.assets[0].fileName || 'avatar.jpg',
+      });
+      dispatch(uploadAvata(formData)).then(req => {
+        console.log(req);
+      });
     }
   };
   //

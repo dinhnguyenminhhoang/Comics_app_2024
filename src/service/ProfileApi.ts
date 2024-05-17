@@ -20,12 +20,14 @@ const handleUpdateUserProfile = async (formData: {
   };
   return axios.patch('/api/v1/user/profile', formData, {headers: headers});
 };
-const handleUpdateImg = async (file: File) => {
+const handleUpdateImg = async (file: any) => {
   const token = await AsyncStorage.getItem('token');
   const headers = {
+    'Content-Type': 'multipart/form-data',
     Authorization: `Bearer ${JSON.parse(token || '')}`,
+    // ...file.getHeaders(),
   };
-  return axios.put(`/api/v1/user/profile/avatar`, file, {headers});
+  return axios.put('/api/v1/user/profile/avatar', file, {headers: headers});
 };
 const handleResetPassword = async (formData: {
   current_password: string;
