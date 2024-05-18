@@ -1,30 +1,29 @@
+import {Feather} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import ChangePasswordModel from 'components/Model/ChangePasswordModel';
+import UpdateProfileModel from 'components/Model/UpdateProfileModel';
 import HeaderBack from 'components/Resuable/HeaderBack';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
 import Avata from 'components/imageCustom/Avata';
+import * as ImagePicker from 'expo-image-picker';
 import {useAppSelector} from 'hooks/useAppSelector';
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  Alert,
   Animated,
   Dimensions,
-  Modal,
   Pressable,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
-import {Feather} from '@expo/vector-icons';
 import {useDispatch} from 'react-redux';
 import HistoryComment from 'screens/ProfileScreen/HistoryComment';
-import * as ImagePicker from 'expo-image-picker';
 import HistoryView from 'screens/ProfileScreen/HistoryView';
 import {userLogout} from 'state/Action/AuthenAction';
 import {getProfileUser, uploadAvata} from 'state/Action/profileAction';
@@ -38,9 +37,7 @@ import {
   FONTSIZE,
   SPACING,
 } from 'theme/theme';
-import {ProfileType, RootStackParamList} from 'utils/datatype';
-import UpdateProfileModel from 'components/Model/UpdateProfileModel';
-import ChangePasswordModel from 'components/Model/ChangePasswordModel';
+import {RootStackParamList} from 'utils/datatype';
 const Tab = createMaterialTopTabNavigator();
 const ProfileTopTab = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -62,8 +59,11 @@ const ProfileTopTab = () => {
   );
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   useEffect(() => {
-    if (isLoggedId === true) dispatch(getProfileUser());
+    if (isLoggedId === true) {
+      dispatch(getProfileUser());
+    }
   }, [dispatch, isLoggedId]);
+
   const handleLogout = async () => {
     dispatch(userLogout());
     dispatch(setIsLoggedIn(false));
@@ -91,12 +91,12 @@ const ProfileTopTab = () => {
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let result = (await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-    });
+    })) as any;
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -107,9 +107,7 @@ const ProfileTopTab = () => {
         type: 'image/jpeg',
         name: result.assets[0].fileName || 'avatar.jpg',
       });
-      dispatch(uploadAvata(formData)).then(req => {
-        console.log(req);
-      });
+      dispatch(uploadAvata(formData));
     }
   };
   //

@@ -1,6 +1,7 @@
+import {useFocusEffect} from '@react-navigation/native';
 import ResuableText from 'components/Resuable/ResuableText';
 import {useAppSelector} from 'hooks/useAppSelector';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -37,9 +38,12 @@ const HistoryComment = () => {
   const isLoggedId = useAppSelector(
     (state: RootState) => state.isLogger.isLoggedIn,
   );
-  useEffect(() => {
-    if (isLoggedId) dispatch(getHistoryComment({page: 1, page_size: pageSize}));
-  }, [dispatch, pageSize]);
+  useFocusEffect(
+    useCallback(() => {
+      if (isLoggedId)
+        dispatch(getHistoryComment({page: 1, page_size: pageSize}));
+    }, [dispatch, pageSize]),
+  );
   return (
     <FlatList
       onEndReached={() => (isMore ? setPageSize(pageSize + 10) : null)}

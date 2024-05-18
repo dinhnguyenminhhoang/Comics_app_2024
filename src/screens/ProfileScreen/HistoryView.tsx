@@ -1,8 +1,8 @@
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import ResuableText from 'components/Resuable/ResuableText';
 import {useAppSelector} from 'hooks/useAppSelector';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -40,9 +40,11 @@ const HistoryView = () => {
     (state: RootState) => state.isLogger.isLoggedIn,
   );
   const isMore = useAppSelector((state: RootState) => state.historyView.isMore);
-  useEffect(() => {
-    if (isLoggedId) dispatch(getHistoryView({page: 1, page_size: pageSize}));
-  }, [dispatch, pageSize]);
+  useFocusEffect(
+    useCallback(() => {
+      if (isLoggedId) dispatch(getHistoryView({page: 1, page_size: pageSize}));
+    }, [dispatch, pageSize]),
+  );
   return (
     <FlatList
       onEndReached={() => (isMore ? setPageSize(pageSize + 10) : null)}
