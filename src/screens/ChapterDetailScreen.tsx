@@ -1,6 +1,7 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import CommentCpn from 'components/Comment/Comment';
 import CommentItem from 'components/Comment/CommentItem';
+import CommentModel from 'components/Model/CommentModel';
 import CustomIcon from 'components/Resuable/CustomIcon';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
@@ -34,6 +35,7 @@ type Props = NativeStackScreenProps<RootAppParamList, 'Chapters'>;
 const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
   const {chapter, comicId, endChapterId, startChapterId} = route.params;
   const [chapterDetail, setChapterDetail] = useState(chapter);
+  const [showComment, setShowComment] = useState(false);
   const ThemeDarkMode = useAppSelector(
     (state: RootState) => state.ThemeDarkMode.darkMode,
   );
@@ -173,7 +175,21 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
             }
           />
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setShowComment(true);
+          }}>
+          <Text>Comment</Text>
+        </TouchableOpacity>
       </View>
+      {showComment ? (
+        <CommentModel
+          chapterId={detailChapter.id}
+          comicId={comicId}
+          showCommentcpn={showComment}
+          setShowCommentcpn={setShowComment}
+        />
+      ) : null}
       <FlatList
         maxToRenderPerBatch={100}
         data={detailChapter?.images}
@@ -189,9 +205,9 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
           </View>
         )}
         keyExtractor={(_, index) => index.toString()}
-        ListFooterComponent={
-          <CommentCpn chapterId={chapter.id} comicId={comicId} />
-        }
+        // ListFooterComponent={
+        //   <CommentCpn chapterId={chapter.id} comicId={comicId} />
+        // }
       />
     </>
   );

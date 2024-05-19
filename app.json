@@ -1,8 +1,8 @@
 {
   "expo": {
     "jsEngine": "hermes",
-    "name": "Comics app 2024",
-    "slug": "Comics app 2024",
+    "name": "Comics_app_2024",
+    "slug": "Comics_app_2024",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,7 +23,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.minhhoangdev.Comics_app_2024"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,6 +35,11 @@
     "plugins": [
       "expo-font",
       "expo-image-picker"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d01ca4e1-3ade-4e51-bfd5-18d967a00db1"
+      }
+    }
   }
 }
