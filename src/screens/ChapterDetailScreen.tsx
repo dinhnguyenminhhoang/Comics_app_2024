@@ -117,70 +117,86 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
       <StatusBar hidden />
       <View
         style={[
-          resuable.rowWithSpace,
           {
             paddingVertical: SPACING.space_10,
             backgroundColor: ACTIVECOLORS.primaryBlackHex,
             borderBottomWidth: 1,
+            gap: SPACING.space_8,
           },
         ]}>
-        <TouchableOpacity
-          onPress={handlePreChapter}
-          disabled={chapterDetail.id === startChapterId}>
-          <CustomIcon
-            name="left"
+        <View style={[resuable.rowWithSpace]}>
+          <TouchableOpacity
+            onPress={handlePreChapter}
+            disabled={chapterDetail.id === startChapterId}>
+            <CustomIcon
+              name="left"
+              size={FONTSIZE.size_20}
+              styles={[
+                styles.icon,
+                {
+                  borderColor:
+                    chapterDetail.id === startChapterId
+                      ? ACTIVECOLORS.primaryGreyHex
+                      : ACTIVECOLORS.primaryWhiteHex,
+                },
+              ]}
+              color={
+                chapterDetail.id === startChapterId
+                  ? ACTIVECOLORS.primaryGreyHex
+                  : ACTIVECOLORS.primaryWhiteHex
+              }
+            />
+          </TouchableOpacity>
+          <ResuableText
+            text={detailChapter?.name}
+            color={ACTIVECOLORS.primaryWhiteHex}
             size={FONTSIZE.size_20}
-            styles={[
-              styles.icon,
-              {
-                borderColor:
-                  chapterDetail.id === startChapterId
-                    ? ACTIVECOLORS.primaryGreyHex
-                    : ACTIVECOLORS.primaryWhiteHex,
-              },
-            ]}
-            color={
-              chapterDetail.id === startChapterId
-                ? ACTIVECOLORS.primaryGreyHex
-                : ACTIVECOLORS.primaryWhiteHex
-            }
+            fontFamily={FONTFAMILY.poppins_extrabold}
+            moreStyles={{maxWidth: Dimensions.get('screen').width / 2}}
           />
-        </TouchableOpacity>
-        <ResuableText
-          text={detailChapter?.name}
-          color={ACTIVECOLORS.primaryWhiteHex}
-          size={FONTSIZE.size_20}
-          fontFamily={FONTFAMILY.poppins_extrabold}
-          moreStyles={{maxWidth: Dimensions.get('screen').width / 2}}
-        />
-        <TouchableOpacity
-          onPress={handleNextChapter}
-          disabled={chapterDetail.id === endChapterId}>
-          <CustomIcon
-            name="right"
-            size={FONTSIZE.size_20}
-            styles={[
-              styles.icon,
-              {
-                borderColor:
-                  chapterDetail.id === endChapterId
-                    ? ACTIVECOLORS.primaryGreyHex
-                    : ACTIVECOLORS.primaryWhiteHex,
-              },
-            ]}
-            color={
-              chapterDetail.id === endChapterId
-                ? ACTIVECOLORS.primaryGreyHex
-                : ACTIVECOLORS.primaryWhiteHex
-            }
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setShowComment(true);
-          }}>
-          <Text>Comment</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleNextChapter}
+            disabled={chapterDetail.id === endChapterId}>
+            <CustomIcon
+              name="right"
+              size={FONTSIZE.size_20}
+              styles={[
+                styles.icon,
+                {
+                  borderColor:
+                    chapterDetail.id === endChapterId
+                      ? ACTIVECOLORS.primaryGreyHex
+                      : ACTIVECOLORS.primaryWhiteHex,
+                },
+              ]}
+              color={
+                chapterDetail.id === endChapterId
+                  ? ACTIVECOLORS.primaryGreyHex
+                  : ACTIVECOLORS.primaryWhiteHex
+              }
+            />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={[
+            resuable.rowWithSpace,
+            {justifyContent: 'center', gap: SPACING.space_10},
+          ]}>
+          <TouchableOpacity
+            onPress={() => {
+              setShowComment(true);
+            }}
+            style={styles.borderBtn}>
+            <Text style={styles.borderText}>Bình Luận</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setShowComment(true);
+            }}
+            style={styles.borderBtn}>
+            <Text style={styles.borderText}>Tìm Kiếm</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       {showComment ? (
         <CommentModel
@@ -241,5 +257,16 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.space_8,
     paddingHorizontal: SPACING.space_10,
     borderRadius: BORDERRADIUS.radius_25,
+  },
+  borderBtn: {
+    borderWidth: 1,
+    alignItems: 'center',
+    paddingVertical: SPACING.space_8,
+    paddingHorizontal: SPACING.space_10,
+    borderRadius: BORDERRADIUS.radius_4,
+  },
+  borderText: {
+    fontSize: FONTSIZE.size_12,
+    fontFamily: FONTFAMILY.poppins_semibold,
   },
 });
