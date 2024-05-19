@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  // baseURL: 'https://go-comic.onrender.com',
-  baseURL: 'http://192.168.1.7:8080',
+  baseURL: 'https://go-comic.onrender.com',
+  // baseURL: 'http://10.16.9.150:8080',
   // baseURL: 'http://172.16.1.121:8080',
   validateStatus: function (status) {
     return status >= 200 && status <= 299;
