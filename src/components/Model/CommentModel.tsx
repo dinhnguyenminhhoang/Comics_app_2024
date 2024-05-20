@@ -1,16 +1,29 @@
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import CommentItem from 'components/Comment/CommentItem';
+import HeightSpacer from 'components/Resuable/HeightSpacer';
+import ResuableText from 'components/Resuable/ResuableText';
+import ResuableTitle from 'components/Resuable/ResuableTitle';
+import {useAppSelector} from 'hooks/useAppSelector';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Modal,
+  StatusBar,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useAppSelector} from 'hooks/useAppSelector';
-import {RootState} from 'store/store';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
+import {
+  createComment,
+  createCommentReply,
+  getListComment,
+} from 'state/Action/CommentAction';
+import {RootState} from 'store/store';
 import {
   BORDERRADIUS,
   COLORS,
@@ -19,23 +32,13 @@ import {
   FONTSIZE,
   SPACING,
 } from 'theme/theme';
-import {
-  createComment,
-  createCommentReply,
-  getListComment,
-} from 'state/Action/CommentAction';
-import Toast from 'react-native-toast-message';
-import ResuableText from 'components/Resuable/ResuableText';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import CommentItem from 'components/Comment/CommentItem';
-import HeightSpacer from 'components/Resuable/HeightSpacer';
-import ResuableTitle from 'components/Resuable/ResuableTitle';
 interface CommentModelProps {
   chapterId: number;
   comicId: number;
   showCommentcpn: boolean;
   setShowCommentcpn: (show: boolean) => void;
 }
+
 const CommentModel: React.FC<CommentModelProps> = ({
   chapterId,
   comicId,
@@ -113,7 +116,7 @@ const CommentModel: React.FC<CommentModelProps> = ({
   return (
     <Modal
       animationType="slide"
-      visible={showComment}
+      visible={showCommentcpn}
       onRequestClose={() => {
         setShowCommentcpn(!showCommentcpn);
       }}>
@@ -124,11 +127,21 @@ const CommentModel: React.FC<CommentModelProps> = ({
             backgroundColor: ACTIVECOLORS.primaryBlackRGBA,
           },
         ]}>
-        <ResuableTitle
-          titleRight={`Tổng ${listComments?.length || 0} bình luận`}
-          titleLeft="Danh sách bình luận"
-          onPress={() => {}}
+        <ResuableText
+          text="Danh sách bình luận"
+          size={FONTSIZE.size_20}
+          fontFamily={FONTFAMILY.poppins_bold}
+          color={ACTIVECOLORS.primaryWhiteHex}
         />
+        <TouchableOpacity
+          style={styles.btnClose}
+          onPress={() => setShowCommentcpn(false)}>
+          <MaterialCommunityIcons
+            name="window-close"
+            size={24}
+            color={ACTIVECOLORS.primaryWhiteHex}
+          />
+        </TouchableOpacity>
         <FlatList
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => (
@@ -147,11 +160,11 @@ const CommentModel: React.FC<CommentModelProps> = ({
           renderItem={({item}) => (
             <CommentItem
               comment={item}
-              onReply={handleReply}
               ACTIVECOLORS={ACTIVECOLORS}
-              setShowComment={setShowComment}
               chapterID={chapterId}
               comicID={comicId}
+              showComment={showComment}
+              setShowComment={setShowComment}
             />
           )}
           keyExtractor={item => item.id.toString()}
@@ -204,10 +217,18 @@ export default CommentModel;
 
 const styles = StyleSheet.create({
   container: {
+    padding: SPACING.space_12,
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
-  commentContainer: {},
+  commentContainer: {
+    paddingBottom: SPACING.space_20,
+  },
+  btnClose: {
+    position: 'absolute',
+    top: SPACING.space_2,
+    right: SPACING.space_8,
+  },
   userInfoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -251,11 +272,12 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
-    // paddingTop: SPACING.space_12,
-    // borderTopWidth: 1,
+    paddingTop: SPACING.space_12,
+    borderTopWidth: 1,
+    marginBottom: SPACING.space_20,
   },
   btnLogin: {
-    // padding: SPACING.space_10,
+    padding: SPACING.space_10,
     borderRadius: BORDERRADIUS.radius_15,
     borderWidth: 1,
   },
