@@ -1,6 +1,4 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import CommentCpn from 'components/Comment/Comment';
-import CommentItem from 'components/Comment/CommentItem';
 import CommentModel from 'components/Model/CommentModel';
 import CustomIcon from 'components/Resuable/CustomIcon';
 import resuable from 'components/Resuable/Resuable.style';

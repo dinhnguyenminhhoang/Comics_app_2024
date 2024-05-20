@@ -1,28 +1,24 @@
-import resuable from 'components/Resuable/Resuable.style';
+import {Ionicons} from '@expo/vector-icons';
 import ResuableText from 'components/Resuable/ResuableText';
-import {useAppSelector} from 'hooks/useAppSelector';
+import {Formik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {
-  FlatList,
   Image,
-  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
-import {getListCommentReply} from 'state/Action/CommentAction';
-import {RootState} from 'store/store';
 import {
-  BORDERRADIUS,
-  ColorType,
-  FONTFAMILY,
-  FONTSIZE,
-  SPACING,
-} from 'theme/theme';
+  createCommentReply,
+  getListCommentReply,
+} from 'state/Action/CommentAction';
+import {BORDERRADIUS, ColorType, FONTSIZE, SPACING} from 'theme/theme';
 import {replyCOmmentType} from 'utils/datatype';
+import * as Yup from 'yup';
 
 export interface CommentType {
   id: number;
@@ -35,57 +31,57 @@ export interface CommentType {
 }
 interface comicItemProp {
   comment: CommentType;
-  onReply: (commentId: number, replyContent: string) => void;
   ACTIVECOLORS: ColorType;
-  setShowComment: (show: boolean) => void;
   chapterID: number;
   comicID: number;
+  showComment: boolean;
+  setShowComment: (showComment: boolean) => void;
 }
+
+const validationSchema = Yup.object().shape({
+  contentReply: Yup.string()
+    .min(6, 'Bình luận phải trên 6 kí tự')
+    .required('Bắt buộc'),
+});
 const CommentItem: React.FC<comicItemProp> = ({
   comment,
-  onReply,
   ACTIVECOLORS,
-  setShowComment,
   chapterID,
   comicID,
+  showComment,
+  setShowComment,
 }) => {
-  const [relyId, setReplyId] = useState<number>(0);
-  const [replyContent, setReplyContent] = useState('');
+  const [showInputReply, setShowInputReply] = useState(false);
+  const [callApiReply, setCallApiReply] = useState(false);
+  const [listCommentReply, setListCommentReply] = useState<replyCOmmentType[]>(
+    [],
+  );
   const dispatch = useDispatch<any>();
-  const commentReply = useAppSelector(
-    (state: RootState) => state.listCommentReply.data,
-  ) as replyCOmmentType[];
-  const handleReply = () => {
-    if (replyContent.trim() !== '') {
-      onReply(comment.id, replyContent);
-      setReplyContent('');
-      Keyboard.dismiss();
-    }
-  };
-  const handleShowReply = (id: number) => {
-    if (relyId === 0) {
-      setReplyId(id);
-      setShowComment(false);
-    } else {
-      setReplyId(0);
-      setShowComment(true);
-    }
-  };
-  // useEffect(() => {
-  //   dispatch(
-  //     getListCommentReply({
-  //       chapterID: chapterID,
-  //       comicID: comicID,
-  //       commentID: comment.id,
-  //       page: 1,
-  //       page_size: 10,
-  //     }),
-  //   );
-  // }, [chapterID, comicID, comment]);
-  // console.log('commentReply', commentReply);
-  console.log('re-render');
+  useEffect(() => {
+    if (callApiReply)
+      if (comicID && chapterID && comment.id) {
+        dispatch(
+          getListCommentReply({
+            chapterID: chapterID,
+            comicID: comicID,
+            commentID: comment.id,
+            page: 1,
+            page_size: 10,
+          }),
+        ).then((req: any) => {
+          if (req?.payload?.data?.length > 0) {
+            setListCommentReply(req.payload.data);
+          }
+        });
+      }
+  }, [dispatch, comment, comicID, chapterID, callApiReply]);
+  // const handleCreateReplyComment = () => {};
   return (
-    <View style={[styles.commentContainer]}>
+    <View
+      style={[
+        styles.commentContainer,
+        {borderBottomColor: ACTIVECOLORS.primaryWhiteHexRBGA},
+      ]}>
       <View style={styles.userInfoContainer}>
         <Image source={{uri: comment.user_avatar}} style={styles.avatar} />
         <Text style={[styles.username, {color: ACTIVECOLORS.primaryWhiteHex}]}>
@@ -107,84 +103,154 @@ const CommentItem: React.FC<comicItemProp> = ({
         </Text>
         <TouchableOpacity
           onPress={() => {
-            handleShowReply(comment.id);
+            setShowInputReply(!showInputReply);
+            showInputReply ? setShowComment(true) : setShowComment(false);
           }}>
-          <Text
-            style={[
-              styles.replyMiniIcon,
-              {
-                color: ACTIVECOLORS.primaryWhiteHex,
-              },
-            ]}>
-            {relyId > 0 ? 'ẩn' : 'phản hồi'}
+          <Text style={styles.replyMiniIcon}>
+            {!showInputReply ? 'Phàn hồi' : 'Ẩn'}
           </Text>
         </TouchableOpacity>
       </View>
-      {/* {commentReply?.length && commentReply[0].parent_id === comment.id ? (
-        <FlatList
-          data={commentReply}
-          renderItem={({item}) => (
-            <View style={{}}>
-              <View style={styles.userReply}>
-                <Image
-                  source={{uri: comment.user_avatar}}
-                  style={styles.avatar}
-                />
-                <ResuableText
-                  text={item.username}
-                  size={FONTSIZE.size_16}
-                  fontFamily={FONTFAMILY.poppins_medium}
-                  numberOfLines={3}
-                  color={ACTIVECOLORS.primaryWhiteHex}
-                  textAlign="left"
-                />
-              </View>
-              <ResuableText
-                text={item.content}
-                size={FONTSIZE.size_12}
-                fontFamily={FONTFAMILY.poppins_medium}
-                numberOfLines={3}
-                color={ACTIVECOLORS.primaryWhiteHex}
-                textAlign="left"
-              />
-            </View>
-          )}
-        />
-      ) : null} */}
-
-      {/* {relyId === comment.id ? (
-        <View style={styles.replyContainer}>
-          <TextInput
-            style={[
-              styles.input,
-              {
-                color: ACTIVECOLORS.primaryWhiteHex,
-                borderColor: ACTIVECOLORS.secondaryLightGreyHex,
-              },
-            ]}
-            placeholder="Reply..."
-            placeholderTextColor={ACTIVECOLORS.secondaryLightGreyHex}
-            value={replyContent}
-            onChangeText={setReplyContent}
+      {!callApiReply ? (
+        <TouchableOpacity
+          onPress={() => setCallApiReply(true)}
+          style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+          <Ionicons
+            name="arrow-redo"
+            size={14}
+            color={ACTIVECOLORS.primaryWhiteHex}
           />
-          <TouchableOpacity
-            style={[
-              styles.replyButton,
-              {
-                borderColor: ACTIVECOLORS.secondaryLightGreyHex,
-              },
-            ]}
-            onPress={handleReply}>
-            <Text style={{color: ACTIVECOLORS.primaryWhiteHex}}>Phản hồi</Text>
-          </TouchableOpacity>
-        </View>
-      ) : null} */}
+          <ResuableText
+            text="xem phản hồi"
+            textAlign="start"
+            size={FONTSIZE.size_12}
+          />
+        </TouchableOpacity>
+      ) : null}
+      {listCommentReply?.length && callApiReply ? (
+        listCommentReply?.map(commentReply => (
+          <View
+            key={commentReply.id}
+            style={{gap: SPACING.space_8, marginTop: SPACING.space_8}}>
+            <View style={styles.userReply}>
+              <Image
+                source={{uri: commentReply.user_avatar}}
+                style={styles.avatar}
+              />
+              <View style={{gap: SPACING.space_4}}>
+                <Text
+                  style={[
+                    styles.username,
+                    {color: ACTIVECOLORS.primaryWhiteHex},
+                  ]}>
+                  {commentReply.username}
+                </Text>
+                <Text
+                  style={[
+                    styles.contentReply,
+                    {color: ACTIVECOLORS.primaryWhiteHex},
+                  ]}>
+                  {commentReply.content}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={[
+                {
+                  justifyContent: 'flex-start',
+                  gap: 4,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: SPACING.space_8,
+                },
+              ]}></View>
+          </View>
+        ))
+      ) : callApiReply ? (
+        <ResuableText
+          text="hãy trở thành người phản hồi đầu tiên"
+          color={ACTIVECOLORS.primaryWhiteHex}
+          size={FONTSIZE.size_14}
+        />
+      ) : null}
+      {showInputReply ? (
+        <Formik
+          initialValues={{
+            contentReply: '',
+          }}
+          validationSchema={validationSchema}
+          onSubmit={(values: {contentReply: string}, {resetForm}) => {
+            dispatch(
+              createCommentReply({
+                chapterID: chapterID,
+                comicID: comicID,
+                commentID: comment.id,
+                content: values.contentReply,
+              }),
+            ).then(() => {
+              dispatch(
+                getListCommentReply({
+                  chapterID: chapterID,
+                  comicID: comicID,
+                  commentID: comment.id,
+                  page: 1,
+                  page_size: 10,
+                }),
+              ).then((req: any) => {
+                if (req?.payload?.data?.length > 0) {
+                  setListCommentReply(req.payload.data);
+                }
+              });
+              resetForm();
+              setShowInputReply(false);
+              setShowComment(true);
+            });
+          }}>
+          {({
+            handleChange,
+            touched,
+            handleSubmit,
+            values,
+            errors,
+            isValid,
+            setFieldTouched,
+          }) => (
+            <KeyboardAwareScrollView>
+              <View style={styles.replyContainer}>
+                <TextInput
+                  placeholder="Trả lời ..."
+                  style={styles.input}
+                  onFocus={() => {
+                    setFieldTouched('contentReply');
+                  }}
+                  onBlur={() => {
+                    setFieldTouched('contentReply');
+                  }}
+                  value={values.contentReply}
+                  onChangeText={handleChange('contentReply')}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                <TouchableOpacity
+                  style={styles.replyButton}
+                  onPress={handleSubmit}>
+                  <Text>Trả lời</Text>
+                </TouchableOpacity>
+              </View>
+              {touched.contentReply && errors.contentReply && (
+                <Text style={styles.errMessage}>{errors.contentReply}</Text>
+              )}
+            </KeyboardAwareScrollView>
+          )}
+        </Formik>
+      ) : null}
     </View>
   );
 };
 const styles = StyleSheet.create({
   commentContainer: {
-    marginBottom: 20,
+    paddingBottom: SPACING.space_10,
+    borderBottomWidth: 1,
   },
   userInfoContainer: {
     flexDirection: 'row',
@@ -206,6 +272,7 @@ const styles = StyleSheet.create({
   replyContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 4,
   },
   input: {
     flex: 1,
@@ -235,6 +302,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: SPACING.space_4,
     marginLeft: SPACING.space_8,
+  },
+  errMessage: {
+    color: 'red',
+    fontSize: FONTSIZE.size_14,
+    marginTop: 5,
+    marginLeft: 5,
+  },
+  contentReply: {
+    // marginLeft: SPACING.space_20,
   },
 });
 
