@@ -1,14 +1,14 @@
 {
   "expo": {
     "jsEngine": "hermes",
-    "name": "Comics_app_2024",
+    "name": "HTCOMICS",
     "slug": "Comics_app_2024",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.jpg",
+    "icon": "./assets/relax.jpg",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/icon.jpg",
+      "image": "./assets/bg.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,7 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.jpg",
+        "foregroundImage": "./assets/relax.jpg",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
