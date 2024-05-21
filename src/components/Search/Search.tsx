@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CustomIcon from 'components/Resuable/CustomIcon';
 import {
   BORDERRADIUS,
@@ -21,12 +21,15 @@ import Shadow from 'components/Resuable/Shadow.style';
 import {RootState} from 'store/store';
 import {useDispatch} from 'react-redux';
 import {resetResultSearchComics} from 'state/Slices/Comic/GetResutSearchComicsSlice';
+import useDebounce from 'hooks/useDebounce';
+import {getResultSearchComics} from 'state/Action/comicAction';
 
 interface SearchProp {
   onPress: (value: string) => void;
+  setSearchText: (value: string) => void;
+  searchText: string;
 }
-const Search: React.FC<SearchProp> = ({onPress}) => {
-  const [searchText, setSearchText] = useState<string>('');
+const Search: React.FC<SearchProp> = ({onPress, searchText, setSearchText}) => {
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
   );
@@ -39,6 +42,15 @@ const Search: React.FC<SearchProp> = ({onPress}) => {
   const searchComicData = useAppSelector(
     (state: RootState) => state.searchComicData.data,
   );
+  const debounced = useDebounce(searchText, 500) as string;
+
+  useEffect(() => {
+    if (debounced !== '') {
+      dispatch(
+        getResultSearchComics({keyword: debounced, page: 1, page_size: 10}),
+      );
+    }
+  }, [debounced, dispatch]);
   return (
     <View
       style={[

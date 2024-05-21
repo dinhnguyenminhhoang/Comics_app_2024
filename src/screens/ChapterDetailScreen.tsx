@@ -36,6 +36,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
     route.params;
   const [chapterDetail, setChapterDetail] = useState(chapter);
   const [showComment, setShowComment] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
   const ThemeDarkMode = useAppSelector(
     (state: RootState) => state.ThemeDarkMode.darkMode,
   );
@@ -145,20 +146,26 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
               }
             />
           </TouchableOpacity>
-          {/* <ResuableText
-            text={detailChapter?.name}
-            color={ACTIVECOLORS.primaryWhiteHex}
-            size={FONTSIZE.size_20}
-            fontFamily={FONTFAMILY.poppins_extrabold}
-            moreStyles={{maxWidth: Dimensions.get('screen').width / 2}}
-          /> */}
           <View style={styles.contentWrapper}>
             <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={chapterDetail}
                 style={styles.picker}
                 onValueChange={itemValue => {
-                  setChapterDetail(itemValue);
+                  try {
+                    dispatch(setComponentLevelLoading(true));
+                    dispatch(
+                      getDetailChapter({
+                        ChapterId: itemValue.id,
+                        comicId: comicId,
+                      }),
+                    ).then(() => {
+                      setChapterDetail(itemValue);
+                      dispatch(setComponentLevelLoading(false));
+                    });
+                  } catch (error) {
+                    dispatch(setComponentLevelLoading(false));
+                  }
                 }}>
                 <Picker.Item
                   label={`${detailChapter.name}`}
@@ -193,13 +200,6 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
                 }}
                 style={styles.borderBtn}>
                 <Text style={styles.borderText}>Bình Luận</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowComment(true);
-                }}
-                style={styles.borderBtn}>
-                <Text style={styles.borderText}>Tìm Kiếm</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.space_8,
     paddingHorizontal: SPACING.space_10,
     borderRadius: BORDERRADIUS.radius_4,
-    flex: 0.5,
+    flex: 1,
   },
   borderText: {
     fontSize: FONTSIZE.size_12,
