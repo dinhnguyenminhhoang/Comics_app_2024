@@ -9,6 +9,9 @@
       "android": {
         "buildType": "apk",
         "image": "latest"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.production.com"
       }
     },
     "preview": {
@@ -16,6 +19,9 @@
       "android": {
         "buildType": "apk",
         "image": "latest"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.production.com"
       }
     },
     "production": {
@@ -23,7 +29,9 @@
         "buildType": "apk",
         "image": "latest"
       }
-    }
+    },"env": {
+        "EXPO_PUBLIC_API_URL": "https://api.production.com"
+      }
   },
   "submit": {
     "production": {}
