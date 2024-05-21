@@ -145,20 +145,26 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
               }
             />
           </TouchableOpacity>
-          {/* <ResuableText
-            text={detailChapter?.name}
-            color={ACTIVECOLORS.primaryWhiteHex}
-            size={FONTSIZE.size_20}
-            fontFamily={FONTFAMILY.poppins_extrabold}
-            moreStyles={{maxWidth: Dimensions.get('screen').width / 2}}
-          /> */}
           <View style={styles.contentWrapper}>
             <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={chapterDetail}
                 style={styles.picker}
                 onValueChange={itemValue => {
-                  setChapterDetail(itemValue);
+                  try {
+                    dispatch(setComponentLevelLoading(true));
+                    dispatch(
+                      getDetailChapter({
+                        ChapterId: itemValue.id,
+                        comicId: comicId,
+                      }),
+                    ).then(() => {
+                      setChapterDetail(itemValue);
+                      dispatch(setComponentLevelLoading(false));
+                    });
+                  } catch (error) {
+                    dispatch(setComponentLevelLoading(false));
+                  }
                 }}>
                 <Picker.Item
                   label={`${detailChapter.name}`}
