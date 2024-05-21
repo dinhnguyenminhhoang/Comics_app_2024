@@ -36,6 +36,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
     route.params;
   const [chapterDetail, setChapterDetail] = useState(chapter);
   const [showComment, setShowComment] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
   const ThemeDarkMode = useAppSelector(
     (state: RootState) => state.ThemeDarkMode.darkMode,
   );
@@ -200,13 +201,6 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
                 style={styles.borderBtn}>
                 <Text style={styles.borderText}>Bình Luận</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowComment(true);
-                }}
-                style={styles.borderBtn}>
-                <Text style={styles.borderText}>Tìm Kiếm</Text>
-              </TouchableOpacity>
             </View>
           </View>
           <TouchableOpacity
@@ -299,7 +293,7 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.space_8,
     paddingHorizontal: SPACING.space_10,
     borderRadius: BORDERRADIUS.radius_4,
-    flex: 0.5,
+    flex: 1,
   },
   borderText: {
     fontSize: FONTSIZE.size_12,

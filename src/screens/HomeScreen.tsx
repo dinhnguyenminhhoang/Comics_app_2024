@@ -11,6 +11,7 @@ import ResuableText from 'components/Resuable/ResuableText';
 import ResuableTitle from 'components/Resuable/ResuableTitle';
 import Search from 'components/Search/Search';
 import {useAppSelector} from 'hooks/useAppSelector';
+import useDebounce from 'hooks/useDebounce';
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
@@ -33,7 +34,7 @@ import {
 } from 'state/Action/comicAction';
 import {setComponentLevelLoading} from 'state/Slices/common/ComponentLoading';
 import {RootState} from 'store/store';
-import {COLORS, ColorType, FONTSIZE, SPACING} from 'theme/theme';
+import {COLORS, ColorType, FONTFAMILY, FONTSIZE, SPACING} from 'theme/theme';
 import {COMICPARAM} from 'utils/ApiType';
 import {ComicType, RootStackParamList} from 'utils/datatype';
 
@@ -41,6 +42,7 @@ export default function HomeScreen() {
   const systemColorScheme = useColorScheme();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [searchText, setSearchText] = useState<string>('');
 
   const [getMoreComics, setGetMoreComics] = useState<number>(12);
   const [Loading, setLoading] = useState<Boolean>(false);
@@ -162,6 +164,7 @@ export default function HomeScreen() {
       dispath(getResultSearchComics({keyword: value, page: 1, page_size: 10}));
     }
   };
+
   return (
     <SafeAreaView style={dynamicStyle.ScreenContainer}>
       <StatusBar
@@ -176,7 +179,11 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}>
           {/* search  */}
-          <Search onPress={handlePressSearch} />
+          <Search
+            onPress={handlePressSearch}
+            searchText={searchText}
+            setSearchText={setSearchText}
+          />
           {/* end search */}
           {/* category */}
           <HeightSpacer height={SPACING.space_30} />
@@ -191,7 +198,7 @@ export default function HomeScreen() {
           <Genres listGenres={listGenres} />
           {/* end genrtes */}
           {/* search */}
-          {searchComicData.length ? (
+          {searchComicData?.length ? (
             <>
               <HeightSpacer height={SPACING.space_30} />
               <ResuableTitle
@@ -201,6 +208,14 @@ export default function HomeScreen() {
               />
               <ComicsBox listComics={searchComicData as ComicType[]} />
             </>
+          ) : searchText?.length > 0 ? (
+            <ResuableText
+              text="Không có truyện thích hợp"
+              color={ACTIVECOLORS.primaryWhiteHex}
+              fontFamily={FONTFAMILY.poppins_bold}
+              size={FONTSIZE.size_20}
+              moreStyles={{marginTop: SPACING.space_18}}
+            />
           ) : null}
           {/* end search */}
           {/* chapter */}
