@@ -106,6 +106,7 @@ const DetailScreen: React.FC<Props> = ({route, navigation}) => {
             startChapterId:
               comicById.chapters[comicById.chapters.length - 1].id,
             endChapterId: comicById.chapters[0].id,
+            optionChapters: comicById.chapters,
           })
         }
       />

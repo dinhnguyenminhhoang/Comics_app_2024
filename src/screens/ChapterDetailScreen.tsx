@@ -1,10 +1,11 @@
+import {Picker} from '@react-native-picker/picker';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import CommentModel from 'components/Model/CommentModel';
 import CustomIcon from 'components/Resuable/CustomIcon';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
 import {useAppSelector} from 'hooks/useAppSelector';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -31,7 +32,8 @@ import {
 import {RootAppParamList} from 'utils/datatype';
 type Props = NativeStackScreenProps<RootAppParamList, 'Chapters'>;
 const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
-  const {chapter, comicId, endChapterId, startChapterId} = route.params;
+  const {chapter, comicId, endChapterId, startChapterId, optionChapters} =
+    route.params;
   const [chapterDetail, setChapterDetail] = useState(chapter);
   const [showComment, setShowComment] = useState(false);
   const ThemeDarkMode = useAppSelector(
@@ -43,9 +45,6 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   const detailChapter = useAppSelector(
     (state: RootState) => state.detailChapter.data,
-  );
-  const listComment = useAppSelector(
-    (state: RootState) => state.listComment.data,
   );
   const dispatch = useDispatch<any>();
   useEffect(() => {
@@ -62,7 +61,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
     }
   }, [dispatch, route.params]);
   const handleNextChapter = () => {
-    // dispatch(setComponentLevelLoading(true));
+    dispatch(setComponentLevelLoading(true));
     dispatch(
       getDetailChapter({
         ChapterId: chapterDetail?.id + 1,
@@ -110,6 +109,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
       </View>
     );
   }
+  const reversedChapters = optionChapters ? [...optionChapters].reverse() : [];
   return (
     <>
       <StatusBar hidden />
@@ -145,13 +145,64 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
               }
             />
           </TouchableOpacity>
-          <ResuableText
+          {/* <ResuableText
             text={detailChapter?.name}
             color={ACTIVECOLORS.primaryWhiteHex}
             size={FONTSIZE.size_20}
             fontFamily={FONTFAMILY.poppins_extrabold}
             moreStyles={{maxWidth: Dimensions.get('screen').width / 2}}
-          />
+          /> */}
+          <View style={styles.contentWrapper}>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={chapterDetail}
+                style={styles.picker}
+                onValueChange={itemValue => {
+                  setChapterDetail(itemValue);
+                }}>
+                <Picker.Item
+                  label={`${detailChapter.name}`}
+                  value={detailChapter}
+                />
+                {reversedChapters?.length ? (
+                  reversedChapters?.map(chapter => (
+                    <Picker.Item
+                      key={chapter.id}
+                      label={`${chapter.name}`}
+                      value={chapter}
+                    />
+                  ))
+                ) : (
+                  <ResuableText
+                    text="Truyện chưa có chapter nào"
+                    color={ACTIVECOLORS.primaryBlackHex}
+                    size={FONTSIZE.size_20}
+                    fontFamily={FONTFAMILY.poppins_bold}
+                  />
+                )}
+              </Picker>
+            </View>
+            <View
+              style={[
+                resuable.rowWithSpace,
+                {justifyContent: 'center', gap: SPACING.space_10},
+              ]}>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowComment(true);
+                }}
+                style={styles.borderBtn}>
+                <Text style={styles.borderText}>Bình Luận</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowComment(true);
+                }}
+                style={styles.borderBtn}>
+                <Text style={styles.borderText}>Tìm Kiếm</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
           <TouchableOpacity
             onPress={handleNextChapter}
             disabled={chapterDetail.id === endChapterId}>
@@ -173,26 +224,6 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
                   : ACTIVECOLORS.primaryWhiteHex
               }
             />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={[
-            resuable.rowWithSpace,
-            {justifyContent: 'center', gap: SPACING.space_10},
-          ]}>
-          <TouchableOpacity
-            onPress={() => {
-              setShowComment(true);
-            }}
-            style={styles.borderBtn}>
-            <Text style={styles.borderText}>Bình Luận</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setShowComment(true);
-            }}
-            style={styles.borderBtn}>
-            <Text style={styles.borderText}>Tìm Kiếm</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -262,9 +293,29 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.space_8,
     paddingHorizontal: SPACING.space_10,
     borderRadius: BORDERRADIUS.radius_4,
+    flex: 0.5,
   },
   borderText: {
     fontSize: FONTSIZE.size_12,
     fontFamily: FONTFAMILY.poppins_semibold,
+  },
+  containerPicker: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#f8f8f8',
+  },
+  contentWrapper: {
+    width: Dimensions.get('window').width / 2,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 8,
+    marginBottom: SPACING.space_8,
+  },
+  picker: {
+    width: Dimensions.get('window').width / 2,
   },
 });

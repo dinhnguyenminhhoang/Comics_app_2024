@@ -41,6 +41,7 @@ export type RootAppParamList = {
     comicId: number;
     startChapterId: number;
     endChapterId: number;
+    optionChapters: chapterType[];
   };
   Profile: undefined;
 };

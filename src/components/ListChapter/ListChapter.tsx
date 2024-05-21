@@ -33,6 +33,7 @@ const ListChapter: React.FC<ListChapterProps> = ({
                 comicId: comic.id,
                 startChapterId: comic.chapters[comic.chapters?.length - 1].id,
                 endChapterId: comic.chapters[0].id,
+                optionChapters: comic.chapters,
               })
             }
             style={[
