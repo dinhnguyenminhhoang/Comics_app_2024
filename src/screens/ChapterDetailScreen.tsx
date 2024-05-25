@@ -6,12 +6,13 @@ import CustomIcon from 'components/Resuable/CustomIcon';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
 import {useAppSelector} from 'hooks/useAppSelector';
+import {Image} from 'expo-image';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Dimensions,
   FlatList,
-  Image,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -49,6 +50,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
   const detailChapter = useAppSelector(
     (state: RootState) => state.detailChapter.data,
   );
+
   const dispatch = useDispatch<any>();
   const flatListRef = useRef<FlatList>(null);
   useEffect(() => {
@@ -175,7 +177,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
                 <Picker.Item
                   label={`${detailChapter.name}`}
                   value={detailChapter}
-                  style={{fontSize: 10}}
+                  style={{fontSize: 16}}
                 />
                 {reversedChapters?.length ? (
                   reversedChapters?.map(chapter => (
@@ -261,26 +263,23 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
           setShowCommentcpn={setShowComment}
         />
       ) : null}
-      <FlatList
-        ref={flatListRef}
-        maxToRenderPerBatch={100}
-        data={detailChapter?.images}
-        renderItem={({item}) => {
-          return (
-            <View style={[styles.container]}>
-              <Image
-                source={{
-                  uri: `https://comics-api.vercel.app/images?src=${
-                    !changeServer ? item.original : item.cdn
-                  }`,
-                }}
-                style={styles.img}
-              />
-            </View>
-          );
-        }}
-        keyExtractor={(_, index) => index.toString()}
-      />
+      <ScrollView>
+        {detailChapter?.images?.map((item, index) => (
+          <View key={index.toString()} style={styles.container}>
+            <Image
+              source={{
+                uri: `https://comics-api.vercel.app/images?src=${
+                  !changeServer ? item.original : item.cdn
+                }`,
+              }}
+              style={styles.img}
+              contentFit="fill"
+              cachePolicy="memory-disk"
+              placeholderContentFit="contain"
+            />
+          </View>
+        ))}
+      </ScrollView>
     </>
   );
 };
@@ -299,7 +298,6 @@ const styles = StyleSheet.create({
     borderRadius: BORDERRADIUS.radius_25,
   },
   img: {
-    resizeMode: 'stretch',
     width: Dimensions.get('screen').width,
     height: Dimensions.get('screen').height - SPACING.space_30,
   },
