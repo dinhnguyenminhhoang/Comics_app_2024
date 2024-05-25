@@ -1,3 +1,4 @@
+import {AntDesign, FontAwesome} from '@expo/vector-icons';
 import {Picker} from '@react-native-picker/picker';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import CommentModel from 'components/Model/CommentModel';
@@ -5,7 +6,7 @@ import CustomIcon from 'components/Resuable/CustomIcon';
 import resuable from 'components/Resuable/Resuable.style';
 import ResuableText from 'components/Resuable/ResuableText';
 import {useAppSelector} from 'hooks/useAppSelector';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -36,6 +37,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
     route.params;
   const [chapterDetail, setChapterDetail] = useState(chapter);
   const [showComment, setShowComment] = useState(false);
+  const [changeServer, setChangeServer] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const ThemeDarkMode = useAppSelector(
     (state: RootState) => state.ThemeDarkMode.darkMode,
@@ -48,6 +50,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
     (state: RootState) => state.detailChapter.data,
   );
   const dispatch = useDispatch<any>();
+  const flatListRef = useRef<FlatList>(null);
   useEffect(() => {
     if (route.params?.chapter?.id > 0 && route.params?.comicId > 0) {
       dispatch(setComponentLevelLoading(true));
@@ -75,6 +78,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
         updated_at: chapterDetail.updated_at,
       });
       dispatch(setComponentLevelLoading(false));
+      flatListRef.current?.scrollToOffset({offset: 0, animated: true});
     });
   };
   const handlePreChapter = async () => {
@@ -92,6 +96,7 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
           updated_at: chapterDetail?.updated_at,
         });
         dispatch(setComponentLevelLoading(false));
+        flatListRef.current?.scrollToOffset({offset: 0, animated: true});
       });
     } catch (error) {
       dispatch(setComponentLevelLoading(false));
@@ -170,10 +175,12 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
                 <Picker.Item
                   label={`${detailChapter.name}`}
                   value={detailChapter}
+                  style={{fontSize: 10}}
                 />
                 {reversedChapters?.length ? (
                   reversedChapters?.map(chapter => (
                     <Picker.Item
+                      style={{fontSize: 12}}
                       key={chapter.id}
                       label={`${chapter.name}`}
                       value={chapter}
@@ -199,7 +206,26 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
                   setShowComment(true);
                 }}
                 style={styles.borderBtn}>
+                <FontAwesome
+                  name="commenting-o"
+                  size={FONTSIZE.size_12}
+                  color="black"
+                />
                 <Text style={styles.borderText}>Bình Luận</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setChangeServer(!changeServer);
+                }}
+                style={styles.borderBtn}>
+                <AntDesign
+                  name="retweet"
+                  size={FONTSIZE.size_12}
+                  color="black"
+                />
+                <Text style={styles.borderText}>
+                  {!changeServer ? 'Server 1' : 'Server 2'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -236,23 +262,24 @@ const ChapterDetail: React.FC<Props> = ({navigation, route}) => {
         />
       ) : null}
       <FlatList
+        ref={flatListRef}
         maxToRenderPerBatch={100}
         data={detailChapter?.images}
-        renderItem={({item}) => (
-          <View style={[styles.container]}>
-            <Image
-              source={{
-                uri: `https://comics-api.vercel.app/images?src=
-  https://api-manga-2.vercel.app/images?src=${item.cdn}`,
-              }}
-              style={styles.img}
-            />
-          </View>
-        )}
+        renderItem={({item}) => {
+          return (
+            <View style={[styles.container]}>
+              <Image
+                source={{
+                  uri: `https://comics-api.vercel.app/images?src=${
+                    !changeServer ? item.original : item.cdn
+                  }`,
+                }}
+                style={styles.img}
+              />
+            </View>
+          );
+        }}
         keyExtractor={(_, index) => index.toString()}
-        // ListFooterComponent={
-        //   <CommentCpn chapterId={chapter.id} comicId={comicId} />
-        // }
       />
     </>
   );
@@ -290,10 +317,12 @@ const styles = StyleSheet.create({
   borderBtn: {
     borderWidth: 1,
     alignItems: 'center',
-    paddingVertical: SPACING.space_8,
-    paddingHorizontal: SPACING.space_10,
+    paddingVertical: SPACING.space_4,
+    paddingHorizontal: SPACING.space_8 - 2,
     borderRadius: BORDERRADIUS.radius_4,
     flex: 1,
+    flexDirection: 'row',
+    gap: 4,
   },
   borderText: {
     fontSize: FONTSIZE.size_12,
@@ -303,7 +332,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
     backgroundColor: '#f8f8f8',
   },
   contentWrapper: {
@@ -317,5 +345,6 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: Dimensions.get('window').width / 2,
+    fontSize: FONTSIZE.size_10,
   },
 });

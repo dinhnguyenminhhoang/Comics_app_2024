@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import resuable from 'components/Resuable/Resuable.style';
 import {useAppSelector} from 'hooks/useAppSelector';
-import React from 'react';
+import React, {useRef} from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {BORDERRADIUS, COLORS, ColorType, SPACING} from 'theme/theme';
 import {ComicType, RootAppParamList} from 'utils/datatype';
@@ -22,6 +22,7 @@ const ComicsBoxLoadPage: React.FC<ComicsBoxLoadPageprops> = ({
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
   );
+  const imgRef = useRef<any>();
   let ACTIVECOLORS = (ThemeDarkMode ? COLORS.dark : COLORS.light) as ColorType;
   return listComics?.length ? (
     <View style={[resuable.rowWithSpace, {flexWrap: 'wrap'}]}>

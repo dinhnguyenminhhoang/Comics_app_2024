@@ -10,7 +10,9 @@ const fillParams = (formData: comicsApiParams) => {
   if (genres !== undefined) queryParams.genres = genres;
   if (min_chapter !== undefined) queryParams.min_chapter = min_chapter;
   if (sort !== undefined) queryParams.sort = sort;
-  if (sort_by !== undefined) queryParams.sort_by = sort_by;
+  if (sort_by !== undefined) {
+    queryParams.sort_by = sort_by;
+  }
   if (status !== undefined) queryParams.status = status;
   return queryParams;
 };

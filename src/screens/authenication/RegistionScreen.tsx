@@ -49,7 +49,7 @@ const validationSchema = Yup.object().shape({
 const RegistionScreen: React.FC = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [obsecureText, setObsecureText] = useState<boolean>(false);
+  const [obsecureText, setObsecureText] = useState<boolean>(true);
   const dispach = useDispatch<any>();
   const ThemeDarkMode = useAppSelector(
     (state: any) => state.ThemeDarkMode.darkMode,
@@ -208,13 +208,11 @@ const RegistionScreen: React.FC = () => {
             <TouchableOpacity onPress={handleSubmit}>
               <ResuableText
                 text={'REGISTER'}
-                color={ACTIVECOLORS.fixColorBlack
-                }
+                color={ACTIVECOLORS.fixColorBlack}
                 fontFamily={FONTFAMILY.poppins_semibold}
                 moreStyles={{
                   borderWidth: 1,
-                  borderColor: ACTIVECOLORS.fixColorBlack
-                  ,
+                  borderColor: ACTIVECOLORS.fixColorBlack,
                   backgroundColor: 'transparent',
                   paddingVertical: SPACING.space_10,
                   borderRadius: BORDERRADIUS.radius_10,

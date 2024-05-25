@@ -46,7 +46,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const SingninScreen: React.FC = () => {
-  const [obsecureText, setObsecureText] = useState<boolean>(false);
+  const [obsecureText, setObsecureText] = useState<boolean>(true);
   const [reload, setReload] = useState<boolean>(false);
   const dispatch = useDispatch<any>();
   const ThemeDarkMode = useAppSelector(
