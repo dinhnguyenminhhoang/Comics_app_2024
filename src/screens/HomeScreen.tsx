@@ -153,7 +153,8 @@ export default function HomeScreen() {
   const handleScroll = async (event: any) => {
     const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
     const isAtEnd =
-      layoutMeasurement.height + contentOffset.y >= contentSize.height;
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - (tabBarHeight + 40);
     if (isAtEnd && hasMoreComics) {
       setLoading(true);
       await handleLoadMore();
