@@ -30,9 +30,9 @@ import {Buffer} from 'buffer';
 import Toast from 'react-native-toast-message';
 import {setIsLoggedIn} from 'state/Slices/Auth/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {Link, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from 'utils/datatype';
+import {RootAppParamList, RootStackParamList} from 'utils/datatype';
 interface FormValues {
   email: string;
   password: string;
@@ -63,6 +63,8 @@ const SingninScreen: React.FC = () => {
   const tabBarHeight = useBottomTabBarHeight();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigationStack =
+    useNavigation<NativeStackNavigationProp<RootAppParamList>>();
   const onSubmit = async (values: FormValues, resetForm: () => void) => {
     await dispatch(UserLogin({email: values.email, password: values.password}));
     setReload(true);
@@ -198,6 +200,20 @@ const SingninScreen: React.FC = () => {
                   borderRadius: BORDERRADIUS.radius_10,
                 }}
                 size={FONTSIZE.size_16}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigationStack.navigate('ForgotPassword')}>
+              <ResuableText
+                text={'Forgotten your password ? '}
+                color={'#f00'}
+                fontFamily={FONTFAMILY.poppins_semibold}
+                moreStyles={{
+                  backgroundColor: 'transparent',
+                  paddingVertical: SPACING.space_16,
+                }}
+                size={FONTSIZE.size_14}
+                textDecorationLine="underline"
               />
             </TouchableOpacity>
           </View>

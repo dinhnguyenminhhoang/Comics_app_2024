@@ -44,6 +44,7 @@ export type RootAppParamList = {
     optionChapters: chapterType[];
   };
   Profile: undefined;
+  ForgotPassword: undefined;
 };
 export interface authorsType {
   id: number;
