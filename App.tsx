@@ -10,6 +10,7 @@ import ToastMessage from 'react-native-toast-message';
 import {Provider} from 'react-redux';
 import ChapterDetail from 'screens/ChapterDetailScreen';
 import DetailScreen from 'screens/DetailScreen';
+import ForgotPassword from 'screens/authenication/ForgotPassword';
 import {store} from 'store/store';
 import {RootAppParamList} from 'utils/datatype';
 
@@ -55,6 +56,11 @@ export default function App() {
           <Stack.Screen
             name="Profile"
             component={ProfileTopTab}
+            options={{animation: 'slide_from_bottom'}}
+          />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
             options={{animation: 'slide_from_bottom'}}
           />
         </Stack.Navigator>
